@@ -1,746 +1,1475 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>دومينو - Dominokimo</title>
+<title>DOMINO — v7</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap');
-:root{
-  --bg:#0d1b2a;--surface:#1b2d3e;--card:#243447;
-  --gold:#f5c842;--red:#e84040;--blue:#1565c0;
-  --felt:#1a5c2a;--felt2:#0f3d1a;
-  --ivory:#f8f4eb;--pip:#1a1a2e;
-  --text:#dde8f0;--muted:#6a8a9a;
-  --shadow:rgba(0,0,0,0.6);
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
+
+:root {
+  --bg: #080c12;
+  --bg2: #0e1420;
+  --surface: #141c2a;
+  --surface2: #1a2436;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --gold: #c9a84c;
+  --gold2: #e8c96d;
+  --gold3: #f5e0a0;
+  --red: #c0392b;
+  --red2: #e74c3c;
+  --green: #0f4a20;
+  --green2: #1a6b30;
+  --felt: #0d3d18;
+  --ivory: #f5f0e8;
+  --pip: #111;
+  --text: #d4dae8;
+  --text2: #8a9ab5;
+  --text3: #4a5a72;
+  --shadow: rgba(0,0,0,0.7);
+  --glow: rgba(201,168,76,0.2);
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
-html,body{height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text)}
-#app{display:flex;flex-direction:column;height:100dvh;max-width:700px;margin:0 auto}
 
-.screen{display:none;flex-direction:column;height:100%;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-.screen.active{display:flex}
-#game{display:none;flex-direction:column;height:100%}
-#game.active{display:flex}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; }
+html, body { height:100%; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
 
-/* LOBBY */
-#lobby{background:radial-gradient(ellipse at 50% 20%,#1b2d3e,#0d1b2a)}
-#lobby h1{font-family:'Amiri',serif;font-size:2.8rem;color:var(--gold);text-shadow:0 0 30px rgba(245,200,66,.4);margin-bottom:4px;text-align:center}
-.sub{color:var(--muted);font-size:.88rem;margin-bottom:28px;text-align:center}
-.card{background:var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;width:100%;max-width:400px;margin-bottom:12px}
-.card h3{color:var(--gold);font-size:.9rem;margin-bottom:10px;text-align:center}
-.inp{width:100%;font-family:'Cairo',sans-serif;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.9rem;outline:none;margin-bottom:8px;text-align:right}
-.inp:focus{border-color:var(--gold)}
-.inp::placeholder{color:var(--muted)}
-.bbtn{width:100%;font-family:'Cairo',sans-serif;border:none;border-radius:11px;padding:12px;font-size:.92rem;font-weight:800;cursor:pointer;touch-action:manipulation;transition:all .15s;margin-bottom:7px}
-.bbtn.gold{background:var(--gold);color:#000}.bbtn.gold:hover{background:#ddb020}
-.bbtn.blue{background:var(--blue);color:#fff}.bbtn.blue:hover{background:#1976d2}
-.bbtn.gray{background:rgba(255,255,255,.08);color:var(--muted);border:1px solid rgba(255,255,255,.12)}
-.divider{color:var(--muted);text-align:center;font-size:.78rem;margin:5px 0}
-#lobby-err{color:var(--red);font-size:.78rem;min-height:16px;text-align:center;margin-top:2px}
+/* RTL support */
+[dir="rtl"] { font-family:'Cairo',sans-serif; }
+[lang="fr"] { font-family:'Inter',sans-serif; }
 
-/* WAITING */
-#waiting{background:var(--bg);text-align:center}
-#waiting h2{font-family:'Amiri',serif;font-size:1.7rem;color:var(--gold);margin-bottom:8px}
-.room-code{font-size:2.5rem;font-weight:900;color:var(--text);letter-spacing:8px;background:var(--card);padding:12px 28px;border-radius:14px;margin:12px 0;border:2px dashed rgba(255,255,255,.15);font-family:monospace}
-.players-list{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
-.player-chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 12px;font-size:.78rem}
-.player-chip.me{border-color:var(--gold);color:var(--gold)}
-.sbtn{font-family:'Cairo',sans-serif;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:8px 16px;color:var(--muted);font-size:.8rem;cursor:pointer;margin:3px;touch-action:manipulation}
-.sbtn.start{background:var(--gold);color:#000;border:none;font-weight:800}
-.sbtn.danger{color:var(--red);border-color:rgba(232,64,64,.3)}
+#app { display:flex; flex-direction:column; height:100dvh; max-width:720px; margin:0 auto; }
 
-/* PRAYER BAR */
-#prayer-bar{background:linear-gradient(90deg,rgba(13,27,42,.98),rgba(27,45,62,.98));border-bottom:1px solid rgba(245,200,66,.2);padding:4px 10px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:34px}
-#prayer-times-row{display:flex;gap:8px;align-items:center;overflow-x:auto;flex:1}
-#prayer-times-row::-webkit-scrollbar{display:none}
-.prayer-item{display:flex;flex-direction:column;align-items:center;white-space:nowrap;flex-shrink:0}
-.prayer-item .pname{font-size:.5rem;color:var(--muted);line-height:1}
-.prayer-item .ptime{font-size:.68rem;font-weight:700;color:var(--gold)}
-.prayer-item.next-prayer .pname{color:#4caf50}
-.prayer-item.next-prayer .ptime{color:#4caf50}
-#city-name{font-size:.58rem;color:var(--muted);white-space:nowrap}
+/* ═══════════════════════════════════════
+   SCREENS
+   ═══════════════════════════════════════ */
+.screen { display:none; flex-direction:column; height:100%; }
+.screen.active { display:flex; }
+#game { display:none; flex-direction:column; height:100%; }
+#game.active { display:flex; }
+
+/* ═══════════════════════════════════════
+   LANDING PAGE
+   ═══════════════════════════════════════ */
+#landing {
+  background: radial-gradient(ellipse at 50% 0%, #1a2436 0%, #080c12 70%);
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 24px 20px 40px;
+  position: relative;
+}
+
+/* Decorative corner lines */
+#landing::before, #landing::after {
+  content: '';
+  position: fixed;
+  width: 120px; height: 120px;
+  border-color: var(--gold);
+  border-style: solid;
+  opacity: 0.15;
+  pointer-events: none;
+}
+#landing::before { top:16px; left:16px; border-width: 2px 0 0 2px; }
+#landing::after  { bottom:16px; right:16px; border-width: 0 2px 2px 0; }
+
+.landing-inner {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* Logo */
+.logo-wrap {
+  text-align: center;
+  animation: fadeDown .8s ease both;
+}
+.logo-tiles {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.logo-tile {
+  display: flex;
+  flex-direction: column;
+  background: var(--ivory);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.3);
+}
+.logo-tile .lh {
+  flex:1;
+  width: 36px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 900; color: var(--pip);
+  font-family: monospace;
+}
+.logo-tile .lh:first-child { border-bottom: 1.5px solid #ccc; }
+.logo-sep { width:2px; background:var(--gold); opacity:.4; }
+
+.game-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.4rem, 8vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold3) 50%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  line-height: 1;
+}
+.game-sub {
+  font-size: .75rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-top: 6px;
+}
+.version-tag {
+  display: inline-block;
+  font-size: .55rem;
+  letter-spacing: 2px;
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 20px;
+  padding: 2px 8px;
+  margin-top: 8px;
+}
+
+/* Language selector */
+.lang-selector {
+  display: flex;
+  gap: 8px;
+  animation: fadeUp .8s .1s ease both;
+}
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: inherit;
+  font-size: .78rem;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .2s;
+  touch-action: manipulation;
+}
+.lang-btn:hover, .lang-btn.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(201,168,76,0.08);
+}
+.lang-flag { font-size: 1.1rem; }
+
+/* Main card */
+.main-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 28px 24px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  animation: fadeUp .8s .2s ease both;
+}
+
+.name-label {
+  font-size: .65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 8px;
+}
+.name-input {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s;
+  margin-bottom: 20px;
+}
+.name-input:focus { border-color: var(--gold); }
+.name-input::placeholder { color: var(--text3); }
+
+.divider-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: var(--text3);
+  font-size: .65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.divider-line::before, .divider-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.join-row { display:flex; gap:8px; }
+.code-input {
+  flex:1;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: 'Inter', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 5px;
+  color: var(--gold2);
+  outline: none;
+  text-transform: uppercase;
+  transition: border-color .2s;
+  text-align: center;
+}
+.code-input:focus { border-color: var(--gold); }
+.code-input::placeholder { color:var(--text3); letter-spacing:2px; font-weight:400; }
+
+/* Buttons */
+.pbtn {
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: .88rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: all .2s;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.pbtn.primary {
+  background: linear-gradient(135deg, var(--gold) 0%, #a8822a 100%);
+  color: #080c12;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+}
+.pbtn.primary:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(201,168,76,0.4); }
+.pbtn.secondary {
+  background: var(--surface2);
+  color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.pbtn.secondary:hover { border-color: var(--text2); color: var(--text); }
+.pbtn.join-btn {
+  background: var(--surface2);
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 10px;
+  padding: 12px 18px;
+  width: auto;
+  font-size: .8rem;
+  margin: 0;
+}
+.pbtn.join-btn:hover { background: rgba(201,168,76,0.1); }
+
+#lobby-err {
+  color: var(--red2);
+  font-size: .75rem;
+  text-align: center;
+  min-height: 18px;
+  margin-top: -4px;
+}
+
+/* Optional features toggle */
+.features-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  width: 100%;
+  animation: fadeUp .8s .3s ease both;
+}
+.features-title {
+  font-size: .6rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 14px;
+}
+.feature-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.feature-row:last-child { border-bottom: none; }
+.feature-label { font-size: .82rem; color: var(--text2); }
+.feature-sub { font-size: .62rem; color: var(--text3); margin-top: 1px; }
+.toggle {
+  position: relative;
+  width: 40px; height: 22px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 14px; height: 14px;
+  background: var(--text3);
+  border-radius: 50%;
+  transition: transform .2s, background .2s;
+}
+.toggle.on { background: rgba(201,168,76,0.2); border-color: var(--gold); }
+.toggle.on::after { transform: translateX(18px); background: var(--gold); }
+
+/* ═══════════════════════════════════════
+   WAITING ROOM
+   ═══════════════════════════════════════ */
+#waiting {
+  background: var(--bg);
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  text-align: center;
+}
+.waiting-inner { width:100%; max-width:380px; }
+.wait-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: var(--gold2);
+  margin-bottom: 6px;
+}
+.wait-sub { font-size: .75rem; color: var(--text3); margin-bottom: 24px; }
+.code-display {
+  font-family: 'Inter', monospace;
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: 10px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 16px 28px;
+  margin: 0 auto 24px;
+  width: fit-content;
+}
+.players-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.player-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: .78rem;
+  color: var(--text2);
+}
+.player-pill.me { border-color: var(--gold); color: var(--gold); }
+.player-dot { width:6px; height:6px; border-radius:50%; background:var(--text3); }
+.player-pill.me .player-dot { background: var(--gold); }
+.wait-actions { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+.wbtn {
+  font-family: inherit;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 9px 18px;
+  font-size: .78rem;
+  color: var(--text2);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: all .2s;
+}
+.wbtn.gold { background: linear-gradient(135deg, var(--gold), #a8822a); color: #080c12; font-weight: 700; border: none; display: none; }
+.wbtn.danger { color: var(--red2); border-color: rgba(192,57,43,.3); }
+.wbtn:hover { border-color: var(--text2); color: var(--text); }
+.wbtn.gold:hover { opacity: .9; }
+
+/* ═══════════════════════════════════════
+   GAME SCREEN
+   ═══════════════════════════════════════ */
+
+/* TOP INFO BAR (prayer/weather — optional) */
+#info-bar {
+  background: rgba(8,12,18,.95);
+  border-bottom: 1px solid rgba(201,168,76,.1);
+  padding: 3px 10px;
+  flex-shrink: 0;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  min-height: 30px;
+  overflow: hidden;
+}
+#info-bar.visible { display: flex; }
+#prayer-mini { display:flex; gap:8px; align-items:center; flex:1; overflow:hidden; }
+.pm-item { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+.pm-name { font-size:.42rem; color:var(--text3); line-height:1; }
+.pm-time { font-size:.6rem; font-weight:600; color:var(--gold); }
+.pm-item.next .pm-name { color:#4caf50; }
+.pm-item.next .pm-time { color:#4caf50; }
+#weather-mini {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  font-size: .62rem;
+  color: var(--text2);
+  white-space: nowrap;
+}
+#city-mini { font-size:.5rem; color:var(--text3); }
 
 /* HADITH BAR */
-#hadith-bar{background:rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.04);padding:4px 10px;flex-shrink:0;min-height:40px;display:flex;flex-direction:column;justify-content:center}
-#hadith-ar{font-family:'Amiri',serif;font-size:.75rem;color:rgba(245,200,66,.9);line-height:1.4;text-align:right}
-#hadith-en{font-size:.58rem;color:var(--muted);line-height:1.3;text-align:left;direction:ltr;margin-top:1px}
+#hadith-bar {
+  background: rgba(8,12,18,.9);
+  border-bottom: 1px solid rgba(201,168,76,.06);
+  padding: 3px 12px;
+  flex-shrink: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+}
+#hadith-bar.visible { display: flex; }
+#hadith-text {
+  font-size: .64rem;
+  color: rgba(201,168,76,.7);
+  text-align: center;
+  line-height: 1.4;
+  font-style: italic;
+}
+[dir="rtl"] #hadith-text { font-family: 'Amiri', serif; font-size: .72rem; }
 
 /* HEADER */
-#hdr{background:linear-gradient(180deg,#0d1b2a,#1b2d3e);border-bottom:1px solid rgba(245,200,66,.15);padding:5px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-#hdr h1{font-family:'Amiri',serif;font-size:1.2rem;color:var(--gold)}
-.scores{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
-.sbox{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:2px 7px;text-align:center;min-width:50px}
-.sbox .sl{font-size:.55rem;color:var(--muted);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55px}
-.sbox .sv{font-size:.9rem;font-weight:900;color:var(--gold);line-height:1.2}
-.sbox.myturn{border-color:var(--gold);box-shadow:0 0 6px rgba(245,200,66,.3)}
+#hdr {
+  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+  border-bottom: 1px solid rgba(201,168,76,.15);
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.hdr-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.hdr-brand .brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+.hdr-brand .brand-v { font-size: .5rem; color: var(--text3); letter-spacing: 1px; }
+.scores-row { display:flex; gap:5px; }
+.sbox {
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px 8px;
+  text-align: center;
+  min-width: 52px;
+}
+.sbox .sl { font-size:.52rem; color:var(--text3); line-height:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:58px; }
+.sbox .sv { font-size:.9rem; font-weight:700; color:var(--gold2); line-height:1.2; }
+.sbox.myturn { border-color: rgba(201,168,76,.5); box-shadow: 0 0 10px rgba(201,168,76,.15); }
 
 /* OPPONENTS */
-#opps-row{background:rgba(0,0,0,.2);border-bottom:1px solid rgba(255,255,255,.04);padding:4px 10px;flex-shrink:0;display:flex;gap:10px;flex-wrap:wrap;min-height:44px;align-items:center}
-.opp-info{display:flex;flex-direction:column;align-items:center;gap:1px}
-.opp-name{font-size:.58rem;color:var(--muted);white-space:nowrap}
-.opp-tiles-row{display:flex;gap:2px}
-.back-tile{width:13px;height:24px;background:linear-gradient(135deg,#1b3a5c,#0f2540);border-radius:3px;border:1px solid rgba(255,255,255,.1);flex-shrink:0}
-.waiting-badge{font-size:.52rem;background:rgba(21,101,192,.3);border:1px solid rgba(21,101,192,.4);border-radius:10px;padding:2px 6px;color:#90caf9}
+#opps-row {
+  background: rgba(8,12,18,.7);
+  border-bottom: 1px solid var(--border);
+  padding: 4px 12px;
+  flex-shrink: 0;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-height: 44px;
+  align-items: center;
+}
+.opp-info { display:flex; flex-direction:column; align-items:center; gap:1px; }
+.opp-name { font-size:.55rem; color:var(--text3); white-space:nowrap; }
+.opp-tiles-row { display:flex; gap:2px; }
+.back-tile {
+  width: 12px; height: 22px;
+  background: linear-gradient(135deg, var(--surface2), var(--surface));
+  border-radius: 3px;
+  border: 1px solid rgba(201,168,76,.1);
+}
+.wait-badge {
+  font-size: .5rem;
+  background: rgba(21,101,192,.2);
+  border: 1px solid rgba(21,101,192,.3);
+  border-radius: 8px;
+  padding: 2px 7px;
+  color: #90caf9;
+}
 
 /* FELT TABLE */
-#table-wrap{flex:1;overflow:hidden;position:relative;background:radial-gradient(ellipse at 50% 40%,#256b30,var(--felt) 50%,var(--felt2))}
-#table-wrap::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,transparent 1px,transparent 7px),repeating-linear-gradient(-45deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,transparent 1px,transparent 7px);pointer-events:none;z-index:0}
-#table-scroll{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:center;justify-content:center}
-#chain-container{display:flex;align-items:center;justify-content:center;padding:20px;min-width:100%;min-height:100%}
-#chain{display:flex;align-items:center;gap:3px;flex-shrink:0;position:relative}
+#table-wrap {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(ellipse at 50% 40%, #1a5c2a 0%, var(--felt) 50%, #061208 100%);
+}
+#table-wrap::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0, rgba(255,255,255,.015) 1px, transparent 1px, transparent 28px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.015) 0, rgba(255,255,255,.015) 1px, transparent 1px, transparent 28px);
+  pointer-events: none;
+}
+/* Felt border shadow */
+#table-wrap::after {
+  content: '';
+  position: absolute; inset: 0;
+  box-shadow: inset 0 0 60px rgba(0,0,0,.5);
+  pointer-events: none;
+}
+#table-scroll {
+  position: absolute; inset: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+#chain-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  min-width: 100%;
+  min-height: 100%;
+}
+#chain { display:flex; align-items:center; gap:3px; flex-shrink:0; }
 
-/* UNDO OVERLAY */
-#undo-bar{display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(13,27,42,.95);border-top:2px solid var(--red);padding:8px 14px;z-index:20;align-items:center;justify-content:space-between;gap:10px}
-#undo-bar.show{display:flex}
-#undo-timer-text{font-size:.8rem;color:var(--text)}
-#undo-progress{flex:1;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
-#undo-fill{height:100%;background:var(--red);width:100%;transition:width linear}
-#btn-undo{font-family:'Cairo',sans-serif;background:var(--red);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;touch-action:manipulation}
+/* UNDO BAR */
+#undo-bar {
+  display: none;
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(8,12,18,.96);
+  border-top: 1.5px solid var(--red2);
+  padding: 7px 14px;
+  z-index: 30;
+  align-items: center;
+  gap: 12px;
+}
+#undo-bar.show { display:flex; }
+#undo-text { font-size:.76rem; color:var(--text); white-space:nowrap; }
+#undo-prog { flex:1; height:4px; background:rgba(255,255,255,.08); border-radius:3px; overflow:hidden; }
+#undo-fill { height:100%; background:var(--red2); width:100%; transition:width linear; }
+#btn-undo {
+  font-family:inherit; background:var(--red2); color:#fff; border:none;
+  border-radius:8px; padding:6px 14px; font-size:.76rem; font-weight:600;
+  cursor:pointer; white-space:nowrap; touch-action:manipulation; pointer-events:all;
+}
 
 /* MSG BAR */
-#msg-bar{padding:4px 12px;text-align:center;font-size:.75rem;font-weight:700;color:var(--gold);background:rgba(0,0,0,.3);min-height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-top:1px solid rgba(255,255,255,.04)}
+#msg-bar {
+  padding: 5px 14px;
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--gold2);
+  background: rgba(8,12,18,.85);
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  letter-spacing: .5px;
+}
 
 /* MY HAND */
-#my-zone{background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.04);padding:6px;flex-shrink:0;min-height:76px}
-#my-hand{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;align-items:flex-end}
+#my-zone {
+  background: rgba(8,12,18,.9);
+  border-top: 1px solid var(--border);
+  padding: 8px;
+  flex-shrink: 0;
+  min-height: 78px;
+}
+#my-hand { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; align-items:flex-end; }
 
 /* CONTROLS */
-#controls{display:flex;gap:5px;padding:6px 8px 8px;background:rgba(0,0,0,.2);flex-shrink:0}
-.btn{flex:1;font-family:'Cairo',sans-serif;border:none;border-radius:9px;padding:9px 5px;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s;touch-action:manipulation}
-#btn-draw{background:var(--card);color:var(--gold);border:1.5px solid rgba(245,200,66,.3)}
-#btn-draw:hover{background:rgba(245,200,66,.12)}
-#btn-draw:disabled{opacity:.3;pointer-events:none}
-#btn-leave{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.1);flex:.7}
+#controls {
+  display: flex;
+  gap: 6px;
+  padding: 7px 10px 9px;
+  background: var(--bg2);
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+}
+.gbtn {
+  flex: 1;
+  font-family: inherit;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 6px;
+  font-size: .75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  touch-action: manipulation;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+#btn-draw {
+  background: var(--surface2);
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,.25);
+}
+#btn-draw:hover { background: rgba(201,168,76,.1); }
+#btn-draw:disabled { opacity:.25; pointer-events:none; }
+#btn-leave {
+  background: rgba(255,255,255,.04);
+  color: var(--text3);
+  border: 1px solid var(--border);
+  flex: .65;
+}
+#btn-leave:hover { color: var(--text2); border-color: var(--border2); }
 
-/* TILES */
-.tile{background:var(--ivory);border-radius:5px;border:1.5px solid #c8bfaa;box-shadow:1px 3px 7px var(--shadow);display:inline-flex;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s,opacity .15s;position:relative;flex-shrink:0;touch-action:manipulation}
-.tile.V{flex-direction:column;width:30px;height:56px}
-.tile.H{flex-direction:row;width:56px;height:30px}
-.tile.DBL{flex-direction:column;width:28px;height:52px}
-.chain-t{cursor:default;pointer-events:none}
-.chain-t.H{flex-direction:row;width:46px;height:25px}
-.chain-t.V{flex-direction:column;width:25px;height:46px}
-.chain-t.DBL{flex-direction:column;width:25px;height:46px}
-/* Pending tile (placed but in 5sec undo window) */
-.chain-t.pending{pointer-events:none;border-color:var(--gold)!important;box-shadow:0 0 8px rgba(245,200,66,.5)!important;animation:pendingPulse 1s ease-in-out infinite}
-@keyframes pendingPulse{0%,100%{box-shadow:0 0 6px rgba(245,200,66,.4)}50%{box-shadow:0 0 14px rgba(245,200,66,.8)}}
-.tile:hover{transform:translateY(-5px);box-shadow:1px 7px 14px var(--shadow)}
-.tile.sel{border-color:var(--gold)!important;box-shadow:0 0 0 2.5px rgba(245,200,66,.5),1px 7px 14px var(--shadow);transform:translateY(-8px)}
-.tile.dim{opacity:.28;cursor:not-allowed}
-.tile.dim:hover{transform:none;box-shadow:1px 3px 7px var(--shadow)}
-.half{flex:1;display:flex;align-items:center;justify-content:center}
-.tile.V .half:first-child,.tile.DBL .half:first-child{border-bottom:1.5px solid #b0a090}
-.tile.H .half:first-child{border-right:1.5px solid #b0a090}
-.chain-t.H .half:first-child{border-right:1.5px solid #b0a090}
-.chain-t.V .half:first-child,.chain-t.DBL .half:first-child{border-bottom:1.5px solid #b0a090}
-.pip-grid{display:grid;width:100%;height:100%;padding:3px;gap:1px}
-.pip{width:5px;height:5px;background:var(--pip);border-radius:50%;box-shadow:0 1px 1px rgba(0,0,0,.4);justify-self:center;align-self:center}
-.chain-t .pip{width:4px;height:4px}
-.pip-grid[data-n="0"]{grid-template:1fr/1fr}
-.pip-grid[data-n="1"]{grid-template:repeat(3,1fr)/repeat(3,1fr)}
-.pip-grid[data-n="2"]{grid-template:repeat(3,1fr)/repeat(3,1fr)}
-.pip-grid[data-n="3"]{grid-template:repeat(3,1fr)/repeat(3,1fr)}
-.pip-grid[data-n="4"]{grid-template:repeat(3,1fr)/repeat(3,1fr)}
-.pip-grid[data-n="5"]{grid-template:repeat(3,1fr)/repeat(3,1fr)}
-.pip-grid[data-n="6"]{grid-template:repeat(3,1fr)/repeat(3,1fr)}
+/* ═══════════════════════════════════════
+   DOMINO TILES
+   ═══════════════════════════════════════ */
+.tile {
+  background: var(--ivory);
+  border-radius: 6px;
+  border: 1.5px solid #d4c9b8;
+  box-shadow: 1px 3px 8px var(--shadow), inset 0 1px 0 rgba(255,255,255,.8);
+  display: inline-flex;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s, border-color .15s, opacity .15s;
+  position: relative;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+.tile.V { flex-direction:column; width:32px; height:60px; }
+.tile.H { flex-direction:row; width:60px; height:32px; }
+.tile.DBL { flex-direction:column; width:30px; height:56px; }
+.chain-t { cursor:default; pointer-events:none; }
+.chain-t.H { flex-direction:row; width:50px; height:27px; }
+.chain-t.V { flex-direction:column; width:27px; height:50px; }
+.chain-t.DBL { flex-direction:column; width:27px; height:50px; }
+.chain-t.pending {
+  border-color: var(--gold)!important;
+  box-shadow: 0 0 12px rgba(201,168,76,.6)!important;
+  animation: pendPulse 1s ease-in-out infinite;
+}
+@keyframes pendPulse { 0%,100%{box-shadow:0 0 8px rgba(201,168,76,.4)} 50%{box-shadow:0 0 18px rgba(201,168,76,.9)} }
+.tile:hover { transform:translateY(-6px); box-shadow:1px 8px 16px var(--shadow); }
+.tile.dim { opacity:.25; cursor:not-allowed; }
+.tile.dim:hover { transform:none; box-shadow:1px 3px 8px var(--shadow); }
+.half { flex:1; display:flex; align-items:center; justify-content:center; }
+.tile.V .half:first-child, .tile.DBL .half:first-child { border-bottom:1.5px solid #c8bfaa; }
+.tile.H .half:first-child { border-right:1.5px solid #c8bfaa; }
+.chain-t.H .half:first-child { border-right:1.5px solid #c8bfaa; }
+.chain-t.V .half:first-child, .chain-t.DBL .half:first-child { border-bottom:1.5px solid #c8bfaa; }
+.pip-grid { display:grid; width:100%; height:100%; padding:3px; gap:1px; }
+.pip {
+  width:5px; height:5px;
+  background: var(--pip);
+  border-radius:50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,.5);
+  justify-self:center; align-self:center;
+}
+.chain-t .pip { width:4px; height:4px; }
+.pip-grid[data-n="0"] { grid-template:1fr/1fr; }
+.pip-grid[data-n="1"] { grid-template:repeat(3,1fr)/repeat(3,1fr); }
+.pip-grid[data-n="2"] { grid-template:repeat(3,1fr)/repeat(3,1fr); }
+.pip-grid[data-n="3"] { grid-template:repeat(3,1fr)/repeat(3,1fr); }
+.pip-grid[data-n="4"] { grid-template:repeat(3,1fr)/repeat(3,1fr); }
+.pip-grid[data-n="5"] { grid-template:repeat(3,1fr)/repeat(3,1fr); }
+.pip-grid[data-n="6"] { grid-template:repeat(3,1fr)/repeat(3,1fr); }
 
-/* WIN */
-#win-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center}
-#win-bg.show{display:flex}
-#win-box{background:linear-gradient(160deg,#1b2d3e,#0d1b2a);border:2.5px solid var(--gold);border-radius:20px;padding:30px 36px;text-align:center;max-width:300px;width:88%;box-shadow:0 0 50px rgba(245,200,66,.2);animation:winPop .3s cubic-bezier(.34,1.56,.64,1)}
-@keyframes winPop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
-#win-emoji{font-size:2.6rem;margin-bottom:5px}
-#win-title{font-family:'Amiri',serif;font-size:1.8rem;color:var(--gold);margin-bottom:3px}
-#win-sub{color:var(--muted);font-size:.85rem;margin-bottom:18px}
-.win-btn{font-family:'Cairo',sans-serif;border:none;border-radius:10px;padding:10px 26px;font-size:.88rem;font-weight:800;cursor:pointer;display:block;width:100%;margin-bottom:7px;touch-action:manipulation}
-.win-btn.gold{background:var(--gold);color:#000}
-.win-btn.gray{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.15)}
+/* ═══════════════════════════════════════
+   NOTIFICATIONS
+   ═══════════════════════════════════════ */
+/* Prayer popup */
+#prayer-notify {
+  display:none; position:fixed; inset:0; z-index:300;
+  align-items:center; justify-content:center;
+  background:rgba(0,0,0,.8); backdrop-filter:blur(6px);
+}
+#prayer-notify.show { display:flex; }
+#prayer-box {
+  background: linear-gradient(160deg, var(--surface2), var(--bg2));
+  border: 1.5px solid rgba(201,168,76,.4);
+  border-radius: 20px;
+  padding: 30px 36px;
+  text-align: center;
+  max-width: 270px;
+  width: 88%;
+  box-shadow: 0 0 50px rgba(201,168,76,.2);
+  animation: popIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+#prayer-box .p-icon { font-size:2.2rem; }
+#prayer-box .p-name {
+  font-family:'Playfair Display',serif;
+  font-size:1.6rem; color:var(--gold2);
+  margin:10px 0 4px;
+}
+[dir="rtl"] #prayer-box .p-name { font-family:'Amiri',serif; }
+#prayer-box .p-time { font-size:.9rem; color:var(--text); margin-bottom:16px; }
+#prayer-box .p-msg { font-size:.7rem; color:var(--text3); margin-bottom:18px; }
+#btn-close-prayer {
+  background:linear-gradient(135deg,var(--gold),#a8822a);
+  color:#080c12; border:none; border-radius:10px;
+  padding:10px 26px; font-family:inherit; font-size:.85rem; font-weight:700;
+  cursor:pointer; touch-action:manipulation; pointer-events:all;
+}
 
-.spin{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--gold);border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle}
-@keyframes sp{to{transform:rotate(360deg)}}
+/* Weather toast */
+#weather-toast {
+  position:fixed; top:14px; left:50%; transform:translateX(-50%);
+  z-index:301; display:none; min-width:210px; max-width:88%;
+}
+#weather-toast.show { display:block; animation:slideDown .4s ease; }
+@keyframes slideDown { from{opacity:0;transform:translateX(-50%) translateY(-16px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+#weather-toast-inner {
+  background:linear-gradient(135deg,var(--surface2),var(--bg2));
+  border:1px solid rgba(100,180,255,.3);
+  border-radius:14px; padding:11px 16px;
+  display:flex; align-items:center; gap:10px;
+  box-shadow:0 8px 30px rgba(0,0,0,.6);
+}
+.wt-icon { font-size:1.5rem; }
+.wt-info { flex:1; }
+.wt-title { font-size:.76rem; font-weight:600; color:#90caf9; }
+.wt-sub { font-size:.62rem; color:var(--text3); }
+#btn-close-wt { background:none; border:none; color:var(--text3); font-size:.9rem; cursor:pointer; pointer-events:all; touch-action:manipulation; }
 
-#table-scroll::-webkit-scrollbar{height:4px;width:4px}
-#table-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
+/* WIN SCREEN */
+#win-bg {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.9);
+  z-index:200; align-items:center; justify-content:center;
+  backdrop-filter:blur(8px);
+}
+#win-bg.show { display:flex; }
+#win-box {
+  background:linear-gradient(160deg,var(--surface2),var(--bg2));
+  border:1.5px solid rgba(201,168,76,.35);
+  border-radius:22px; padding:36px 40px;
+  text-align:center; max-width:300px; width:88%;
+  box-shadow:0 0 60px rgba(201,168,76,.15);
+  animation:popIn .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn { from{transform:scale(.7);opacity:0} to{transform:scale(1);opacity:1} }
+#win-emoji { font-size:2.8rem; margin-bottom:8px; }
+#win-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.8rem; color:var(--gold2); margin-bottom:4px;
+}
+[dir="rtl"] #win-title { font-family:'Amiri',serif; }
+#win-sub { font-size:.8rem; color:var(--text3); margin-bottom:22px; }
+.wwin-btn {
+  width:100%; font-family:inherit; border:none; border-radius:11px;
+  padding:12px; font-size:.85rem; font-weight:600; cursor:pointer;
+  touch-action:manipulation; margin-bottom:8px; text-transform:uppercase; letter-spacing:.5px;
+}
+.wwin-btn.gold { background:linear-gradient(135deg,var(--gold),#a8822a); color:#080c12; }
+.wwin-btn.ghost { background:transparent; color:var(--text3); border:1px solid var(--border2); }
 
-@media(min-width:700px){#app{border-left:1px solid rgba(255,255,255,.06);border-right:1px solid rgba(255,255,255,.06)}body{background:#070e14}}
+/* SPINNER */
+.spin { display:inline-block; width:10px; height:10px; border:2px solid rgba(255,255,255,.15); border-top-color:var(--gold); border-radius:50%; animation:sp .6s linear infinite; vertical-align:middle; }
+@keyframes sp { to{transform:rotate(360deg)} }
+
+/* ANIMATIONS */
+@keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* SCROLLBARS */
+#table-scroll::-webkit-scrollbar { height:4px; width:4px; }
+#table-scroll::-webkit-scrollbar-thumb { background:rgba(255,255,255,.15); border-radius:3px; }
+
+@media(min-width:720px) {
+  #app { border-left:1px solid var(--border); border-right:1px solid var(--border); }
+  body { background:#040608; }
+}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- LOBBY -->
-<div id="lobby" class="screen active">
-  <h1>🁢 V3.0 دومينو</h1>
-  <p class="sub">العب مع أيه حبيبتي ❤️</p>
-  <div class="card">
-    <h3>اسمك</h3>
-    <input class="inp" id="inp-name" placeholder="اكتب اسمك" maxlength="14">
+<!-- ═══ LANDING ═══ -->
+<div id="landing" class="screen active">
+  <div class="landing-inner">
+
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <div class="logo-tiles">
+        <div class="logo-tile">
+          <div class="lh">6</div><div class="lh">6</div>
+        </div>
+        <div class="logo-tile">
+          <div class="lh">5</div><div class="lh">3</div>
+        </div>
+        <div class="logo-tile">
+          <div class="lh">4</div><div class="lh">4</div>
+        </div>
+      </div>
+      <div class="game-name" id="game-name-text">DOMINO</div>
+      <div class="game-sub" id="game-sub-text">Multiplayer · Classic · Worldwide</div>
+      <div class="version-tag">v7</div>
+    </div>
+
+    <!-- Language -->
+    <div class="lang-selector">
+      <button class="lang-btn active" data-lang="en" onclick="setLang('en')">
+        <span class="lang-flag">🇬🇧</span> English
+      </button>
+      <button class="lang-btn" data-lang="ar" onclick="setLang('ar')">
+        <span class="lang-flag">🇸🇦</span> العربية
+      </button>
+      <button class="lang-btn" data-lang="fr" onclick="setLang('fr')">
+        <span class="lang-flag">🇫🇷</span> Français
+      </button>
+    </div>
+
+    <!-- Main card -->
+    <div class="main-card">
+      <div class="name-label" id="lbl-name">YOUR NAME</div>
+      <input class="name-input" id="inp-name" placeholder="Enter your name..." maxlength="14" autocomplete="off">
+
+      <button class="pbtn primary" id="btn-create" onclick="createRoom()">
+        + <span id="lbl-create">Create Room</span>
+      </button>
+      <button class="pbtn secondary" id="btn-vs-ai" onclick="startVsAI()">
+        🤖 <span id="lbl-vsai">Play vs Computer</span>
+      </button>
+
+      <div class="divider-line"><span id="lbl-or">OR JOIN</span></div>
+
+      <div class="join-row">
+        <input class="code-input" id="inp-code" placeholder="ROOM CODE" maxlength="6" autocomplete="off">
+        <button class="pbtn join-btn" id="btn-join" onclick="joinRoom()">
+          <span id="lbl-join">Join →</span>
+        </button>
+      </div>
+      <div id="lobby-err"></div>
+    </div>
+
+    <!-- Optional Features -->
+    <div class="features-card">
+      <div class="features-title" id="lbl-features">Optional Features</div>
+
+      <div class="feature-row">
+        <div>
+          <div class="feature-label" id="lbl-prayer-feat">Prayer Times</div>
+          <div class="feature-sub" id="lbl-prayer-sub">Show daily prayer schedule</div>
+        </div>
+        <div class="toggle" id="tog-prayer" onclick="toggleFeature('prayer')"></div>
+      </div>
+
+      <div class="feature-row">
+        <div>
+          <div class="feature-label" id="lbl-hadith-feat">Daily Hadith</div>
+          <div class="feature-sub" id="lbl-hadith-sub">Rotating Islamic wisdom</div>
+        </div>
+        <div class="toggle" id="tog-hadith" onclick="toggleFeature('hadith')"></div>
+      </div>
+
+      <div class="feature-row">
+        <div>
+          <div class="feature-label" id="lbl-weather-feat">Weather</div>
+          <div class="feature-sub" id="lbl-weather-sub">Live local weather updates</div>
+        </div>
+        <div class="toggle" id="tog-weather" onclick="toggleFeature('weather')"></div>
+      </div>
+    </div>
+
   </div>
-  <div class="card">
-    <h3>🆕 لعبة جديدة</h3>
-    <button class="bbtn gold" id="btn-create">إنشاء غرفة</button>
-    <button class="bbtn gray" id="btn-vs-ai">العب ضد الكمبيوتر 🤖</button>
-    <div class="divider">— أو انضم —</div>
-    <input class="inp" id="inp-code" placeholder="كود الغرفة" maxlength="6" style="text-align:center;letter-spacing:4px;font-weight:700;text-transform:uppercase">
-    <button class="bbtn blue" id="btn-join">انضم للعبة</button>
-  </div>
-  <div id="lobby-err"></div>
 </div>
 
-<!-- WAITING -->
+<!-- ═══ WAITING ═══ -->
 <div id="waiting" class="screen">
-  <h2>غرفة اللعب</h2>
-  <p style="color:var(--muted);font-size:.8rem">ابعت الكود للمجموعة 📲</p>
-  <div class="room-code" id="room-code-display">——</div>
-  <div class="players-list" id="players-list"></div>
-  <p style="color:var(--muted);font-size:.72rem;margin:6px 0">من 2 لـ 6 لاعبين — صاحب الغرفة يبدأ</p>
-  <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px">
-    <button class="sbtn start" id="btn-start-game" style="display:none">▶ ابدأ اللعبة</button>
-    <button class="sbtn" id="btn-copy-code">📋 نسخ الكود</button>
-    <button class="sbtn danger" id="btn-cancel-wait">إلغاء</button>
+  <div class="waiting-inner">
+    <div class="wait-title" id="lbl-wait-title">Waiting for Players</div>
+    <div class="wait-sub" id="lbl-wait-sub">Share the code with your friends 📲</div>
+    <div class="code-display" id="room-code-display">——</div>
+    <div class="players-grid" id="players-list"></div>
+    <div class="wait-sub" id="lbl-wait-hint">2–6 players · Host starts the game</div>
+    <div class="wait-actions">
+      <button class="wbtn gold" id="btn-start-game" onclick="startGame()">▶ Start</button>
+      <button class="wbtn" id="btn-copy-code" onclick="copyCode()">📋 Copy</button>
+      <button class="wbtn danger" id="btn-cancel-wait" onclick="cancelWait()">✕ Cancel</button>
+    </div>
   </div>
 </div>
 
-<!-- GAME -->
+<!-- ═══ GAME ═══ -->
 <div id="game">
-  <div id="prayer-bar">
-    <div id="prayer-times-row"><span style="color:var(--muted);font-size:.6rem">⏳ مواقيت الصلاة…</span></div>
-    <span id="city-name"></span>
+  <!-- INFO BAR -->
+  <div id="info-bar">
+    <div id="prayer-mini"></div>
+    <div id="weather-mini">
+      <span id="wm-icon">🌤️</span>
+      <span id="wm-temp">--°</span>
+      <span id="wm-desc"></span>
+      <span id="city-mini"></span>
+    </div>
   </div>
+  <!-- HADITH BAR -->
   <div id="hadith-bar">
-    <div id="hadith-ar">﷽</div>
-    <div id="hadith-en"></div>
+    <div id="hadith-text">—</div>
   </div>
+  <!-- HEADER -->
   <div id="hdr">
-    <h1>🁢 دومينو</h1>
-    <div class="scores" id="scores-row"></div>
+    <div class="hdr-brand">
+      <span class="brand-name">DOMINO</span>
+      <span class="brand-v">v7</span>
+    </div>
+    <div class="scores-row" id="scores-row"></div>
   </div>
+  <!-- OPPONENTS -->
   <div id="opps-row"></div>
+  <!-- TABLE -->
   <div id="table-wrap">
     <div id="table-scroll">
       <div id="chain-container">
-        <div id="chain">
-          <div id="empty-hint" style="color:rgba(255,255,255,.2);font-size:.82rem;text-align:center;padding:24px;font-style:italic;border:2px dashed rgba(255,255,255,.1);border-radius:12px;min-width:180px">
-            اضغط على قطعة لتبدأ 🎯
-          </div>
-        </div>
+        <div id="chain"></div>
       </div>
     </div>
-    <!-- UNDO BAR inside table wrap -->
+    <!-- UNDO BAR -->
     <div id="undo-bar">
-      <span id="undo-timer-text">تراجع؟</span>
-      <div id="undo-progress"><div id="undo-fill"></div></div>
-      <button id="btn-undo">↩ تراجع</button>
+      <span id="undo-text">Undo?</span>
+      <div id="undo-prog"><div id="undo-fill"></div></div>
+      <button id="btn-undo" onclick="doUndo()">↩ Undo</button>
     </div>
   </div>
-  <div id="msg-bar">جاري التحميل…</div>
+  <div id="msg-bar">Loading…</div>
   <div id="my-zone"><div id="my-hand"></div></div>
   <div id="controls">
-    <button class="btn" id="btn-draw">سحب 🎲</button>
-    <button class="btn" id="btn-leave">خروج 🚪</button>
+    <button class="gbtn" id="btn-draw" onclick="onDraw()">🎲 Draw</button>
+    <button class="gbtn" id="btn-leave" onclick="leaveGame()">✕ Leave</button>
+  </div>
+</div>
+</div>
+
+<!-- PRAYER POPUP -->
+<div id="prayer-notify">
+  <div id="prayer-box">
+    <div class="p-icon">🕌</div>
+    <div class="p-name" id="prayer-notify-name"></div>
+    <div class="p-time" id="prayer-notify-time"></div>
+    <div class="p-msg" id="prayer-notify-msg">Prayer time</div>
+    <button id="btn-close-prayer" onclick="document.getElementById('prayer-notify').classList.remove('show')">OK ✓</button>
   </div>
 </div>
 
+<!-- WEATHER TOAST -->
+<div id="weather-toast">
+  <div id="weather-toast-inner">
+    <span class="wt-icon" id="wt-icon">🌤️</span>
+    <div class="wt-info">
+      <div class="wt-title" id="wt-title">Weather Update</div>
+      <div class="wt-sub" id="wt-sub"></div>
+    </div>
+    <button class="btn-close-wt" id="btn-close-wt" onclick="closeWeatherToast()">✕</button>
+  </div>
 </div>
 
 <!-- WIN -->
 <div id="win-bg">
   <div id="win-box">
     <div id="win-emoji">🏆</div>
-    <div id="win-title">مبروك!</div>
-    <div id="win-sub"></div>
-    <button class="win-btn gold" id="btn-win-new">العب مرة ثانية 🔄</button>
-    <button class="win-btn gray" id="btn-win-lobby">الرئيسية 🏠</button>
+    <div id="win-title">You Won!</div>
+    <div id="win-sub">Excellent play!</div>
+    <button class="wwin-btn gold" id="btn-win-new" onclick="newGame()">Play Again 🔄</button>
+    <button class="wwin-btn ghost" id="btn-win-lobby" onclick="leaveGame()">Main Menu 🏠</button>
   </div>
 </div>
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getDatabase,ref,set,get,update,onValue,remove}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+const FC={apiKey:"AIzaSyDP0I6KtiHFhdGhdhRKGs6EdEBpCaFfvDM",authDomain:"dominokimo.firebaseapp.com",databaseURL:"https://dominokimo-default-rtdb.firebaseio.com",projectId:"dominokimo",storageBucket:"dominokimo.firebasestorage.app",messagingSenderId:"808003512706",appId:"1:808003512706:web:4f650ac159854a1184879b"};
+const db=getDatabase(initializeApp(FC));
 
-const firebaseConfig={apiKey:"AIzaSyDP0I6KtiHFhdGhdhRKGs6EdEBpCaFfvDM",authDomain:"dominokimo.firebaseapp.com",databaseURL:"https://dominokimo-default-rtdb.firebaseio.com",projectId:"dominokimo",storageBucket:"dominokimo.firebasestorage.app",messagingSenderId:"808003512706",appId:"1:808003512706:web:4f650ac159854a1184879b"};
-const fbApp=initializeApp(firebaseConfig);
-const db=getDatabase(fbApp);
+// ── TRANSLATIONS ──────────────────────────────────────────
+const T={
+  en:{
+    yourName:'YOUR NAME',namePh:'Enter your name...',
+    create:'Create Room',vsai:'Play vs Computer',or:'OR JOIN',joinBtn:'Join →',
+    features:'Optional Features',prayerFeat:'Prayer Times',prayerSub:'Show daily prayer schedule',
+    hadithFeat:'Daily Hadith',hadithSub:'Rotating Islamic wisdom',
+    weatherFeat:'Weather',weatherSub:'Live local weather updates',
+    waitTitle:'Waiting for Players',waitSub:'Share the code with your friends 📲',
+    waitHint:'2–6 players · Host starts the game',
+    yourTurn:'🟢 Your turn — tap a tile!',oppTurn:'turn…',
+    cantPlay:'Cannot play — passing turn…',waitNext:'⏳ Wait for next round to join',
+    draw:'🎲 Draw',leave:'✕ Leave',playAgain:'Play Again 🔄',mainMenu:'Main Menu 🏠',
+    undo:'Undo?',prayerMsg:'Prayer time',weatherUpdate:'Weather Update',
+    boneyardEmpty:'Boneyard almost empty!',undoSec:'s',
+    gameSub:'Multiplayer · Classic · Worldwide',
+  },
+  ar:{
+    yourName:'اسمك',namePh:'اكتب اسمك...',
+    create:'إنشاء غرفة',vsai:'العب ضد الكمبيوتر',or:'أو انضم',joinBtn:'انضم ←',
+    features:'مميزات إضافية',prayerFeat:'مواقيت الصلاة',prayerSub:'جدول الصلوات اليومية',
+    hadithFeat:'حديث شريف',hadithSub:'حكمة إسلامية متغيرة',
+    weatherFeat:'الطقس',weatherSub:'تحديثات الطقس المحلي',
+    waitTitle:'في انتظار اللاعبين',waitSub:'ابعت الكود للمجموعة 📲',
+    waitHint:'من ٢ لـ ٦ لاعبين — صاحب الغرفة يبدأ',
+    yourTurn:'🟢 دورك — اضغط على قطعة!',oppTurn:'دور',
+    cantPlay:'مش قادر تلعب — هيتمرر دورك…',waitNext:'⏳ انتظر الجولة القادمة للانضمام',
+    draw:'🎲 سحب',leave:'✕ خروج',playAgain:'العب مرة ثانية 🔄',mainMenu:'الرئيسية 🏠',
+    undo:'تراجع؟',prayerMsg:'حان وقت الصلاة 🙏',weatherUpdate:'تحديث الطقس',
+    boneyardEmpty:'البازل شارف على النهاية!',undoSec:'s',
+    gameSub:'متعدد اللاعبين · كلاسيكي · عالمي',
+  },
+  fr:{
+    yourName:'VOTRE NOM',namePh:'Entrez votre nom...',
+    create:'Créer une salle',vsai:'Jouer contre l\'ordi',or:'OU REJOINDRE',joinBtn:'Rejoindre →',
+    features:'Fonctionnalités',prayerFeat:'Horaires de prière',prayerSub:'Afficher les prières',
+    hadithFeat:'Hadith du jour',hadithSub:'Sagesse islamique',
+    weatherFeat:'Météo',weatherSub:'Météo locale en direct',
+    waitTitle:'En attente de joueurs',waitSub:'Partagez le code 📲',
+    waitHint:'2–6 joueurs · L\'hôte démarre',
+    yourTurn:'🟢 Votre tour — cliquez!',oppTurn:'tour…',
+    cantPlay:'Impossible de jouer — passage…',waitNext:'⏳ Attendez le prochain tour',
+    draw:'🎲 Piocher',leave:'✕ Quitter',playAgain:'Rejouer 🔄',mainMenu:'Menu 🏠',
+    undo:'Annuler?',prayerMsg:'Heure de prière',weatherUpdate:'Météo mise à jour',
+    boneyardEmpty:'Pioche presque vide!',undoSec:'s',
+    gameSub:'Multijoueur · Classique · Mondial',
+  }
+};
 
 // ── HADITHS ──────────────────────────────────────────────
 const HADITHS=[
-  {ar:"إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى.",en:"Actions are judged by intentions, and every person will have what they intended."},
-  {ar:"المسلم من سلم المسلمون من لسانه ويده.",en:"A Muslim is one from whose tongue and hands other Muslims are safe."},
-  {ar:"لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه.",en:"None of you truly believes until he loves for his brother what he loves for himself."},
-  {ar:"تبسّمك في وجه أخيك صدقة.",en:"Your smile in the face of your brother is an act of charity."},
-  {ar:"خيركم من تعلّم القرآن وعلّمه.",en:"The best of you are those who learn the Quran and teach it."},
-  {ar:"إن الله يحب إذا عمل أحدكم عملاً أن يتقنه.",en:"Allah loves that when one of you does a task, they do it with excellence."},
-  {ar:"الصدق يهدي إلى البر، وإن البر يهدي إلى الجنة.",en:"Truthfulness leads to righteousness, and righteousness leads to Paradise."},
-  {ar:"من كان يؤمن بالله واليوم الآخر فليقل خيراً أو ليصمت.",en:"Whoever believes in Allah and the Last Day, let him speak good or remain silent."},
-  {ar:"أحب الأعمال إلى الله أدومها وإن قل.",en:"The most beloved deeds to Allah are the most consistent, even if they are few."},
-  {ar:"الكلمة الطيبة صدقة.",en:"A kind word is an act of charity."},
-  {ar:"خير الناس أنفعهم للناس.",en:"The best of people are those most beneficial to others."},
-  {ar:"من سلك طريقاً يلتمس فيه علماً سهّل الله له طريقاً إلى الجنة.",en:"Whoever travels a path seeking knowledge, Allah makes easy a path to Paradise."},
-  {ar:"الدين النصيحة.",en:"Religion is sincere advice."},
-  {ar:"البر حسن الخلق.",en:"Righteousness is good character."},
-  {ar:"اتق الله حيثما كنت، وأتبع السيئة الحسنة تمحها.",en:"Fear Allah wherever you are, and follow a bad deed with a good one to erase it."},
+  {ar:"إنما الأعمال بالنيات.",en:"Actions are judged by intentions.",fr:"Les actes sont jugés par les intentions."},
+  {ar:"المسلم من سلم المسلمون من لسانه ويده.",en:"A Muslim is one whose tongue and hands others are safe from.",fr:"Un musulman est celui dont la langue et les mains ne nuisent pas aux autres."},
+  {ar:"لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه.",en:"None truly believes until he loves for his brother what he loves for himself.",fr:"Nul ne croit vraiment jusqu'à ce qu'il aime pour son frère ce qu'il aime pour lui-même."},
+  {ar:"تبسّمك في وجه أخيك صدقة.",en:"Your smile for your brother is charity.",fr:"Ton sourire envers ton frère est une aumône."},
+  {ar:"خيركم من تعلّم القرآن وعلّمه.",en:"The best of you are those who learn the Quran and teach it.",fr:"Le meilleur d'entre vous est celui qui apprend le Coran et l'enseigne."},
+  {ar:"الكلمة الطيبة صدقة.",en:"A kind word is charity.",fr:"Une bonne parole est une aumône."},
+  {ar:"خير الناس أنفعهم للناس.",en:"The best people are those most beneficial to others.",fr:"Les meilleures personnes sont celles qui profitent le plus aux autres."},
+  {ar:"الدين النصيحة.",en:"Religion is sincere advice.",fr:"La religion est le conseil sincère."},
+  {ar:"البر حسن الخلق.",en:"Righteousness is good character.",fr:"La piété, c'est avoir un bon caractère."},
+  {ar:"أحب الأعمال إلى الله أدومها وإن قل.",en:"The most beloved deeds to Allah are the most consistent, even if few.",fr:"Les actes les plus aimés d'Allah sont les plus réguliers, même s'ils sont peu nombreux."},
 ];
-let hadithIdx=Math.floor(Math.random()*HADITHS.length);
-function showHadith(){
-  const h=HADITHS[hadithIdx%HADITHS.length];
-  document.getElementById('hadith-ar').textContent='❝ '+h.ar+' ❞';
-  document.getElementById('hadith-en').textContent='❝ '+h.en+' ❞';
-  hadithIdx++;
-}
-showHadith();
-setInterval(showHadith,60000);
 
-// ── PRAYER TIMES ──────────────────────────────────────────
-const PRAYER_NAMES={Fajr:'الفجر',Sunrise:'الشروق',Dhuhr:'الظهر',Asr:'العصر',Maghrib:'المغرب',Isha:'العشاء'};
-const PRAYER_KEYS=['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
-async function loadPrayerTimes(){
-  try{
-    let lat,lon,city='';
-    try{
-      const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:6000}));
-      lat=pos.coords.latitude;lon=pos.coords.longitude;
-      try{const cr=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);const cd=await cr.json();city=cd.address?.city||cd.address?.town||cd.address?.state||'';}catch(e){}
-    }catch(e){
-      const ipR=await fetch('https://ipapi.co/json/');const ipD=await ipR.json();
-      lat=ipD.latitude;lon=ipD.longitude;city=ipD.city||'';
-    }
-    const today=new Date();
-    const url=`https://api.aladhan.com/v1/timings/${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}?latitude=${lat}&longitude=${lon}&method=4`;
-    const r=await fetch(url);const d=await r.json();
-    renderPrayerTimes(d.data.timings,city);
-  }catch(e){document.getElementById('prayer-times-row').innerHTML='<span style="color:var(--muted);font-size:.6rem">مواقيت الصلاة غير متاحة</span>';}
-}
-function renderPrayerTimes(timings,city){
-  const row=document.getElementById('prayer-times-row');row.innerHTML='';
-  const now=new Date();const nowMin=now.getHours()*60+now.getMinutes();
-  let nextKey=null,minDiff=Infinity;
-  PRAYER_KEYS.forEach(k=>{const t=timings[k];if(!t)return;const[h,m]=t.split(':').map(Number);const diff=(h*60+m)-nowMin;if(diff>0&&diff<minDiff){minDiff=diff;nextKey=k}});
-  PRAYER_KEYS.forEach(k=>{
-    const t=timings[k];if(!t)return;
-    const item=document.createElement('div');item.className='prayer-item'+(k===nextKey?' next-prayer':'');
-    item.innerHTML=`<span class="pname">${PRAYER_NAMES[k]||k}</span><span class="ptime">${t}</span>`;
-    row.appendChild(item);
-  });
-  if(city)document.getElementById('city-name').textContent='📍'+city;
-}
-
-// ── PIPS ─────────────────────────────────────────────────
-const PIP_MAP={0:[],1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
-function makePips(n){
-  const g=document.createElement('div');g.className='pip-grid';g.dataset.n=n;
-  for(let i=1;i<=9;i++){const c=document.createElement('div');if(PIP_MAP[n].includes(i)){const p=document.createElement('div');p.className='pip';c.appendChild(p)}g.appendChild(c);}
-  return g;
-}
-function makeTileEl(a,b,cls,isChain=false){
-  const t=document.createElement('div');t.className=(isChain?'tile chain-t ':'tile ')+cls;
-  const h1=document.createElement('div');h1.className='half';
-  const h2=document.createElement('div');h2.className='half';
-  h1.appendChild(makePips(a));h2.appendChild(makePips(b));
-  t.appendChild(h1);t.appendChild(h2);return t;
-}
-
-// ── GAME LOGIC ────────────────────────────────────────────
-function allTiles(){const t=[];for(let a=0;a<=6;a++)for(let b=a;b<=6;b++)t.push([a,b]);return t}
-function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function canFit(a,b,end){if(end===-1)return true;return a===end||b===end}
-function isDouble(a,b){return a===b}
-function sumHand(h){return(h||[]).reduce((s,[a,b])=>s+a+b,0)}
-function handCanPlay(hand,lE,rE){if(lE===-1)return true;return(hand||[]).some(([a,b])=>canFit(a,b,lE)||canFit(a,b,rE))}
-
-function placeTile(chain,lE,rE,a,b,side){
-  const nc=[...chain];let nL=lE,nR=rE;const dbl=isDouble(a,b);
-  if(lE===-1){nc.push({a,b,dbl});nL=a;nR=b;}
-  else if(side==='left'){
-    const flip=b===lE;nc.unshift({a:flip?b:a,b:flip?a:b,dbl});
-    nL=dbl?a:(flip?a:b);
-  }else{
-    const flip=a===rE;nc.push({a:flip?b:a,b:flip?a:b,dbl});
-    nR=dbl?b:(flip?b:a);
-  }
-  return{chain:nc,leftEnd:nL,rightEnd:nR};
-}
-
-// Choose best side automatically
-function chooseSide(a,b,lE,rE,chain){
-  const canL=canFit(a,b,lE);const canR=canFit(a,b,rE);
-  if(!canL&&!canR)return null;
-  if(canL&&!canR)return 'left';
-  if(!canL&&canR)return 'right';
-  // Both sides — prefer right (more natural), unless left end has bigger number
-  return lE>=rE?'left':'right';
+// ── WEATHER ───────────────────────────────────────────────
+function wIcon(c){if(c===0)return'☀️';if(c<=2)return'⛅';if(c===3)return'☁️';if(c<=49)return'🌫️';if(c<=69)return'🌧️';if(c<=79)return'❄️';if(c<=94)return'⛈️';return'🌩️'}
+function wDesc(c,lang){
+  const d={en:['Clear','Partly cloudy','Overcast','Fog','Drizzle','Rain','Snow','Showers','Thunderstorm'],ar:['صحو','غيوم جزئية','غائم','ضباب','رذاذ','مطر','ثلج','أمطار','عاصفة'],fr:['Dégagé','Partiellement nuageux','Couvert','Brouillard','Bruine','Pluie','Neige','Averses','Orage']};
+  const idx=c===0?0:c<=2?1:c===3?2:c<=49?3:c<=59?4:c<=69?5:c<=79?6:c<=84?7:8;
+  return d[lang]?.[idx]||d.en[idx];
 }
 
 // ── STATE ─────────────────────────────────────────────────
+let lang='en', features={prayer:false,hadith:false,weather:false};
 let myId=null,myName='',roomId=null,myRole=null;
 let isHost=false,vsAI=false;
 let unsubRoom=null,unsubGame=null;
 let lastGS=null,localScores={};
-// Undo state
-let pendingMove=null; // {prevGS, timeout}
-let undoTimer=null,undoInterval=null;
+let pendingMove=null,undoTimer=null,undoInterval=null;
+let locationLoaded=false,lastWCode=null,wToastTimer=null;
+let notifiedPrayers=new Set();
+let hadithIdx=Math.floor(Math.random()*HADITHS.length);
 
-function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:5},()=>c[Math.floor(Math.random()*c.length)]).join('')}
-function genId(){return Math.random().toString(36).slice(2,10)}
-function lobbyErr(t){document.getElementById('lobby-err').textContent=t}
-function setMsg(t){document.getElementById('msg-bar').innerHTML=t}
-function showScreen(id){document.querySelectorAll('.screen,#game').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+// expose globals
+window.setLang=setLang;
+window.toggleFeature=toggleFeature;
+window.createRoom=createRoom;
+window.startVsAI=startVsAI;
+window.joinRoom=joinRoom;
+window.startGame=startGame;
+window.cancelWait=cancelWait;
+window.copyCode=copyCode;
+window.onDraw=onDraw;
+window.leaveGame=leaveGame;
+window.newGame=newGame;
+window.doUndo=doUndo;
+window.closeWeatherToast=closeWeatherToast;
 
-// ── RENDER CHAIN ──────────────────────────────────────────
-function renderChain(gs){
-  const chain=gs.chain||[];
-  const el=document.getElementById('chain');
-  el.innerHTML='';
-  const activePlayers=gs.activePlayers||[];
-  const amActive=activePlayers.includes(myRole);
-
-  if(chain.length===0){
-    const hint=document.createElement('div');
-    hint.id='empty-hint';
-    hint.style.cssText='color:rgba(255,255,255,.2);font-size:.82rem;text-align:center;padding:24px;font-style:italic;border:2px dashed rgba(255,255,255,.1);border-radius:12px;min-width:180px';
-    hint.textContent=amActive&&gs.turn===myRole?'اضغط على قطعة لتبدأ 🎯':'في انتظار…';
-    el.appendChild(hint);
-    return;
-  }
-
-  chain.forEach(({a,b,dbl},idx)=>{
-    const cls=dbl?'DBL':'H';
-    const t=makeTileEl(a,b,cls,true);
-    // Mark pending tile
-    if(gs.pendingIdx!==undefined&&gs.pendingIdx!==null&&idx===gs.pendingIdx&&gs.pendingRole===myRole){
-      t.classList.add('pending');
-    }
-    el.appendChild(t);
-  });
-
-  // Scroll to center / end
-  setTimeout(()=>{
-    const s=document.getElementById('table-scroll');
-    // Center the chain
-    const container=document.getElementById('chain-container');
-    const chainEl=document.getElementById('chain');
-    const cw=chainEl.offsetWidth;const sw=s.offsetWidth;
-    if(cw<sw){
-      // Center it
-      s.scrollLeft=Math.max(0,(cw-sw)/2);
-    }else{
-      s.scrollLeft=(cw-sw)/2+cw/2;
-    }
-  },50);
+// ── LANGUAGE ──────────────────────────────────────────────
+function setLang(l){
+  lang=l;
+  document.documentElement.lang=l;
+  document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===l));
+  applyTranslations();
 }
 
-// ── RENDER OPPS ───────────────────────────────────────────
+function applyTranslations(){
+  const t=T[lang];
+  const ids={
+    'lbl-name':'yourName','lbl-create':'create','lbl-vsai':'vsai','lbl-or':'or',
+    'lbl-join':'joinBtn','lbl-features':'features','lbl-prayer-feat':'prayerFeat',
+    'lbl-prayer-sub':'prayerSub','lbl-hadith-feat':'hadithFeat','lbl-hadith-sub':'hadithSub',
+    'lbl-weather-feat':'weatherFeat','lbl-weather-sub':'weatherSub',
+    'lbl-wait-title':'waitTitle','lbl-wait-sub':'waitSub','lbl-wait-hint':'waitHint',
+    'game-sub-text':'gameSub',
+  };
+  Object.entries(ids).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=t[key]});
+  document.getElementById('inp-name').placeholder=t.namePh;
+  document.getElementById('btn-draw').innerHTML=t.draw;
+  document.getElementById('btn-leave').innerHTML=t.leave;
+  document.getElementById('btn-win-new').innerHTML=t.playAgain;
+  document.getElementById('btn-win-lobby').innerHTML=t.mainMenu;
+  document.getElementById('btn-undo').innerHTML='↩ '+t.undo.replace('?','');
+  document.getElementById('prayer-notify-msg').textContent=t.prayerMsg;
+  document.getElementById('wt-title').textContent=t.weatherUpdate;
+}
+applyTranslations();
+
+// ── FEATURES ──────────────────────────────────────────────
+function toggleFeature(f){
+  features[f]=!features[f];
+  document.getElementById('tog-'+f).classList.toggle('on',features[f]);
+  updateFeatureUI();
+}
+function updateFeatureUI(){
+  document.getElementById('hadith-bar').classList.toggle('visible',features.hadith);
+  // prayer + weather go to info-bar
+  const showInfo=features.prayer||features.weather;
+  document.getElementById('info-bar').classList.toggle('visible',showInfo);
+  if(features.hadith) rotateHadith();
+}
+function rotateHadith(){
+  const h=HADITHS[hadithIdx%HADITHS.length];
+  const ar=lang==='ar'||features.prayer; // show Arabic if Arabic lang
+  let txt='';
+  if(lang==='ar') txt='❝ '+h.ar+' ❞';
+  else if(lang==='fr') txt='❝ '+h.fr+' ❞  ·  ❝ '+h.en+' ❞';
+  else txt='❝ '+h.en+' ❞  ·  ❝ '+h.ar+' ❞';
+  document.getElementById('hadith-text').textContent=txt;
+  hadithIdx++;
+}
+setInterval(()=>{if(features.hadith)rotateHadith()},60000);
+
+// ── LOCATION DATA ─────────────────────────────────────────
+async function loadLocationData(){
+  if(locationLoaded)return;
+  locationLoaded=true;
+  if(!features.prayer&&!features.weather)return;
+  try{
+    let lat,lon,city='';
+    try{
+      const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:7000,maximumAge:3600000}));
+      lat=pos.coords.latitude;lon=pos.coords.longitude;
+      try{const cr=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);const cd=await cr.json();city=cd.address?.city||cd.address?.town||cd.address?.state||'';}catch(e){}
+    }catch(e){
+      const ip=await(await fetch('https://ipapi.co/json/')).json();
+      lat=ip.latitude;lon=ip.longitude;city=ip.city||'';
+    }
+    const today=new Date();
+    const promises=[];
+    if(features.prayer){
+      promises.push(fetch(`https://api.aladhan.com/v1/timings/${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}?latitude=${lat}&longitude=${lon}&method=4`).then(r=>r.json()).then(d=>{renderPrayer(d.data.timings,city);startPrayerChecker(d.data.timings);}));
+    }
+    if(features.weather){
+      promises.push(loadWeather(lat,lon,city));
+      setInterval(()=>loadWeather(lat,lon,city),600000);
+    }
+    await Promise.allSettled(promises);
+  }catch(e){}
+}
+
+// ── PRAYER ────────────────────────────────────────────────
+const PNAMES={en:{Fajr:'Fajr',Sunrise:'Sunrise',Dhuhr:'Dhuhr',Asr:'Asr',Maghrib:'Maghrib',Isha:'Isha'},ar:{Fajr:'الفجر',Sunrise:'الشروق',Dhuhr:'الظهر',Asr:'العصر',Maghrib:'المغرب',Isha:'العشاء'},fr:{Fajr:'Fajr',Sunrise:'Lever',Dhuhr:'Dhohr',Asr:'Asr',Maghrib:'Maghrib',Isha:'Icha'}};
+const PKEYS=['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
+function renderPrayer(t,city){
+  const row=document.getElementById('prayer-mini');row.innerHTML='';
+  const now=new Date();const nm=now.getHours()*60+now.getMinutes();
+  let nk=null,md=Infinity;
+  PKEYS.forEach(k=>{const v=t[k];if(!v)return;const[h,m]=v.split(':').map(Number);const d=(h*60+m)-nm;if(d>0&&d<md){md=d;nk=k}});
+  PKEYS.forEach(k=>{const v=t[k];if(!v)return;const el=document.createElement('div');el.className='pm-item'+(k===nk?' next':'');el.innerHTML=`<span class="pm-name">${PNAMES[lang]?.[k]||k}</span><span class="pm-time">${v}</span>`;row.appendChild(el)});
+  if(city){const c=document.createElement('span');c.id='city-mini-p';c.style.cssText='font-size:.48rem;color:var(--text3);margin-right:4px';c.textContent='📍'+city;row.prepend(c)}
+}
+function startPrayerChecker(t){
+  setInterval(()=>{
+    const now=new Date();const h=now.getHours(),m=now.getMinutes(),s=now.getSeconds();
+    if(s!==0)return;
+    const ns=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    PKEYS.forEach(k=>{if(t[k]===ns&&!notifiedPrayers.has(ns+'_'+k)){notifiedPrayers.add(ns+'_'+k);document.getElementById('prayer-notify-name').textContent=PNAMES[lang]?.[k]||k;document.getElementById('prayer-notify-time').textContent=ns;document.getElementById('prayer-notify').classList.add('show');}});
+  },1000);
+}
+
+// ── WEATHER ───────────────────────────────────────────────
+async function loadWeather(lat,lon,city){
+  try{
+    const d=await(await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&wind_speed_unit=kmh&timezone=auto`)).json();
+    const c=d.current,code=c.weather_code,temp=Math.round(c.temperature_2m);
+    const icon=wIcon(code),desc=wDesc(code,lang);
+    document.getElementById('wm-icon').textContent=icon;
+    document.getElementById('wm-temp').textContent=temp+'°C';
+    document.getElementById('wm-desc').textContent=desc;
+    document.getElementById('city-mini').textContent=city?'· 📍'+city:'';
+    if(lastWCode!==null&&lastWCode!==code){showWeatherToast(icon,desc,temp);}
+    lastWCode=code;
+  }catch(e){}
+}
+function showWeatherToast(icon,desc,temp){
+  if(wToastTimer)clearTimeout(wToastTimer);
+  document.getElementById('wt-icon').textContent=icon;
+  document.getElementById('wt-title').textContent=T[lang].weatherUpdate;
+  document.getElementById('wt-sub').textContent=`${desc} — ${temp}°C`;
+  document.getElementById('weather-toast').classList.add('show');
+  wToastTimer=setTimeout(closeWeatherToast,5000);
+}
+function closeWeatherToast(){document.getElementById('weather-toast').classList.remove('show');if(wToastTimer){clearTimeout(wToastTimer);wToastTimer=null}}
+
+// ── PIPS ─────────────────────────────────────────────────
+const PM={0:[],1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
+function mkPips(n){const g=document.createElement('div');g.className='pip-grid';g.dataset.n=n;for(let i=1;i<=9;i++){const c=document.createElement('div');if(PM[n].includes(i)){const p=document.createElement('div');p.className='pip';c.appendChild(p)}g.appendChild(c)}return g}
+function mkTile(a,b,cls,chain=false){const t=document.createElement('div');t.className=(chain?'tile chain-t ':'tile ')+cls;const h1=document.createElement('div');h1.className='half';const h2=document.createElement('div');h2.className='half';h1.appendChild(mkPips(a));h2.appendChild(mkPips(b));t.appendChild(h1);t.appendChild(h2);return t}
+
+// ── GAME LOGIC ────────────────────────────────────────────
+function allTiles(){const t=[];for(let a=0;a<=6;a++)for(let b=a;b<=6;b++)t.push([a,b]);return t}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function canFit(a,b,e){if(e===-1)return true;return a===e||b===e}
+function handCanPlay(h,lE,rE){if(lE===-1)return true;return(h||[]).some(([a,b])=>canFit(a,b,lE)||canFit(a,b,rE))}
+function sumHand(h){return(h||[]).reduce((s,[a,b])=>s+a+b,0)}
+function chooseSide(a,b,lE,rE){const cL=canFit(a,b,lE),cR=canFit(a,b,rE);if(!cL&&!cR)return null;if(cL&&!cR)return'left';if(!cL&&cR)return'right';return'right'}
+
+function placeTile(chain,lE,rE,a,b,side){
+  const nc=[...chain];const dbl=a===b;
+  if(lE===-1){nc.push({a,b,dbl});return{chain:nc,leftEnd:a,rightEnd:b}}
+  if(side==='left'){
+    let na,nb;
+    if(b===lE){na=a;nb=b}else{na=b;nb=a}
+    nc.unshift({a:na,b:nb,dbl});
+    return{chain:nc,leftEnd:dbl?nb:na,rightEnd:rE}
+  }else{
+    let na,nb;
+    if(a===rE){na=a;nb=b}else{na=b;nb=a}
+    nc.push({a:na,b:nb,dbl});
+    return{chain:nc,leftEnd:lE,rightEnd:dbl?na:nb}
+  }
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function renderChain(gs){
+  const chain=gs.chain||[],el=document.getElementById('chain');el.innerHTML='';
+  const amActive=(gs.activePlayers||[]).includes(myRole);
+  if(!chain.length){
+    const h=document.createElement('div');
+    h.style.cssText='color:rgba(255,255,255,.15);font-size:.78rem;text-align:center;padding:20px 28px;font-style:italic;border:1px dashed rgba(255,255,255,.08);border-radius:12px;min-width:150px;font-family:Inter,sans-serif';
+    h.textContent=amActive&&gs.turn===myRole?T[lang].yourTurn.split('—')[1]?.trim()||'Tap a tile…':'Waiting…';
+    el.appendChild(h);return;
+  }
+  chain.forEach(({a,b,dbl},idx)=>{
+    const cls=dbl?'DBL':'H';
+    const t=mkTile(a,b,cls,true);
+    if(gs.pendingIdx!=null&&idx===gs.pendingIdx&&gs.pendingRole===myRole)t.classList.add('pending');
+    el.appendChild(t);
+  });
+  setTimeout(()=>{const s=document.getElementById('table-scroll');const c=document.getElementById('chain');s.scrollLeft=c.offsetWidth<s.offsetWidth?0:(c.offsetWidth-s.offsetWidth)/2},50);
+}
+
 function renderOpps(gs){
   const row=document.getElementById('opps-row');row.innerHTML='';
   const scRow=document.getElementById('scores-row');scRow.innerHTML='';
-  const roles=gs.activePlayers||[];
-  const waiting=gs.waitingPlayers||[];
-
+  const roles=gs.activePlayers||[],waiting=gs.waitingPlayers||[];
   roles.forEach(role=>{
     if(role===myRole)return;
-    const name=gs.names?.[role]||role;
-    const hand=gs[role+'Hand']||[];
-    const sc=localScores[role]||0;
-    const isT=gs.turn===role;
+    const name=gs.names?.[role]||role,hand=gs[role+'Hand']||[],sc=localScores[role]||0,isT=gs.turn===role;
     const info=document.createElement('div');info.className='opp-info';
-    const nm=document.createElement('div');nm.className='opp-name';
-    nm.textContent=`${name}(${hand.length})${isT?' 🟢':''}`;
+    const nm=document.createElement('div');nm.className='opp-name';nm.textContent=`${name}(${hand.length})${isT?' ●':''}`;
     const tr=document.createElement('div');tr.className='opp-tiles-row';
     hand.slice(0,12).forEach(()=>{const bt=document.createElement('div');bt.className='back-tile';tr.appendChild(bt)});
     info.appendChild(nm);info.appendChild(tr);row.appendChild(info);
     const sb=document.createElement('div');sb.className='sbox'+(isT?' myturn':'');
-    sb.innerHTML=`<div class="sl">${name}</div><div class="sv">${sc}</div>`;
-    scRow.appendChild(sb);
+    sb.innerHTML=`<div class="sl">${name}</div><div class="sv">${sc}</div>`;scRow.appendChild(sb);
   });
-
-  if(waiting.length>0){
-    const wb=document.createElement('div');wb.className='waiting-badge';
-    wb.textContent=`⏳ ${waiting.map(r=>gs.names?.[r]||r).join('، ')}`;
-    row.appendChild(wb);
-  }
-
-  const myName2=gs.names?.[myRole]||'أنا';
-  const mysc=localScores[myRole]||0;
-  const isMyT=gs.turn===myRole;
+  if(waiting.length){const wb=document.createElement('div');wb.className='wait-badge';wb.textContent=`⏳ ${waiting.map(r=>gs.names?.[r]||r).join(', ')}`;row.appendChild(wb)}
+  const mn=gs.names?.[myRole]||'Me',msc=localScores[myRole]||0,isMyT=gs.turn===myRole;
   const msb=document.createElement('div');msb.className='sbox'+(isMyT?' myturn':'');
-  msb.innerHTML=`<div class="sl">${myName2}</div><div class="sv">${mysc}</div>`;
-  scRow.appendChild(msb);
+  msb.innerHTML=`<div class="sl">${mn}</div><div class="sv">${msc}</div>`;scRow.appendChild(msb);
 }
 
-// ── RENDER HAND ───────────────────────────────────────────
 function renderHand(gs){
-  const myHand=gs[myRole+'Hand']||[];
-  const lE=gs.leftEnd,rE=gs.rightEnd;
-  const activePlayers=gs.activePlayers||[];
-  const amActive=activePlayers.includes(myRole);
-  const isMyT=gs.turn===myRole&&!gs.winner&&amActive;
-  const inUndo=pendingMove!==null;
+  const myHand=gs[myRole+'Hand']||[],lE=gs.leftEnd,rE=gs.rightEnd;
+  const active=(gs.activePlayers||[]).includes(myRole);
+  const isMyT=gs.turn===myRole&&!gs.winner&&active;
+  const inUndo=!!pendingMove;
   const el=document.getElementById('my-hand');el.innerHTML='';
-
-  if(!amActive){
-    el.innerHTML='<div style="color:var(--muted);font-size:.78rem;padding:14px;text-align:center">⏳ انتظر الجولة القادمة…</div>';
-    document.getElementById('btn-draw').disabled=true;
-    return;
-  }
-
+  if(!active){el.innerHTML=`<div style="color:var(--text3);font-size:.75rem;padding:14px;text-align:center">${T[lang].waitNext}</div>`;document.getElementById('btn-draw').disabled=true;return}
   myHand.forEach(([a,b],i)=>{
-    const canL=canFit(a,b,lE),canR=canFit(a,b,rE);
-    const playable=myHand.length>0&&((gs.chain||[]).length===0||(canL||canR));
-    const t=makeTileEl(a,b,'V');
-    if(inUndo){t.classList.add('dim')}
-    else if(!isMyT||!playable){t.classList.add('dim')}
-    else{
-      t.addEventListener('click',()=>onTapTile(i));
-      t.addEventListener('touchend',(e)=>{e.preventDefault();onTapTile(i)});
-    }
+    const cL=canFit(a,b,lE),cR=canFit(a,b,rE);
+    const playable=!gs.chain?.length||(cL||cR);
+    const t=mkTile(a,b,'V');
+    if(inUndo||!isMyT||!playable)t.classList.add('dim');
+    else{t.addEventListener('click',()=>onTap(i));t.addEventListener('touchend',e=>{e.preventDefault();onTap(i)})}
     el.appendChild(t);
   });
   document.getElementById('btn-draw').disabled=!isMyT||inUndo;
 }
 
-// ── TAP TO PLAY ───────────────────────────────────────────
-function onTapTile(idx){
-  const gs=lastGS;
-  if(!gs||gs.turn!==myRole||gs.winner||pendingMove!==null)return;
-  const activePlayers=gs.activePlayers||[];
-  if(!activePlayers.includes(myRole))return;
-  const myHand=gs[myRole+'Hand']||[];
-  if(idx>=myHand.length)return;
-  const[a,b]=myHand[idx];
-  const lE=gs.leftEnd,rE=gs.rightEnd;
-  const side=chooseSide(a,b,lE,rE,gs.chain||[]);
-  if(!side&&(gs.chain||[]).length>0)return;
+function onTap(idx){
+  const gs=lastGS;if(!gs||gs.turn!==myRole||gs.winner||pendingMove)return;
+  if(!(gs.activePlayers||[]).includes(myRole))return;
+  const hand=gs[myRole+'Hand']||[];if(idx>=hand.length)return;
+  const[a,b]=hand[idx];const side=chooseSide(a,b,gs.leftEnd,gs.rightEnd);
+  if(!side&&(gs.chain||[]).length)return;
   doPlay(idx,side||'right');
 }
 
-// ── PLAY ─────────────────────────────────────────────────
 async function doPlay(idx,side){
-  const gs=lastGS;
-  if(!gs||gs.turn!==myRole||gs.winner)return;
-  const activePlayers=gs.activePlayers||[];
-  if(!activePlayers.includes(myRole))return;
-  const myHand=[...(gs[myRole+'Hand']||[])];
-  if(idx>=myHand.length)return;
-  const[a,b]=myHand[idx];
-  const lE=gs.leftEnd,rE=gs.rightEnd;
-  if((gs.chain||[]).length>0){
-    const canL=canFit(a,b,lE),canR=canFit(a,b,rE);
-    if(!canL&&!canR)return;
-    if(side==='left'&&!canL)side='right';
-    if(side==='right'&&!canR)side='left';
+  const gs=lastGS;if(!gs||gs.turn!==myRole||gs.winner)return;
+  if(!(gs.activePlayers||[]).includes(myRole))return;
+  const myHand=[...(gs[myRole+'Hand']||[])];if(idx>=myHand.length)return;
+  const[a,b]=myHand[idx],lE=gs.leftEnd,rE=gs.rightEnd;
+  if((gs.chain||[]).length){
+    const cL=canFit(a,b,lE),cR=canFit(a,b,rE);
+    if(!cL&&!cR)return;
+    if(side==='left'&&!cL)side='right';
+    if(side==='right'&&!cR)side='left';
   }
   myHand.splice(idx,1);
   const res=placeTile(gs.chain||[],lE,rE,a,b,side);
-  const roles=activePlayers;
-  const myIdx=roles.indexOf(myRole);
-  const nextRole=roles[(myIdx+1)%roles.length];
+  const roles=gs.activePlayers||[],myIdx=roles.indexOf(myRole),nextRole=roles[(myIdx+1)%roles.length];
   let winner=null;
-  if(myHand.length===0){winner=myRole}
+  if(!myHand.length)winner=myRole;
   else{
     const allBlocked=roles.every(r=>{const h=r===myRole?myHand:(gs[r+'Hand']||[]);return !handCanPlay(h,res.leftEnd,res.rightEnd)});
-    if(allBlocked&&(!gs.boneyard||gs.boneyard.length===0)){
-      let minSum=Infinity;
-      roles.forEach(r=>{const h=r===myRole?myHand:(gs[r+'Hand']||[]);const s=sumHand(h);if(s<minSum){minSum=s;winner=r}});
-    }
+    if(allBlocked&&!gs.boneyard?.length){let ms=Infinity;roles.forEach(r=>{const h=r===myRole?myHand:(gs[r+'Hand']||[]);const s=sumHand(h);if(s<ms){ms=s;winner=r}})}
   }
-
-  // Mark pending (last tile in chain)
-  const pendingIdx=res.chain.length-1;
-
-  // Save prev state for undo
-  pendingMove={
-    prevHand:[...(gs[myRole+'Hand']||[])],
-    prevChain:[...(gs.chain||[])],
-    prevLeft:gs.leftEnd,prevRight:gs.rightEnd,
-    prevTurn:gs.turn,
-    winner,
-  };
-
-  const updates={
-    [`rooms/${roomId}/game/${myRole}Hand`]:myHand,
-    [`rooms/${roomId}/game/chain`]:res.chain,
-    [`rooms/${roomId}/game/leftEnd`]:res.leftEnd,
-    [`rooms/${roomId}/game/rightEnd`]:res.rightEnd,
-    [`rooms/${roomId}/game/pendingRole`]:myRole,
-    [`rooms/${roomId}/game/pendingIdx`]:pendingIdx,
-    [`rooms/${roomId}/game/turn`]:winner?myRole:myRole, // keep turn on me during undo window
-  };
-  if(winner)updates[`rooms/${roomId}/game/winner`]=winner;
-  await update(ref(db),updates);
-
-  if(winner){endGame(winner,gs.names);pendingMove=null;return}
-
-  // Start 5 second undo window
-  startUndoTimer(nextRole,5);
+  const pendingIdx=side==='left'?0:res.chain.length-1;
+  pendingMove={prevHand:[...(gs[myRole+'Hand']||[])],prevChain:[...(gs.chain||[])],prevLeft:gs.leftEnd,prevRight:gs.rightEnd,prevTurn:gs.turn,winner};
+  const upd={[`rooms/${roomId}/game/${myRole}Hand`]:myHand,[`rooms/${roomId}/game/chain`]:res.chain,[`rooms/${roomId}/game/leftEnd`]:res.leftEnd,[`rooms/${roomId}/game/rightEnd`]:res.rightEnd,[`rooms/${roomId}/game/pendingRole`]:myRole,[`rooms/${roomId}/game/pendingIdx`]:pendingIdx,[`rooms/${roomId}/game/turn`]:myRole};
+  if(winner)upd[`rooms/${roomId}/game/winner`]=winner;
+  await update(ref(db),upd);
+  startUndo(nextRole,5);
 }
 
-// ── UNDO TIMER ────────────────────────────────────────────
-function startUndoTimer(nextRole,seconds){
-  const bar=document.getElementById('undo-bar');
-  const fill=document.getElementById('undo-fill');
-  const txt=document.getElementById('undo-timer-text');
-  bar.classList.add('show');
-  fill.style.transition='none';
-  fill.style.width='100%';
-  setTimeout(()=>{
-    fill.style.transition=`width ${seconds}s linear`;
-    fill.style.width='0%';
-  },30);
-
-  let remaining=seconds;
-  txt.textContent=`تراجع؟ (${remaining}s)`;
-  undoInterval=setInterval(()=>{
-    remaining--;
-    txt.textContent=`تراجع؟ (${remaining}s)`;
-    if(remaining<=0){clearInterval(undoInterval);undoInterval=null}
-  },1000);
-
+function startUndo(nextRole,secs){
+  const bar=document.getElementById('undo-bar'),fill=document.getElementById('undo-fill'),txt=document.getElementById('undo-text');
+  bar.classList.add('show');fill.style.transition='none';fill.style.width='100%';
+  setTimeout(()=>{fill.style.transition=`width ${secs}s linear`;fill.style.width='0%'},30);
+  let rem=secs;txt.textContent=T[lang].undo+` (${rem}${T[lang].undoSec})`;
+  undoInterval=setInterval(()=>{rem--;txt.textContent=T[lang].undo+` (${rem}${T[lang].undoSec})`;if(!rem){clearInterval(undoInterval);undoInterval=null}},1000);
   undoTimer=setTimeout(async()=>{
-    // Commit — pass turn to next player
-    bar.classList.remove('show');
-    pendingMove=null;
-    const updates={
-      [`rooms/${roomId}/game/turn`]:nextRole,
-      [`rooms/${roomId}/game/pendingRole`]:null,
-      [`rooms/${roomId}/game/pendingIdx`]:null,
-    };
-    await update(ref(db),updates);
+    bar.classList.remove('show');const pm=pendingMove;pendingMove=null;
+    await update(ref(db),{[`rooms/${roomId}/game/turn`]:nextRole,[`rooms/${roomId}/game/pendingRole`]:null,[`rooms/${roomId}/game/pendingIdx`]:null});
+    if(pm?.winner){endGame(pm.winner,lastGS?.names);return}
     if(vsAI&&nextRole!==myRole)setTimeout(()=>runAI(nextRole),600);
-  },seconds*1000);
+  },secs*1000);
 }
 
-async function doUndo(){
+function doUndo(){
   if(!pendingMove)return;
   clearTimeout(undoTimer);clearInterval(undoInterval);undoTimer=null;undoInterval=null;
-  const bar=document.getElementById('undo-bar');bar.classList.remove('show');
+  document.getElementById('undo-bar').classList.remove('show');
   const pm=pendingMove;pendingMove=null;
-  const updates={
-    [`rooms/${roomId}/game/${myRole}Hand`]:pm.prevHand,
-    [`rooms/${roomId}/game/chain`]:pm.prevChain,
-    [`rooms/${roomId}/game/leftEnd`]:pm.prevLeft,
-    [`rooms/${roomId}/game/rightEnd`]:pm.prevRight,
-    [`rooms/${roomId}/game/turn`]:pm.prevTurn,
-    [`rooms/${roomId}/game/pendingRole`]:null,
-    [`rooms/${roomId}/game/pendingIdx`]:null,
-    [`rooms/${roomId}/game/winner`]:null,
-  };
-  await update(ref(db),updates);
+  update(ref(db),{[`rooms/${roomId}/game/${myRole}Hand`]:pm.prevHand,[`rooms/${roomId}/game/chain`]:pm.prevChain,[`rooms/${roomId}/game/leftEnd`]:pm.prevLeft,[`rooms/${roomId}/game/rightEnd`]:pm.prevRight,[`rooms/${roomId}/game/turn`]:pm.prevTurn,[`rooms/${roomId}/game/pendingRole`]:null,[`rooms/${roomId}/game/pendingIdx`]:null,[`rooms/${roomId}/game/winner`]:null});
 }
 
-// ── AI ────────────────────────────────────────────────────
 async function runAI(role){
   const gs=lastGS;if(!gs||gs.winner||gs.turn!==role)return;
-  let hand=[...(gs[role+'Hand']||[])];
-  let boneyard=[...(gs.boneyard||[])];
-  let chain=[...(gs.chain||[])];
-  let lE=gs.leftEnd,rE=gs.rightEnd;
+  let hand=[...(gs[role+'Hand']||[])],boneyard=[...(gs.boneyard||[])],chain=[...(gs.chain||[])],lE=gs.leftEnd,rE=gs.rightEnd;
   const roles=gs.activePlayers||[];
   while(!handCanPlay(hand,lE,rE)&&boneyard.length>2)hand.push(boneyard.pop());
   let played=false;
   if(handCanPlay(hand,lE,rE)){
-    let bestIdx=-1,bestSide='right',bestScore=-1;
-    hand.forEach(([a,b],i)=>{
-      const cL=canFit(a,b,lE),cR=canFit(a,b,rE);
-      if(!cL&&!cR&&chain.length>0)return;
-      const sc=(a===b?100:0)+a+b;
-      if(sc>bestScore){bestScore=sc;bestIdx=i;bestSide=cR?'right':'left'}
-    });
-    if(bestIdx!==-1){
-      const[a,b]=hand[bestIdx];hand.splice(bestIdx,1);
-      const res=placeTile(chain,lE,rE,a,b,bestSide);
-      chain=res.chain;lE=res.leftEnd;rE=res.rightEnd;
-      const myIdx=roles.indexOf(role);const nextRole=roles[(myIdx+1)%roles.length];
-      let winner=null;if(hand.length===0)winner=role;
-      const updates={[`rooms/${roomId}/game/${role}Hand`]:hand,[`rooms/${roomId}/game/boneyard`]:boneyard,[`rooms/${roomId}/game/chain`]:chain,[`rooms/${roomId}/game/leftEnd`]:lE,[`rooms/${roomId}/game/rightEnd`]:rE,[`rooms/${roomId}/game/turn`]:winner?role:nextRole,[`rooms/${roomId}/game/pendingRole`]:null,[`rooms/${roomId}/game/pendingIdx`]:null};
-      if(winner)updates[`rooms/${roomId}/game/winner`]=winner;
-      await update(ref(db),updates);played=true;
-      if(!winner&&nextRole!==myRole)setTimeout(()=>runAI(nextRole),800);
+    let bi=-1,bs='right',bsc=-1;
+    hand.forEach(([a,b],i)=>{const cL=canFit(a,b,lE),cR=canFit(a,b,rE);if(!cL&&!cR&&chain.length)return;const sc=(a===b?100:0)+a+b;if(sc>bsc){bsc=sc;bi=i;bs=cR?'right':'left'}});
+    if(bi!==-1){
+      const[a,b]=hand[bi];hand.splice(bi,1);const res=placeTile(chain,lE,rE,a,b,bs);chain=res.chain;lE=res.leftEnd;rE=res.rightEnd;
+      const mi=roles.indexOf(role),nr=roles[(mi+1)%roles.length];let w=null;if(!hand.length)w=role;
+      const upd={[`rooms/${roomId}/game/${role}Hand`]:hand,[`rooms/${roomId}/game/boneyard`]:boneyard,[`rooms/${roomId}/game/chain`]:chain,[`rooms/${roomId}/game/leftEnd`]:lE,[`rooms/${roomId}/game/rightEnd`]:rE,[`rooms/${roomId}/game/turn`]:w?role:nr,[`rooms/${roomId}/game/pendingRole`]:null,[`rooms/${roomId}/game/pendingIdx`]:null};
+      if(w)upd[`rooms/${roomId}/game/winner`]=w;
+      await update(ref(db),upd);played=true;
+      if(!w&&nr!==myRole)setTimeout(()=>runAI(nr),800);
     }
   }
-  if(!played){
-    const myIdx=roles.indexOf(role);const nextRole=roles[(myIdx+1)%roles.length];
-    await update(ref(db),{[`rooms/${roomId}/game/${role}Hand`]:hand,[`rooms/${roomId}/game/boneyard`]:boneyard,[`rooms/${roomId}/game/turn`]:nextRole});
-    if(nextRole!==myRole)setTimeout(()=>runAI(nextRole),600);
-  }
+  if(!played){const mi=roles.indexOf(role),nr=roles[(mi+1)%roles.length];await update(ref(db),{[`rooms/${roomId}/game/${role}Hand`]:hand,[`rooms/${roomId}/game/boneyard`]:boneyard,[`rooms/${roomId}/game/turn`]:nr});if(nr!==myRole)setTimeout(()=>runAI(nr),600);}
 }
 
-// ── DRAW ─────────────────────────────────────────────────
-async function onDraw(){
+function onDraw(){
   const gs=lastGS;if(!gs||gs.turn!==myRole||gs.winner||pendingMove)return;
-  const boneyard=[...(gs.boneyard||[])];
-  if(boneyard.length<=2){setMsg('البازل شارف على النهاية!');return}
-  const myHand=[...(gs[myRole+'Hand']||[])];
-  myHand.push(boneyard.pop());
-  await update(ref(db),{[`rooms/${roomId}/game/${myRole}Hand`]:myHand,[`rooms/${roomId}/game/boneyard`]:boneyard});
+  const by=[...(gs.boneyard||[])];if(by.length<=2){setMsg(T[lang].boneyardEmpty);return}
+  const h=[...(gs[myRole+'Hand']||[])];h.push(by.pop());
+  update(ref(db),{[`rooms/${roomId}/game/${myRole}Hand`]:h,[`rooms/${roomId}/game/boneyard`]:by});
 }
 
-// ── APPLY STATE ───────────────────────────────────────────
-function applyGameState(gs){
+function applyGS(gs){
   lastGS=gs;if(!gs)return;
-  const activePlayers=gs.activePlayers||[];
-  const amActive=activePlayers.includes(myRole);
-  const isMyT=gs.turn===myRole&&!gs.winner&&amActive;
-  const inUndo=pendingMove!==null;
-
+  const active=(gs.activePlayers||[]).includes(myRole);
+  const isMyT=gs.turn===myRole&&!gs.winner&&active;
   renderChain(gs);renderOpps(gs);renderHand(gs);
-
-  if(gs.winner&&!inUndo){endGame(gs.winner,gs.names);return}
-
-  if(inUndo){setMsg('⏳ يمكنك التراجع خلال ثوانٍ…')}
+  if(gs.winner&&!pendingMove){endGame(gs.winner,gs.names);return}
+  if(pendingMove)setMsg('⏳ '+T[lang].undo+'…');
   else if(isMyT){
-    const myHand=gs[myRole+'Hand']||[];
-    if(!handCanPlay(myHand,gs.leftEnd,gs.rightEnd)&&(gs.boneyard||[]).length<=2){
-      setMsg('مش قادر تلعب — هيتمرر دورك…');
-      setTimeout(async()=>{
-        const roles=activePlayers;const myIdx=roles.indexOf(myRole);
-        const nextRole=roles[(myIdx+1)%roles.length];
-        await update(ref(db),{[`rooms/${roomId}/game/turn`]:nextRole});
-      },1200);
-    }else{setMsg('🟢 دورك — اضغط على قطعة لتلعبها!')}
-  }else if(!amActive){setMsg('⏳ انتظر الجولة القادمة للانضمام')}
-  else{const turnName=gs.names?.[gs.turn]||gs.turn;setMsg(`<span class="spin"></span> دور ${turnName}…`)}
+    const h=gs[myRole+'Hand']||[];
+    if(!handCanPlay(h,gs.leftEnd,gs.rightEnd)&&(gs.boneyard||[]).length<=2){
+      setMsg(T[lang].cantPlay);
+      setTimeout(async()=>{const r=gs.activePlayers||[],mi=r.indexOf(myRole),nr=r[(mi+1)%r.length];await update(ref(db),{[`rooms/${roomId}/game/turn`]:nr})},1200);
+    }else setMsg(T[lang].yourTurn);
+  }else if(!active)setMsg(T[lang].waitNext);
+  else setMsg(`<span class="spin"></span> ${gs.names?.[gs.turn]||gs.turn} ${T[lang].oppTurn}`);
 }
+
+function setMsg(t){document.getElementById('msg-bar').innerHTML=t}
 
 function endGame(winner,names){
-  if(pendingMove)return; // wait for undo window
+  if(pendingMove)return;
   const iWon=winner===myRole;
   if(!localScores[winner])localScores[winner]=0;localScores[winner]++;
-  document.getElementById('win-emoji').textContent=iWon?'🏆':'😅';
-  document.getElementById('win-title').textContent=iWon?'مبروك كسبت! 🎉':`${names?.[winner]||winner} كسب!`;
-  document.getElementById('win-sub').textContent=iWon?'أحسنت! 🌟':'حاول مرة ثانية 💪';
+  document.getElementById('win-emoji').textContent=iWon?'🏆':'😔';
+  document.getElementById('win-title').textContent=iWon?(lang==='ar'?'مبروك!':lang==='fr'?'Félicitations!':'You Won!'):(names?.[winner]||winner)+(lang==='ar'?' كسب':lang==='fr'?' a gagné!':' Wins!');
+  document.getElementById('win-sub').textContent=iWon?(lang==='ar'?'أحسنت!':lang==='fr'?'Excellent!':'Excellent play!'):(lang==='ar'?'حاول مرة تانية':'Essayez encore!');
   document.getElementById('win-bg').classList.add('show');
 }
 
-// ── CREATE GAME ───────────────────────────────────────────
-function createGameState(playersMap,botRoles=[]){
-  const tiles=shuffle(allTiles());
-  const roles=Object.keys(playersMap);
-  const n=roles.length;const tpp=n<=3?7:5;
+function createGS(players,bots=[]){
+  const tiles=shuffle(allTiles()),roles=Object.keys(players),n=roles.length,tpp=n<=3?7:5;
   const hands={};roles.forEach(r=>{hands[r+'Hand']=tiles.splice(0,tpp)});
-  let firstRole=roles[0];let maxVal=-1;
-  roles.forEach(r=>{hands[r+'Hand'].forEach(([a,b])=>{if(a===b&&a>maxVal){maxVal=a;firstRole=r}})});
-  return{roles,activePlayers:roles,waitingPlayers:[],names:playersMap,...Object.fromEntries(roles.map(r=>[r+'Hand',hands[r+'Hand']])),boneyard:tiles,chain:[],leftEnd:-1,rightEnd:-1,turn:firstRole,winner:null,pendingRole:null,pendingIdx:null,botRoles};
+  let fr=roles[0],mv=-1;
+  roles.forEach(r=>{hands[r+'Hand'].forEach(([a,b])=>{if(a===b&&a>mv){mv=a;fr=r}})});
+  return{roles,activePlayers:roles,waitingPlayers:[],names:players,...Object.fromEntries(roles.map(r=>[r+'Hand',hands[r+'Hand']])),boneyard:tiles,chain:[],leftEnd:-1,rightEnd:-1,turn:fr,winner:null,pendingRole:null,pendingIdx:null,botRoles:bots};
 }
 
-function listenGame(rid){
-  if(unsubGame)unsubGame();
-  unsubGame=onValue(ref(db,`rooms/${rid}/game`),snap=>applyGameState(snap.val()));
-}
-
+function listenGame(rid){if(unsubGame)unsubGame();unsubGame=onValue(ref(db,`rooms/${rid}/game`),s=>applyGS(s.val()))}
 function listenRoom(rid){
   if(unsubRoom)unsubRoom();
-  unsubRoom=onValue(ref(db,`rooms/${rid}`),snap=>{
-    const r=snap.val();if(!r)return;
+  unsubRoom=onValue(ref(db,`rooms/${rid}`),s=>{
+    const r=s.val();if(!r)return;
     const pl=document.getElementById('players-list');
-    if(pl){pl.innerHTML='';Object.entries(r.players||{}).forEach(([role,name])=>{const c=document.createElement('div');c.className='player-chip'+(role===myRole?' me':'');c.textContent=name+(role===myRole?' (أنت)':'');pl.appendChild(c)});}
-    const count=Object.keys(r.players||{}).length;
-    const sb=document.getElementById('btn-start-game');if(sb&&isHost)sb.style.display=count>=2?'':'none';
-    if(r.status==='playing'){showScreen('game');listenGame(rid);loadPrayerTimes();}
+    if(pl){pl.innerHTML='';Object.entries(r.players||{}).forEach(([role,name])=>{const c=document.createElement('div');c.className='player-pill'+(role===myRole?' me':'');c.innerHTML=`<div class="player-dot"></div>${name}${role===myRole?' (you)':''}`;pl.appendChild(c)})}
+    const cnt=Object.keys(r.players||{}).length;
+    const sb=document.getElementById('btn-start-game');if(sb&&isHost)sb.style.display=cnt>=2?'':'none';
+    if(r.status==='playing'){showScreen('game');listenGame(rid);loadLocationData();}
   });
 }
 
+function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:5},()=>c[~~(Math.random()*c.length)]).join('')}
+function genId(){return Math.random().toString(36).slice(2,10)}
+function showScreen(id){document.querySelectorAll('.screen,#game').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function lobbyErr(t){document.getElementById('lobby-err').textContent=t}
+
 async function createRoom(){
-  const name=document.getElementById('inp-name').value.trim();if(!name){lobbyErr('اكتب اسمك');return}
+  const name=document.getElementById('inp-name').value.trim();if(!name){lobbyErr(lang==='ar'?'اكتب اسمك':'Enter your name');return}
   myName=name;myId=genId();myRole='p1';isHost=true;vsAI=false;roomId=genCode();lobbyErr('');
   await set(ref(db,`rooms/${roomId}`),{hostId:myId,status:'waiting',players:{p1:name},created:Date.now()});
   document.getElementById('room-code-display').textContent=roomId;
@@ -749,51 +1478,58 @@ async function createRoom(){
 }
 
 async function startVsAI(){
-  const name=document.getElementById('inp-name').value.trim()||'لاعب';
+  const name=document.getElementById('inp-name').value.trim()||(lang==='ar'?'لاعب':'Player');
   myName=name;myId=genId();myRole='p1';isHost=true;vsAI=true;roomId=genCode();
-  const pm={p1:name,p2:'🤖 كمبيوتر'};const gs=createGameState(pm,['p2']);
+  const pm={p1:name,p2:'🤖 AI'};const gs=createGS(pm,['p2']);
   await set(ref(db,`rooms/${roomId}`),{hostId:myId,status:'playing',players:pm,created:Date.now()});
   await set(ref(db,`rooms/${roomId}/game`),gs);
-  showScreen('game');listenGame(roomId);loadPrayerTimes();
+  showScreen('game');listenGame(roomId);loadLocationData();
   setTimeout(()=>{if(lastGS?.turn!==myRole)runAI(lastGS?.turn)},1000);
 }
 
 async function joinRoom(){
-  const name=document.getElementById('inp-name').value.trim();
-  const code=document.getElementById('inp-code').value.trim().toUpperCase();
-  if(!name){lobbyErr('اكتب اسمك');return}if(!code||code.length<4){lobbyErr('اكتب كود الغرفة');return}
+  const name=document.getElementById('inp-name').value.trim();const code=document.getElementById('inp-code').value.trim().toUpperCase();
+  if(!name){lobbyErr(lang==='ar'?'اكتب اسمك':'Enter your name');return}
+  if(!code||code.length<4){lobbyErr(lang==='ar'?'اكتب كود الغرفة':'Enter room code');return}
   myName=name;myId=genId();isHost=false;vsAI=false;roomId=code;lobbyErr('');
-  const snap=await get(ref(db,`rooms/${code}`));if(!snap.exists()){lobbyErr('الغرفة مش موجودة ❌');return}
-  const r=snap.val();const players=r.players||{};const count=Object.keys(players).length;
-  if(count>=6){lobbyErr('الغرفة ممتلئة ❌');return}
-  myRole='p'+(count+1);players[myRole]=name;
-  await update(ref(db,`rooms/${code}`),{players});
+  const sn=await get(ref(db,`rooms/${code}`));if(!sn.exists()){lobbyErr(lang==='ar'?'الغرفة مش موجودة':'Room not found');return}
+  const r=sn.val();const players=r.players||{};const cnt=Object.keys(players).length;
+  if(cnt>=6){lobbyErr(lang==='ar'?'الغرفة ممتلئة':'Room is full');return}
+  myRole='p'+(cnt+1);players[myRole]=name;await update(ref(db,`rooms/${code}`),{players});
   if(r.status==='playing'){
     const gs=(await get(ref(db,`rooms/${code}/game`))).val();
-    if(gs){
-      const boneyard=[...(gs.boneyard||[])];
-      const myTiles=boneyard.splice(0,Math.min(5,boneyard.length));
-      const waiting=[...(gs.waitingPlayers||[]),myRole];
-      const names={...(gs.names||{}),[myRole]:name};
-      await update(ref(db),{[`rooms/${code}/game/${myRole}Hand`]:myTiles,[`rooms/${code}/game/boneyard`]:boneyard,[`rooms/${code}/game/waitingPlayers`]:waiting,[`rooms/${code}/game/names`]:names});
-    }
-    showScreen('game');listenGame(code);loadPrayerTimes();
+    if(gs){const by=[...(gs.boneyard||[])];const mt=by.splice(0,Math.min(5,by.length));const wt=[...(gs.waitingPlayers||[]),myRole];const nm={...(gs.names||{}),[myRole]:name};await update(ref(db),{[`rooms/${code}/game/${myRole}Hand`]:mt,[`rooms/${code}/game/boneyard`]:by,[`rooms/${code}/game/waitingPlayers`]:wt,[`rooms/${code}/game/names`]:nm});}
+    showScreen('game');listenGame(code);loadLocationData();
   }else{document.getElementById('room-code-display').textContent=code;showScreen('waiting');listenRoom(code);}
 }
 
 async function startGame(){
-  const snap=await get(ref(db,`rooms/${roomId}`));const r=snap.val();if(!r)return;
-  const players=r.players||{};if(Object.keys(players).length<2){alert('محتاج لاعبين على الأقل!');return}
-  const gs=createGameState(players,[]);
+  const sn=await get(ref(db,`rooms/${roomId}`));const r=sn.val();if(!r)return;
+  const p=r.players||{};if(Object.keys(p).length<2)return;
+  const gs=createGS(p,[]);
   await update(ref(db,`rooms/${roomId}`),{status:'playing'});
   await set(ref(db,`rooms/${roomId}/game`),gs);
 }
 
+function cancelWait(){
+  if(unsubRoom){unsubRoom();unsubRoom=null}
+  if(roomId&&isHost)remove(ref(db,`rooms/${roomId}`));
+  roomId=null;showScreen('landing');
+}
+
+function copyCode(){
+  const code=document.getElementById('room-code-display').textContent;
+  navigator.clipboard?.writeText(code).then(()=>{
+    const btn=document.getElementById('btn-copy-code');btn.textContent='✓ '+code;
+    setTimeout(()=>btn.textContent=lang==='ar'?'📋 نسخ':'📋 Copy',2000);
+  });
+}
+
 async function newGame(){
   document.getElementById('win-bg').classList.remove('show');
-  if(!isHost){setMsg('بس صاحب الغرفة يبدأ لعبة جديدة');return}
-  const snap=await get(ref(db,`rooms/${roomId}`));const r=snap.val();if(!r)return;
-  const gs=createGameState(r.players||{},lastGS?.botRoles||[]);
+  if(!isHost)return;
+  const sn=await get(ref(db,`rooms/${roomId}`));const r=sn.val();if(!r)return;
+  const gs=createGS(r.players||{},lastGS?.botRoles||[]);
   await set(ref(db,`rooms/${roomId}/game`),gs);
   if(vsAI)setTimeout(()=>{if(lastGS?.turn!==myRole)runAI(lastGS?.turn)},1000);
 }
@@ -802,24 +1538,13 @@ function leaveGame(){
   if(unsubGame){unsubGame();unsubGame=null}if(unsubRoom){unsubRoom();unsubRoom=null}
   if(undoTimer){clearTimeout(undoTimer);undoTimer=null}if(undoInterval){clearInterval(undoInterval);undoInterval=null}
   if(roomId&&isHost)remove(ref(db,`rooms/${roomId}`));
-  roomId=null;myRole=null;lastGS=null;pendingMove=null;localScores={};vsAI=false;isHost=false;
-  document.getElementById('win-bg').classList.remove('show');
-  document.getElementById('undo-bar').classList.remove('show');
-  showScreen('lobby');
+  roomId=null;myRole=null;lastGS=null;pendingMove=null;localScores={};vsAI=false;isHost=false;locationLoaded=false;
+  document.getElementById('win-bg').classList.remove('show');document.getElementById('undo-bar').classList.remove('show');
+  showScreen('landing');
 }
 
-document.getElementById('btn-create').addEventListener('click',createRoom);
-document.getElementById('btn-vs-ai').addEventListener('click',startVsAI);
-document.getElementById('btn-join').addEventListener('click',joinRoom);
 document.getElementById('inp-code').addEventListener('keyup',e=>{if(e.key==='Enter')joinRoom()});
-document.getElementById('btn-start-game').addEventListener('click',startGame);
-document.getElementById('btn-cancel-wait').addEventListener('click',()=>{if(unsubRoom){unsubRoom();unsubRoom=null}if(roomId&&isHost)remove(ref(db,`rooms/${roomId}`));roomId=null;showScreen('lobby')});
-document.getElementById('btn-copy-code').addEventListener('click',()=>{const code=document.getElementById('room-code-display').textContent;navigator.clipboard?.writeText(code).then(()=>{document.getElementById('btn-copy-code').textContent='✅ اتنسخ!';setTimeout(()=>document.getElementById('btn-copy-code').textContent='📋 نسخ الكود',2000)})});
-document.getElementById('btn-draw').addEventListener('click',onDraw);
-document.getElementById('btn-leave').addEventListener('click',leaveGame);
-document.getElementById('btn-win-new').addEventListener('click',newGame);
-document.getElementById('btn-win-lobby').addEventListener('click',leaveGame);
-document.getElementById('btn-undo').addEventListener('click',doUndo);
+document.getElementById('inp-name').addEventListener('keyup',e=>{if(e.key==='Enter')document.getElementById('inp-code').value?joinRoom():createRoom()});
 </script>
 </body>
 </html>
