@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>DOMINO — v7</title>
+<title>DOMINO — v7.1</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
 
@@ -838,7 +838,7 @@ html, body { height:100%; font-family:'Inter',sans-serif; background:var(--bg); 
       </div>
       <div class="game-name" id="game-name-text">DOMINO</div>
       <div class="game-sub" id="game-sub-text">Multiplayer · Classic · Worldwide</div>
-      <div class="version-tag">v7</div>
+      <div class="version-tag">v7.1</div>
     </div>
 
     <!-- Language -->
@@ -945,7 +945,7 @@ html, body { height:100%; font-family:'Inter',sans-serif; background:var(--bg); 
   <div id="hdr">
     <div class="hdr-brand">
       <span class="brand-name">DOMINO</span>
-      <span class="brand-v">v7</span>
+      <span class="brand-v">v7.1</span>
     </div>
     <div class="scores-row" id="scores-row"></div>
   </div>
@@ -1458,7 +1458,7 @@ function listenRoom(rid){
     const pl=document.getElementById('players-list');
     if(pl){pl.innerHTML='';Object.entries(r.players||{}).forEach(([role,name])=>{const c=document.createElement('div');c.className='player-pill'+(role===myRole?' me':'');c.innerHTML=`<div class="player-dot"></div>${name}${role===myRole?' (you)':''}`;pl.appendChild(c)})}
     const cnt=Object.keys(r.players||{}).length;
-    const sb=document.getElementById('btn-start-game');if(sb&&isHost)sb.style.display=cnt>=2?'':'none';
+    const sb=document.getElementById('btn-start-game');if(sb){sb.style.display=(isHost&&cnt>=2)?'block':'none';}
     if(r.status==='playing'){showScreen('game');listenGame(rid);loadLocationData();}
   });
 }
@@ -1473,7 +1473,7 @@ async function createRoom(){
   myName=name;myId=genId();myRole='p1';isHost=true;vsAI=false;roomId=genCode();lobbyErr('');
   await set(ref(db,`rooms/${roomId}`),{hostId:myId,status:'waiting',players:{p1:name},created:Date.now()});
   document.getElementById('room-code-display').textContent=roomId;
-  document.getElementById('btn-start-game').style.display='none';
+  document.getElementById('btn-start-game').style.display='none'; // shown when 2+ players join
   showScreen('waiting');listenRoom(roomId);
 }
 
