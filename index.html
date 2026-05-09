@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>DOMINO — v8.1</title>
+<title>DOMINO — v8.3</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
 :root{
@@ -37,22 +37,37 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
 /* Logo */
 .logo-wrap{text-align:center;animation:fadeDown .8s ease both}
-.logo-tiles{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
-.logo-tile{display:flex;flex-direction:column;background:var(--ivory);border-radius:6px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.6),0 0 0 1px rgba(201,168,76,.3)}
-.logo-tile .lh{flex:1;width:36px;height:32px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--pip);font-family:monospace}
-.logo-tile .lh:first-child{border-bottom:1.5px solid #ccc}
+/* Islamic ornament instead of casino tiles */
+.islamic-ornament{
+  font-size:2.8rem;
+  line-height:1;
+  margin-bottom:10px;
+  filter:drop-shadow(0 0 20px rgba(201,168,76,.4));
+  animation:ornamentGlow 3s ease-in-out infinite;
+}
+@keyframes ornamentGlow{0%,100%{filter:drop-shadow(0 0 12px rgba(201,168,76,.3))}50%{filter:drop-shadow(0 0 28px rgba(201,168,76,.7))}}
 .game-name{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,8vw,3.2rem);font-weight:900;letter-spacing:6px;text-transform:uppercase;background:linear-gradient(135deg,var(--gold) 0%,var(--gold3) 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
 .game-sub{font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--text3);margin-top:6px}
 
 /* Arabic quote strip */
 .quote-strip{
-  width:100%;background:rgba(201,168,76,.05);
-  border:1px solid rgba(201,168,76,.12);border-radius:14px;
-  padding:12px 16px;text-align:center;
+  width:100%;
+  background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.04));
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:16px;
+  padding:16px 20px;
+  text-align:center;
   animation:fadeUp .8s .05s ease both;
+  position:relative;
+  overflow:hidden;
 }
-.quote-ar{font-family:'Amiri',serif;font-size:.88rem;color:rgba(201,168,76,.85);line-height:1.6;margin-bottom:3px}
-.quote-author{font-size:.58rem;color:var(--text3);letter-spacing:1px}
+.quote-strip::before{
+  content:'❧';
+  position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+  font-size:1.4rem;color:rgba(201,168,76,.3);
+}
+.quote-ar{font-family:'Amiri',serif;font-size:1rem;color:rgba(201,168,76,.92);line-height:1.8;margin-bottom:6px;font-style:italic}
+.quote-author{font-size:.62rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase}
 
 .version-tag{display:inline-block;font-size:.55rem;letter-spacing:2px;color:var(--gold);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:2px 8px;margin-top:6px}
 
@@ -317,14 +332,11 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 <div id="landing" class="screen active">
   <div class="landing-inner">
     <div class="logo-wrap">
-      <div class="logo-tiles">
-        <div class="logo-tile"><div class="lh">6</div><div class="lh">6</div></div>
-        <div class="logo-tile"><div class="lh">5</div><div class="lh">3</div></div>
-        <div class="logo-tile"><div class="lh">4</div><div class="lh">4</div></div>
-      </div>
+      <!-- Islamic geometric ornament instead of casino tiles -->
+      <div class="islamic-ornament">✦ ☽ ✦</div>
       <div class="game-name" id="game-name-text">DOMINO</div>
       <div class="game-sub" id="game-sub-text">Multiplayer · Classic · Worldwide</div>
-      <div class="version-tag">v8.1</div>
+      <div class="version-tag">v8.3</div>
     </div>
 
     <!-- Arabic Quote -->
@@ -403,7 +415,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </div>
   <div id="hadith-bar"><div id="hadith-text">—</div></div>
   <div id="hdr">
-    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8.1</span></div>
+    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8.3</span></div>
     <div class="scores-row" id="scores-row"></div>
   </div>
   <div id="opps-row"></div>
@@ -520,8 +532,16 @@ const QUOTES=[
   {ar:"الحرية ليست أن تفعل ما تشاء، بل أن تشاء ما هو صواب.",author:"الغزالي"},
 ];
 let quoteIdx=Math.floor(Math.random()*QUOTES.length);
-function showQuote(){const q=QUOTES[quoteIdx%QUOTES.length];document.getElementById('quote-ar-text').textContent='❝ '+q.ar+' ❞';document.getElementById('quote-author-text').textContent='— '+q.author;quoteIdx++;}
-showQuote();setInterval(showQuote,30000);
+function showQuote(){
+  const q=QUOTES[quoteIdx%QUOTES.length];
+  const arEl=document.getElementById('quote-ar-text');
+  const auEl=document.getElementById('quote-author-text');
+  if(arEl)arEl.textContent='❝  '+q.ar+'  ❞';
+  if(auEl)auEl.textContent='— '+q.author;
+  quoteIdx++;
+}
+showQuote(); // Call immediately on load
+setInterval(showQuote,30000);
 
 // ── TRANSLATIONS ──────────────────────────────────────────
 const T={
@@ -950,6 +970,8 @@ async function logPlayer(name,role){
     await set(ref(db,`playerLogs/${roomId}_${role}`),{name,country,city,device,lang,joinedAt:Date.now(),roomId});
   }catch(e){}
 }
+
+async function createRoom(){
   const name=document.getElementById('inp-name').value.trim();if(!name){lobbyErr(lang==='ar'?'اكتب اسمك':'Enter your name');return}
   myName=name;myId=genId();myRole='p1';isHost=true;vsAI=false;roomId=genCode();lobbyErr('');
   await set(ref(db,`rooms/${roomId}`),{hostId:myId,status:'waiting',players:{p1:name},created:Date.now()});
