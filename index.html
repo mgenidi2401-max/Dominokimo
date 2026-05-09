@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>DOMINO — v8.3</title>
+<title>DOMINO — v8.4</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
 :root{
@@ -336,7 +336,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <div class="islamic-ornament">✦ ☽ ✦</div>
       <div class="game-name" id="game-name-text">DOMINO</div>
       <div class="game-sub" id="game-sub-text">Multiplayer · Classic · Worldwide</div>
-      <div class="version-tag">v8.3</div>
+      <div class="version-tag">v8.4</div>
     </div>
 
     <!-- Arabic Quote -->
@@ -415,7 +415,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </div>
   <div id="hadith-bar"><div id="hadith-text">—</div></div>
   <div id="hdr">
-    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8.3</span></div>
+    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8.4</span></div>
     <div class="scores-row" id="scores-row"></div>
   </div>
   <div id="opps-row"></div>
@@ -683,22 +683,63 @@ function placeTile(chain,lE,rE,a,b,side){
 }
 
 // ── RENDER CHAIN ──────────────────────────────────────────
+// ── DRAG STATE ───────────────────────────────────────────
+let dragIdx=null; // index of tile being dragged
+
 function renderChain(gs){
   const chain=gs.chain||[],el=document.getElementById('chain');el.innerHTML='';
   const amActive=(gs.activePlayers||[]).includes(myRole);
+  const isMyT=gs.turn===myRole&&!gs.winner&&amActive&&!pendingMove;
+
   if(!chain.length){
-    const h=document.createElement('div');
-    h.style.cssText='color:rgba(255,255,255,.15);font-size:.78rem;text-align:center;padding:20px 28px;border:1px dashed rgba(255,255,255,.07);border-radius:12px;min-width:140px';
-    h.textContent=amActive&&gs.turn===myRole?(lang==='ar'?'اضغط على قطعة لتبدأ':'Tap a tile to start'):'Waiting…';
-    el.appendChild(h);return;
+    // Empty board — one big drop zone
+    const hint=document.createElement('div');
+    hint.style.cssText='color:rgba(255,255,255,.18);font-size:.8rem;text-align:center;padding:28px 40px;border:2px dashed rgba(201,168,76,.25);border-radius:14px;min-width:180px;transition:all .2s;cursor:default';
+    hint.textContent=amActive&&isMyT?(lang==='ar'?'اسحب قطعة وضعها هنا':'Drag a tile here'):'Waiting…';
+    if(isMyT){
+      hint.addEventListener('dragover',e=>{e.preventDefault();hint.style.borderColor='rgba(201,168,76,.7)';hint.style.background='rgba(201,168,76,.06)'});
+      hint.addEventListener('dragleave',()=>{hint.style.borderColor='rgba(201,168,76,.25)';hint.style.background=''});
+      hint.addEventListener('drop',e=>{e.preventDefault();hint.style.borderColor='rgba(201,168,76,.25)';hint.style.background='';if(dragIdx!==null)doPlay(dragIdx,'right')});
+      // Touch: tap = play right
+      hint.addEventListener('touchend',e=>{e.preventDefault();if(dragIdx!==null){doPlay(dragIdx,'right');dragIdx=null;clearGhost()}});
+    }
+    el.appendChild(hint);return;
   }
+
+  // Left drop zone
+  if(isMyT){el.appendChild(makeDropZone('left'));}
+
   chain.forEach(({a,b,dbl},idx)=>{
     const cls=dbl?'DBL':'H';const t=mkTile(a,b,cls,true);
     if(gs.pendingIdx!=null&&idx===gs.pendingIdx&&gs.pendingRole===myRole)t.classList.add('pending');
     el.appendChild(t);
   });
-  // Scroll to show center
-  setTimeout(()=>{const s=document.getElementById('table-scroll');s.scrollTop=Math.max(0,(s.scrollHeight-s.clientHeight)/2);s.scrollLeft=Math.max(0,(s.scrollWidth-s.clientWidth)/2)},50);
+
+  // Right drop zone
+  if(isMyT){el.appendChild(makeDropZone('right'));}
+
+  setTimeout(()=>{
+    const s=document.getElementById('table-scroll');
+    s.scrollTop=Math.max(0,(s.scrollHeight-s.clientHeight)/2);
+    s.scrollLeft=Math.max(0,(s.scrollWidth-s.clientWidth)/2);
+  },50);
+}
+
+function makeDropZone(side){
+  const dz=document.createElement('div');
+  const lbl=side==='left'?'←':'→';
+  dz.style.cssText=`width:46px;height:46px;border:2px dashed rgba(201,168,76,.3);border-radius:10px;display:flex;align-items:center;justify-content:center;color:rgba(201,168,76,.35);font-size:1.2rem;transition:all .2s;flex-shrink:0;cursor:pointer`;
+  dz.textContent=lbl;
+  dz.dataset.side=side;
+  // Mouse drag
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.style.borderColor='var(--gold)';dz.style.background='rgba(201,168,76,.1)';dz.style.transform='scale(1.1)'});
+  dz.addEventListener('dragleave',()=>{dz.style.borderColor='rgba(201,168,76,.3)';dz.style.background='';dz.style.transform=''});
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.style.borderColor='rgba(201,168,76,.3)';dz.style.background='';dz.style.transform='';if(dragIdx!==null)doPlay(dragIdx,side)});
+  // Touch: finger release on zone
+  dz.addEventListener('touchend',e=>{e.preventDefault();if(dragIdx!==null){doPlay(dragIdx,side);dragIdx=null;clearGhost()}});
+  // Click (fallback for selected tile)
+  dz.addEventListener('click',()=>{if(dragIdx!==null)doPlay(dragIdx,side)});
+  return dz;
 }
 
 function renderOpps(gs){
@@ -718,46 +759,115 @@ function renderOpps(gs){
   const msb=document.createElement('div');msb.className='sbox'+(isMyT?' myturn':'');msb.innerHTML=`<div class="sl">${mn}</div><div class="sv">${msc}</div>`;scRow.appendChild(msb);
 }
 
+// Ghost tile for touch drag
+let ghostEl=null;
+function showGhost(tile,x,y){
+  clearGhost();
+  ghostEl=tile.cloneNode(true);
+  ghostEl.style.cssText=`position:fixed;left:${x}px;top:${y}px;transform:translate(-50%,-50%) scale(1.15);pointer-events:none;z-index:999;opacity:.85;transition:none`;
+  document.body.appendChild(ghostEl);
+}
+function moveGhost(x,y){if(ghostEl){ghostEl.style.left=x+'px';ghostEl.style.top=y+'px'}}
+function clearGhost(){if(ghostEl){ghostEl.remove();ghostEl=null}}
+
+// Highlight drop zones
+function highlightDropZones(on){
+  document.querySelectorAll('[data-side]').forEach(dz=>{
+    dz.style.borderColor=on?'var(--gold)':'rgba(201,168,76,.3)';
+    dz.style.background=on?'rgba(201,168,76,.08)':'';
+  });
+}
+
 function renderHand(gs){
   const myHand=gs[myRole+'Hand']||[],lE=gs.leftEnd,rE=gs.rightEnd;
   const active=(gs.activePlayers||[]).includes(myRole);
   const isMyT=gs.turn===myRole&&!gs.winner&&active;const inUndo=!!pendingMove;
   const el=document.getElementById('my-hand');el.innerHTML='';
   if(!active){el.innerHTML=`<div style="color:var(--text3);font-size:.73rem;padding:14px;text-align:center">${T[lang].waitNext}</div>`;document.getElementById('btn-draw').disabled=true;return}
+
   myHand.forEach(([a,b],i)=>{
     const cL=canFit(a,b,lE),cR=canFit(a,b,rE);
     const playable=!gs.chain?.length||(cL||cR);
     const t=mkTile(a,b,'V');
-    if(inUndo||!isMyT||!playable)t.classList.add('dim');
-    else{t.addEventListener('click',()=>onTap(i));t.addEventListener('touchend',e=>{e.preventDefault();onTap(i)})}
+    if(inUndo||!isMyT||!playable){
+      t.classList.add('dim');
+    } else {
+      t.draggable=true;
+      t.style.cursor='grab';
+
+      // ── MOUSE DRAG ──
+      t.addEventListener('dragstart',e=>{
+        dragIdx=i;
+        t.style.opacity='.4';
+        e.dataTransfer.effectAllowed='move';
+        highlightDropZones(true);
+      });
+      t.addEventListener('dragend',()=>{
+        t.style.opacity='';
+        dragIdx=null;
+        highlightDropZones(false);
+      });
+
+      // ── TOUCH DRAG ──
+      t.addEventListener('touchstart',e=>{
+        dragIdx=i;
+        const touch=e.touches[0];
+        showGhost(t,touch.clientX,touch.clientY);
+        t.style.opacity='.4';
+        highlightDropZones(true);
+      },{passive:true});
+
+      t.addEventListener('touchmove',e=>{
+        e.preventDefault();
+        const touch=e.touches[0];
+        moveGhost(touch.clientX,touch.clientY);
+        // Highlight nearest drop zone
+        document.querySelectorAll('[data-side]').forEach(dz=>{
+          const r=dz.getBoundingClientRect();
+          const over=touch.clientX>=r.left&&touch.clientX<=r.right&&touch.clientY>=r.top&&touch.clientY<=r.bottom;
+          dz.style.borderColor=over?'var(--gold-bright,#f5e0a0)':'var(--gold)';
+          dz.style.transform=over?'scale(1.15)':'';
+        });
+      },{passive:false});
+
+      t.addEventListener('touchend',e=>{
+        e.preventDefault();
+        clearGhost();
+        t.style.opacity='';
+        highlightDropZones(false);
+        const touch=e.changedTouches[0];
+        // Find which drop zone the finger released on
+        let placed=false;
+        document.querySelectorAll('[data-side]').forEach(dz=>{
+          const r=dz.getBoundingClientRect();
+          if(touch.clientX>=r.left&&touch.clientX<=r.right&&touch.clientY>=r.top&&touch.clientY<=r.bottom){
+            if(dragIdx!==null){doPlay(dragIdx,dz.dataset.side);placed=true;}
+          }
+          dz.style.transform='';
+        });
+        // If no drop zone but only one valid side — play it
+        if(!placed&&dragIdx!==null){
+          const[ta,tb]=myHand[dragIdx];
+          const tcL=canFit(ta,tb,lE),tcR=canFit(ta,tb,rE);
+          if(!gs.chain?.length)doPlay(dragIdx,'right');
+          else if(tcL&&!tcR)doPlay(dragIdx,'left');
+          else if(!tcL&&tcR)doPlay(dragIdx,'right');
+          // If both valid and no zone hit — ignore (player needs to aim at zone)
+        }
+        dragIdx=null;
+      });
+    }
     el.appendChild(t);
   });
   document.getElementById('btn-draw').disabled=!isMyT||inUndo;
 }
 
-// ── TAP TILE ─────────────────────────────────────────────
-function onTap(idx){
-  const gs=lastGS;if(!gs||gs.turn!==myRole||gs.winner||pendingMove)return;
-  if(!(gs.activePlayers||[]).includes(myRole))return;
-  const hand=gs[myRole+'Hand']||[];if(idx>=hand.length)return;
-  const[a,b]=hand[idx],lE=gs.leftEnd,rE=gs.rightEnd;
-  const cL=canFit(a,b,lE),cR=canFit(a,b,rE);
-  if(!gs.chain?.length){doPlay(idx,'right');return}
-  if(!cL&&!cR)return;
-  if(cL&&cR){
-    // Both sides — show modal
-    pendingTileIdx=idx;
-    const prev=document.getElementById('side-preview');prev.innerHTML='';prev.appendChild(mkTile(a,b,'V'));
-    document.getElementById('side-modal').classList.add('show');
-  }else{
-    doPlay(idx,cL?'left':'right');
-  }
-}
+// Remove old onTap and modal functions — replaced by drag
+function onTap(){}
+function confirmSide(){}
+function closeSideModal(){}
 
-function confirmSide(side){closeSideModal();if(pendingTileIdx!==null)doPlay(pendingTileIdx,side)}
-function closeSideModal(){document.getElementById('side-modal').classList.remove('show');pendingTileIdx=null}
 
-// ── PLAY ─────────────────────────────────────────────────
 async function doPlay(idx,sideIn){
   const gs=lastGS;if(!gs||gs.turn!==myRole||gs.winner)return;
   if(!(gs.activePlayers||[]).includes(myRole))return;
