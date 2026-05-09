@@ -6,20 +6,19 @@
 <title>دومينو - Dominokimo</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700;900&display=swap');
-:root {
-  --bg:#0d1b2a; --surface:#1b2d3e; --card:#243447;
-  --gold:#f5c842; --red:#e84040; --green:#1a5c2a;
-  --felt:#1a5c2a; --felt2:#0f3d1a;
-  --ivory:#f8f4eb; --pip:#1a1a2e;
-  --text:#dde8f0; --muted:#6a8a9a;
+:root{
+  --bg:#0d1b2a;--surface:#1b2d3e;--card:#243447;
+  --gold:#f5c842;--red:#e84040;--blue:#1565c0;
+  --felt:#1a5c2a;--felt2:#0f3d1a;
+  --ivory:#f8f4eb;--pip:#1a1a2e;
+  --text:#dde8f0;--muted:#6a8a9a;
   --shadow:rgba(0,0,0,0.6);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
 html,body{height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text)}
 #app{display:flex;flex-direction:column;height:100dvh;max-width:700px;margin:0 auto}
 
-/* SCREENS */
-.screen{display:none;flex-direction:column;height:100%;align-items:center;justify-content:center;padding:20px}
+.screen{display:none;flex-direction:column;height:100%;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
 .screen.active{display:flex}
 #game{display:none;flex-direction:column;height:100%}
 #game.active{display:flex}
@@ -27,106 +26,114 @@ html,body{height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:
 /* LOBBY */
 #lobby{background:radial-gradient(ellipse at 50% 20%,#1b2d3e,#0d1b2a)}
 #lobby h1{font-family:'Amiri',serif;font-size:2.8rem;color:var(--gold);text-shadow:0 0 30px rgba(245,200,66,.4);margin-bottom:4px;text-align:center}
-#lobby .sub{color:var(--muted);font-size:.9rem;margin-bottom:32px;text-align:center}
-.card{background:var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;width:100%;max-width:400px;margin-bottom:14px}
-.card h3{color:var(--gold);font-size:.95rem;margin-bottom:12px;text-align:center}
-.inp{width:100%;font-family:'Cairo',sans-serif;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.9rem;outline:none;margin-bottom:10px;text-align:right}
+.sub{color:var(--muted);font-size:.88rem;margin-bottom:28px;text-align:center}
+.card{background:var(--surface);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;width:100%;max-width:400px;margin-bottom:12px}
+.card h3{color:var(--gold);font-size:.9rem;margin-bottom:10px;text-align:center}
+.inp{width:100%;font-family:'Cairo',sans-serif;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:10px 14px;color:var(--text);font-size:.9rem;outline:none;margin-bottom:8px;text-align:right}
 .inp:focus{border-color:var(--gold)}
 .inp::placeholder{color:var(--muted)}
-.bbtn{width:100%;font-family:'Cairo',sans-serif;border:none;border-radius:11px;padding:13px;font-size:.95rem;font-weight:800;cursor:pointer;touch-action:manipulation;transition:all .15s;margin-bottom:8px}
-.bbtn.gold{background:var(--gold);color:#000}
-.bbtn.gold:hover{background:#ddb020}
-.bbtn.blue{background:#1565c0;color:#fff}
-.bbtn.blue:hover{background:#1976d2}
+.bbtn{width:100%;font-family:'Cairo',sans-serif;border:none;border-radius:11px;padding:12px;font-size:.92rem;font-weight:800;cursor:pointer;touch-action:manipulation;transition:all .15s;margin-bottom:7px}
+.bbtn.gold{background:var(--gold);color:#000}.bbtn.gold:hover{background:#ddb020}
+.bbtn.blue{background:var(--blue);color:#fff}.bbtn.blue:hover{background:#1976d2}
 .bbtn.gray{background:rgba(255,255,255,.08);color:var(--muted);border:1px solid rgba(255,255,255,.12)}
-.divider{color:var(--muted);text-align:center;font-size:.8rem;margin:6px 0}
-#lobby-err{color:var(--red);font-size:.8rem;min-height:18px;text-align:center;margin-top:4px}
+.divider{color:var(--muted);text-align:center;font-size:.78rem;margin:5px 0}
+#lobby-err{color:var(--red);font-size:.78rem;min-height:16px;text-align:center;margin-top:2px}
 
 /* WAITING */
 #waiting{background:var(--bg);text-align:center}
-#waiting h2{font-family:'Amiri',serif;font-size:1.8rem;color:var(--gold);margin-bottom:10px}
-.room-code{font-size:2.8rem;font-weight:900;color:var(--text);letter-spacing:8px;background:var(--card);padding:14px 30px;border-radius:14px;margin:16px 0;border:2px dashed rgba(255,255,255,.15);font-family:monospace}
-.players-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
-.player-chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:6px 14px;font-size:.82rem;color:var(--text)}
+#waiting h2{font-family:'Amiri',serif;font-size:1.7rem;color:var(--gold);margin-bottom:8px}
+.room-code{font-size:2.5rem;font-weight:900;color:var(--text);letter-spacing:8px;background:var(--card);padding:12px 28px;border-radius:14px;margin:12px 0;border:2px dashed rgba(255,255,255,.15);font-family:monospace}
+.players-list{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0}
+.player-chip{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 12px;font-size:.78rem}
 .player-chip.me{border-color:var(--gold);color:var(--gold)}
-.sbtn{font-family:'Cairo',sans-serif;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:9px 18px;color:var(--muted);font-size:.82rem;cursor:pointer;margin:4px;touch-action:manipulation}
+.sbtn{font-family:'Cairo',sans-serif;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:8px 16px;color:var(--muted);font-size:.8rem;cursor:pointer;margin:3px;touch-action:manipulation}
 .sbtn.start{background:var(--gold);color:#000;border:none;font-weight:800}
 .sbtn.danger{color:var(--red);border-color:rgba(232,64,64,.3)}
 
-/* GAME HEADER */
-#hdr{background:linear-gradient(180deg,#0d1b2a,#1b2d3e);border-bottom:2px solid rgba(245,200,66,.2);padding:7px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-#hdr h1{font-family:'Amiri',serif;font-size:1.3rem;color:var(--gold)}
-.scores{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.sbox{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:3px 8px;text-align:center;min-width:54px}
-.sbox .sl{font-size:.58rem;color:var(--muted);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60px}
-.sbox .sv{font-size:1rem;font-weight:900;color:var(--gold);line-height:1.3}
-.sbox.myturn{border-color:var(--gold);box-shadow:0 0 8px rgba(245,200,66,.3)}
+/* PRAYER BAR */
+#prayer-bar{background:linear-gradient(90deg,rgba(13,27,42,.98),rgba(27,45,62,.98));border-bottom:1px solid rgba(245,200,66,.2);padding:4px 10px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:6px;min-height:34px}
+#prayer-times-row{display:flex;gap:8px;align-items:center;overflow-x:auto;flex:1}
+#prayer-times-row::-webkit-scrollbar{display:none}
+.prayer-item{display:flex;flex-direction:column;align-items:center;white-space:nowrap;flex-shrink:0}
+.prayer-item .pname{font-size:.5rem;color:var(--muted);line-height:1}
+.prayer-item .ptime{font-size:.68rem;font-weight:700;color:var(--gold)}
+.prayer-item.next-prayer .pname{color:#4caf50}
+.prayer-item.next-prayer .ptime{color:#4caf50}
+#city-name{font-size:.58rem;color:var(--muted);white-space:nowrap}
 
-/* OPPONENTS ROW */
-#opps-row{background:rgba(0,0,0,.25);border-bottom:1px solid rgba(255,255,255,.05);padding:6px 10px;flex-shrink:0;display:flex;gap:10px;flex-wrap:wrap;min-height:52px;align-items:center}
-.opp-info{display:flex;flex-direction:column;align-items:center;gap:2px}
-.opp-name{font-size:.6rem;color:var(--muted)}
+/* HADITH BAR */
+#hadith-bar{background:rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.04);padding:4px 10px;flex-shrink:0;min-height:40px;display:flex;flex-direction:column;justify-content:center}
+#hadith-ar{font-family:'Amiri',serif;font-size:.75rem;color:rgba(245,200,66,.9);line-height:1.4;text-align:right}
+#hadith-en{font-size:.58rem;color:var(--muted);line-height:1.3;text-align:left;direction:ltr;margin-top:1px}
+
+/* HEADER */
+#hdr{background:linear-gradient(180deg,#0d1b2a,#1b2d3e);border-bottom:1px solid rgba(245,200,66,.15);padding:5px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#hdr h1{font-family:'Amiri',serif;font-size:1.2rem;color:var(--gold)}
+.scores{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.sbox{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:2px 7px;text-align:center;min-width:50px}
+.sbox .sl{font-size:.55rem;color:var(--muted);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55px}
+.sbox .sv{font-size:.9rem;font-weight:900;color:var(--gold);line-height:1.2}
+.sbox.myturn{border-color:var(--gold);box-shadow:0 0 6px rgba(245,200,66,.3)}
+
+/* OPPONENTS */
+#opps-row{background:rgba(0,0,0,.2);border-bottom:1px solid rgba(255,255,255,.04);padding:4px 10px;flex-shrink:0;display:flex;gap:10px;flex-wrap:wrap;min-height:44px;align-items:center}
+.opp-info{display:flex;flex-direction:column;align-items:center;gap:1px}
+.opp-name{font-size:.58rem;color:var(--muted);white-space:nowrap}
 .opp-tiles-row{display:flex;gap:2px}
-.back-tile{width:16px;height:29px;background:linear-gradient(135deg,#1b3a5c,#0f2540);border-radius:3px;border:1px solid rgba(255,255,255,.1);flex-shrink:0}
+.back-tile{width:13px;height:24px;background:linear-gradient(135deg,#1b3a5c,#0f2540);border-radius:3px;border:1px solid rgba(255,255,255,.1);flex-shrink:0}
+.waiting-badge{font-size:.52rem;background:rgba(21,101,192,.3);border:1px solid rgba(21,101,192,.4);border-radius:10px;padding:2px 6px;color:#90caf9}
 
 /* FELT TABLE */
 #table-wrap{flex:1;overflow:hidden;position:relative;background:radial-gradient(ellipse at 50% 40%,#256b30,var(--felt) 50%,var(--felt2))}
 #table-wrap::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,transparent 1px,transparent 7px),repeating-linear-gradient(-45deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,transparent 1px,transparent 7px);pointer-events:none;z-index:0}
-#table-scroll{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch}
-#chain-container{position:relative;min-width:100%;min-height:100%;display:flex;align-items:center;justify-content:flex-start;padding:20px}
-#chain{display:flex;align-items:center;gap:4px;position:relative;flex-shrink:0}
-#empty-hint{color:rgba(255,255,255,.2);font-size:.85rem;text-align:center;width:100%;padding:30px;font-style:italic;position:absolute;left:50%;transform:translateX(-50%)}
+#table-scroll{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:center;justify-content:center}
+#chain-container{display:flex;align-items:center;justify-content:center;padding:20px;min-width:100%;min-height:100%}
+#chain{display:flex;align-items:center;gap:3px;flex-shrink:0;position:relative}
 
-/* DROP ZONES */
-.drop-zone{width:44px;height:44px;border:2px dashed rgba(245,200,66,.4);border-radius:8px;display:flex;align-items:center;justify-content:center;color:rgba(245,200,66,.4);font-size:1.2rem;transition:all .2s;flex-shrink:0;cursor:pointer}
-.drop-zone.active{border-color:var(--gold);color:var(--gold);background:rgba(245,200,66,.1);transform:scale(1.1)}
-.drop-zone:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,200,66,.08)}
+/* UNDO OVERLAY */
+#undo-bar{display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(13,27,42,.95);border-top:2px solid var(--red);padding:8px 14px;z-index:20;align-items:center;justify-content:space-between;gap:10px}
+#undo-bar.show{display:flex}
+#undo-timer-text{font-size:.8rem;color:var(--text)}
+#undo-progress{flex:1;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+#undo-fill{height:100%;background:var(--red);width:100%;transition:width linear}
+#btn-undo{font-family:'Cairo',sans-serif;background:var(--red);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;touch-action:manipulation}
 
 /* MSG BAR */
-#msg-bar{padding:5px 12px;text-align:center;font-size:.78rem;font-weight:700;color:var(--gold);background:rgba(0,0,0,.3);min-height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-top:1px solid rgba(255,255,255,.04)}
+#msg-bar{padding:4px 12px;text-align:center;font-size:.75rem;font-weight:700;color:var(--gold);background:rgba(0,0,0,.3);min-height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-top:1px solid rgba(255,255,255,.04)}
 
 /* MY HAND */
-#my-zone{background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.05);padding:8px;flex-shrink:0;min-height:80px}
-#my-hand{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:flex-end}
+#my-zone{background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.04);padding:6px;flex-shrink:0;min-height:76px}
+#my-hand{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;align-items:flex-end}
 
 /* CONTROLS */
-#controls{display:flex;gap:6px;padding:7px 10px 9px;background:rgba(0,0,0,.2);flex-shrink:0}
-.btn{flex:1;font-family:'Cairo',sans-serif;border:none;border-radius:9px;padding:10px 6px;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .15s;touch-action:manipulation}
-#btn-draw{background:var(--card);color:var(--gold);border:1.5px solid rgba(245,200,66,.35)}
-#btn-draw:hover{background:rgba(245,200,66,.15)}
+#controls{display:flex;gap:5px;padding:6px 8px 8px;background:rgba(0,0,0,.2);flex-shrink:0}
+.btn{flex:1;font-family:'Cairo',sans-serif;border:none;border-radius:9px;padding:9px 5px;font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s;touch-action:manipulation}
+#btn-draw{background:var(--card);color:var(--gold);border:1.5px solid rgba(245,200,66,.3)}
+#btn-draw:hover{background:rgba(245,200,66,.12)}
 #btn-draw:disabled{opacity:.3;pointer-events:none}
-#btn-leave{background:rgba(255,255,255,.07);color:var(--muted);border:1px solid rgba(255,255,255,.1);flex:0.7}
+#btn-leave{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.1);flex:.7}
 
-/* ===== DOMINO TILES ===== */
-.tile{background:var(--ivory);border-radius:5px;border:1.5px solid #c8bfaa;box-shadow:1px 3px 7px var(--shadow);display:inline-flex;cursor:grab;transition:transform .15s,box-shadow .15s,border-color .15s,opacity .15s;position:relative;flex-shrink:0;touch-action:none}
-.tile:active{cursor:grabbing}
-/* Vertical tile (normal) */
-.tile.V{flex-direction:column;width:32px;height:60px}
-/* Horizontal tile (normal) */
-.tile.H{flex-direction:row;width:60px;height:32px}
-/* Double tile - always perpendicular to chain */
-.tile.DBL-H{flex-direction:column;width:32px;height:60px} /* double on H chain = vertical */
-.tile.DBL-V{flex-direction:row;width:60px;height:32px}  /* double on V chain = horizontal */
-
-/* Chain tiles */
+/* TILES */
+.tile{background:var(--ivory);border-radius:5px;border:1.5px solid #c8bfaa;box-shadow:1px 3px 7px var(--shadow);display:inline-flex;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s,opacity .15s;position:relative;flex-shrink:0;touch-action:manipulation}
+.tile.V{flex-direction:column;width:30px;height:56px}
+.tile.H{flex-direction:row;width:56px;height:30px}
+.tile.DBL{flex-direction:column;width:28px;height:52px}
 .chain-t{cursor:default;pointer-events:none}
-.chain-t.H{flex-direction:row;width:52px;height:28px}
-.chain-t.V{flex-direction:column;width:28px;height:52px}
-.chain-t.DBL{flex-direction:column;width:28px;height:52px} /* doubles are always vertical on horizontal chain */
-
+.chain-t.H{flex-direction:row;width:46px;height:25px}
+.chain-t.V{flex-direction:column;width:25px;height:46px}
+.chain-t.DBL{flex-direction:column;width:25px;height:46px}
+/* Pending tile (placed but in 5sec undo window) */
+.chain-t.pending{pointer-events:none;border-color:var(--gold)!important;box-shadow:0 0 8px rgba(245,200,66,.5)!important;animation:pendingPulse 1s ease-in-out infinite}
+@keyframes pendingPulse{0%,100%{box-shadow:0 0 6px rgba(245,200,66,.4)}50%{box-shadow:0 0 14px rgba(245,200,66,.8)}}
 .tile:hover{transform:translateY(-5px);box-shadow:1px 7px 14px var(--shadow)}
-.tile.sel{border-color:var(--red)!important;box-shadow:0 0 0 2.5px rgba(232,64,64,.5),1px 8px 16px var(--shadow);transform:translateY(-8px)}
-.tile.dragging{opacity:.5;transform:scale(.95)}
-.tile.dim{opacity:.35;cursor:not-allowed}
+.tile.sel{border-color:var(--gold)!important;box-shadow:0 0 0 2.5px rgba(245,200,66,.5),1px 7px 14px var(--shadow);transform:translateY(-8px)}
+.tile.dim{opacity:.28;cursor:not-allowed}
 .tile.dim:hover{transform:none;box-shadow:1px 3px 7px var(--shadow)}
-
 .half{flex:1;display:flex;align-items:center;justify-content:center}
-.tile.V .half:first-child,.tile.DBL-H .half:first-child{border-bottom:1.5px solid #b0a090}
-.tile.H .half:first-child,.tile.DBL-V .half:first-child{border-right:1.5px solid #b0a090}
+.tile.V .half:first-child,.tile.DBL .half:first-child{border-bottom:1.5px solid #b0a090}
+.tile.H .half:first-child{border-right:1.5px solid #b0a090}
 .chain-t.H .half:first-child{border-right:1.5px solid #b0a090}
 .chain-t.V .half:first-child,.chain-t.DBL .half:first-child{border-bottom:1.5px solid #b0a090}
-
-/* PIPS */
 .pip-grid{display:grid;width:100%;height:100%;padding:3px;gap:1px}
 .pip{width:5px;height:5px;background:var(--pip);border-radius:50%;box-shadow:0 1px 1px rgba(0,0,0,.4);justify-self:center;align-self:center}
 .chain-t .pip{width:4px;height:4px}
@@ -141,29 +148,22 @@ html,body{height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:
 /* WIN */
 #win-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center}
 #win-bg.show{display:flex}
-#win-box{background:linear-gradient(160deg,#1b2d3e,#0d1b2a);border:2.5px solid var(--gold);border-radius:20px;padding:34px 38px;text-align:center;max-width:320px;width:90%;box-shadow:0 0 50px rgba(245,200,66,.2);animation:winPop .3s cubic-bezier(.34,1.56,.64,1)}
+#win-box{background:linear-gradient(160deg,#1b2d3e,#0d1b2a);border:2.5px solid var(--gold);border-radius:20px;padding:30px 36px;text-align:center;max-width:300px;width:88%;box-shadow:0 0 50px rgba(245,200,66,.2);animation:winPop .3s cubic-bezier(.34,1.56,.64,1)}
 @keyframes winPop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
-#win-emoji{font-size:2.8rem;margin-bottom:6px}
-#win-title{font-family:'Amiri',serif;font-size:2rem;color:var(--gold);margin-bottom:4px}
-#win-sub{color:var(--muted);font-size:.88rem;margin-bottom:20px}
-.win-btn{font-family:'Cairo',sans-serif;border:none;border-radius:10px;padding:11px 28px;font-size:.9rem;font-weight:800;cursor:pointer;display:block;width:100%;margin-bottom:8px;touch-action:manipulation}
+#win-emoji{font-size:2.6rem;margin-bottom:5px}
+#win-title{font-family:'Amiri',serif;font-size:1.8rem;color:var(--gold);margin-bottom:3px}
+#win-sub{color:var(--muted);font-size:.85rem;margin-bottom:18px}
+.win-btn{font-family:'Cairo',sans-serif;border:none;border-radius:10px;padding:10px 26px;font-size:.88rem;font-weight:800;cursor:pointer;display:block;width:100%;margin-bottom:7px;touch-action:manipulation}
 .win-btn.gold{background:var(--gold);color:#000}
 .win-btn.gray{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.15)}
 
-/* SPINNER */
-.spin{display:inline-block;width:11px;height:11px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--gold);border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle}
+.spin{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--gold);border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* DRAG GHOST */
-#drag-ghost{position:fixed;pointer-events:none;z-index:9999;opacity:.85;transform:translate(-50%,-50%)}
-
-#table-scroll::-webkit-scrollbar{height:5px;width:5px}
+#table-scroll::-webkit-scrollbar{height:4px;width:4px}
 #table-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:4px}
 
-@media(min-width:700px){
-  #app{border-left:1px solid rgba(255,255,255,.06);border-right:1px solid rgba(255,255,255,.06)}
-  body{background:#070e14}
-}
+@media(min-width:700px){#app{border-left:1px solid rgba(255,255,255,.06);border-right:1px solid rgba(255,255,255,.06)}body{background:#070e14}}
 </style>
 </head>
 <body>
@@ -171,14 +171,12 @@ html,body{height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:
 
 <!-- LOBBY -->
 <div id="lobby" class="screen active">
-  <h1>🁢V2.0 دومينو</h1>
+  <h1>🁢 دومينو</h1>
   <p class="sub">العب مع أيه حبيبتي ❤️</p>
-
   <div class="card">
     <h3>اسمك</h3>
     <input class="inp" id="inp-name" placeholder="اكتب اسمك" maxlength="14">
   </div>
-
   <div class="card">
     <h3>🆕 لعبة جديدة</h3>
     <button class="bbtn gold" id="btn-create">إنشاء غرفة</button>
@@ -193,12 +191,11 @@ html,body{height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:
 <!-- WAITING -->
 <div id="waiting" class="screen">
   <h2>غرفة اللعب</h2>
-  <p style="color:var(--muted);font-size:.82rem">ابعت الكود ده للمجموعة 📲</p>
+  <p style="color:var(--muted);font-size:.8rem">ابعت الكود للمجموعة 📲</p>
   <div class="room-code" id="room-code-display">——</div>
-  <p style="color:var(--muted);font-size:.78rem;margin-bottom:10px">اللاعبون المنضمون:</p>
   <div class="players-list" id="players-list"></div>
-  <p style="color:var(--muted);font-size:.75rem;margin:8px 0">من 2 لـ 6 لاعبين — صاحب الغرفة يبدأ اللعبة</p>
-  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px">
+  <p style="color:var(--muted);font-size:.72rem;margin:6px 0">من 2 لـ 6 لاعبين — صاحب الغرفة يبدأ</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px">
     <button class="sbtn start" id="btn-start-game" style="display:none">▶ ابدأ اللعبة</button>
     <button class="sbtn" id="btn-copy-code">📋 نسخ الكود</button>
     <button class="sbtn danger" id="btn-cancel-wait">إلغاء</button>
@@ -207,36 +204,45 @@ html,body{height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:
 
 <!-- GAME -->
 <div id="game">
+  <div id="prayer-bar">
+    <div id="prayer-times-row"><span style="color:var(--muted);font-size:.6rem">⏳ مواقيت الصلاة…</span></div>
+    <span id="city-name"></span>
+  </div>
+  <div id="hadith-bar">
+    <div id="hadith-ar">﷽</div>
+    <div id="hadith-en"></div>
+  </div>
   <div id="hdr">
     <h1>🁢 دومينو</h1>
     <div class="scores" id="scores-row"></div>
   </div>
-
   <div id="opps-row"></div>
-
   <div id="table-wrap">
     <div id="table-scroll">
       <div id="chain-container">
         <div id="chain">
-          <div id="empty-hint">اسحب قطعة وضعها هنا لتبدأ 🎯</div>
+          <div id="empty-hint" style="color:rgba(255,255,255,.2);font-size:.82rem;text-align:center;padding:24px;font-style:italic;border:2px dashed rgba(255,255,255,.1);border-radius:12px;min-width:180px">
+            اضغط على قطعة لتبدأ 🎯
+          </div>
         </div>
       </div>
     </div>
+    <!-- UNDO BAR inside table wrap -->
+    <div id="undo-bar">
+      <span id="undo-timer-text">تراجع؟</span>
+      <div id="undo-progress"><div id="undo-fill"></div></div>
+      <button id="btn-undo">↩ تراجع</button>
+    </div>
   </div>
-
   <div id="msg-bar">جاري التحميل…</div>
-
-  <div id="my-zone">
-    <div id="my-hand"></div>
-  </div>
-
+  <div id="my-zone"><div id="my-hand"></div></div>
   <div id="controls">
-    <button class="btn" id="btn-draw">سحب من البازل 🎲</button>
+    <button class="btn" id="btn-draw">سحب 🎲</button>
     <button class="btn" id="btn-leave">خروج 🚪</button>
   </div>
 </div>
 
-</div><!-- /app -->
+</div>
 
 <!-- WIN -->
 <div id="win-bg">
@@ -249,428 +255,389 @@ html,body{height:100%;font-family:'Cairo',sans-serif;background:var(--bg);color:
   </div>
 </div>
 
-<!-- DRAG GHOST -->
-<div id="drag-ghost"></div>
-
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, get, update, onValue, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import{getDatabase,ref,set,get,update,onValue,remove}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDP0I6KtiHFhdGhdhRKGs6EdEBpCaFfvDM",
-  authDomain: "dominokimo.firebaseapp.com",
-  databaseURL: "https://dominokimo-default-rtdb.firebaseio.com",
-  projectId: "dominokimo",
-  storageBucket: "dominokimo.firebasestorage.app",
-  messagingSenderId: "808003512706",
-  appId: "1:808003512706:web:4f650ac159854a1184879b"
-};
-const fbApp = initializeApp(firebaseConfig);
-const db = getDatabase(fbApp);
+const firebaseConfig={apiKey:"AIzaSyDP0I6KtiHFhdGhdhRKGs6EdEBpCaFfvDM",authDomain:"dominokimo.firebaseapp.com",databaseURL:"https://dominokimo-default-rtdb.firebaseio.com",projectId:"dominokimo",storageBucket:"dominokimo.firebasestorage.app",messagingSenderId:"808003512706",appId:"1:808003512706:web:4f650ac159854a1184879b"};
+const fbApp=initializeApp(firebaseConfig);
+const db=getDatabase(fbApp);
 
-// ── PIP MAP ──────────────────────────────────────────────
-const PIP_MAP={0:[],1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
+// ── HADITHS ──────────────────────────────────────────────
+const HADITHS=[
+  {ar:"إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى.",en:"Actions are judged by intentions, and every person will have what they intended."},
+  {ar:"المسلم من سلم المسلمون من لسانه ويده.",en:"A Muslim is one from whose tongue and hands other Muslims are safe."},
+  {ar:"لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه.",en:"None of you truly believes until he loves for his brother what he loves for himself."},
+  {ar:"تبسّمك في وجه أخيك صدقة.",en:"Your smile in the face of your brother is an act of charity."},
+  {ar:"خيركم من تعلّم القرآن وعلّمه.",en:"The best of you are those who learn the Quran and teach it."},
+  {ar:"إن الله يحب إذا عمل أحدكم عملاً أن يتقنه.",en:"Allah loves that when one of you does a task, they do it with excellence."},
+  {ar:"الصدق يهدي إلى البر، وإن البر يهدي إلى الجنة.",en:"Truthfulness leads to righteousness, and righteousness leads to Paradise."},
+  {ar:"من كان يؤمن بالله واليوم الآخر فليقل خيراً أو ليصمت.",en:"Whoever believes in Allah and the Last Day, let him speak good or remain silent."},
+  {ar:"أحب الأعمال إلى الله أدومها وإن قل.",en:"The most beloved deeds to Allah are the most consistent, even if they are few."},
+  {ar:"الكلمة الطيبة صدقة.",en:"A kind word is an act of charity."},
+  {ar:"خير الناس أنفعهم للناس.",en:"The best of people are those most beneficial to others."},
+  {ar:"من سلك طريقاً يلتمس فيه علماً سهّل الله له طريقاً إلى الجنة.",en:"Whoever travels a path seeking knowledge, Allah makes easy a path to Paradise."},
+  {ar:"الدين النصيحة.",en:"Religion is sincere advice."},
+  {ar:"البر حسن الخلق.",en:"Righteousness is good character."},
+  {ar:"اتق الله حيثما كنت، وأتبع السيئة الحسنة تمحها.",en:"Fear Allah wherever you are, and follow a bad deed with a good one to erase it."},
+];
+let hadithIdx=Math.floor(Math.random()*HADITHS.length);
+function showHadith(){
+  const h=HADITHS[hadithIdx%HADITHS.length];
+  document.getElementById('hadith-ar').textContent='❝ '+h.ar+' ❞';
+  document.getElementById('hadith-en').textContent='❝ '+h.en+' ❞';
+  hadithIdx++;
+}
+showHadith();
+setInterval(showHadith,60000);
 
-function makePips(n,small=false){
-  const g=document.createElement('div');
-  g.className='pip-grid'; g.dataset.n=n;
-  for(let i=1;i<=9;i++){
-    const c=document.createElement('div');
-    if(PIP_MAP[n].includes(i)){
-      const p=document.createElement('div');
-      p.className='pip';
-      if(small) p.style.cssText='width:3px;height:3px';
-      c.appendChild(p);
+// ── PRAYER TIMES ──────────────────────────────────────────
+const PRAYER_NAMES={Fajr:'الفجر',Sunrise:'الشروق',Dhuhr:'الظهر',Asr:'العصر',Maghrib:'المغرب',Isha:'العشاء'};
+const PRAYER_KEYS=['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
+async function loadPrayerTimes(){
+  try{
+    let lat,lon,city='';
+    try{
+      const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:6000}));
+      lat=pos.coords.latitude;lon=pos.coords.longitude;
+      try{const cr=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);const cd=await cr.json();city=cd.address?.city||cd.address?.town||cd.address?.state||'';}catch(e){}
+    }catch(e){
+      const ipR=await fetch('https://ipapi.co/json/');const ipD=await ipR.json();
+      lat=ipD.latitude;lon=ipD.longitude;city=ipD.city||'';
     }
-    g.appendChild(c);
-  }
-  return g;
+    const today=new Date();
+    const url=`https://api.aladhan.com/v1/timings/${today.getDate()}-${today.getMonth()+1}-${today.getFullYear()}?latitude=${lat}&longitude=${lon}&method=4`;
+    const r=await fetch(url);const d=await r.json();
+    renderPrayerTimes(d.data.timings,city);
+  }catch(e){document.getElementById('prayer-times-row').innerHTML='<span style="color:var(--muted);font-size:.6rem">مواقيت الصلاة غير متاحة</span>';}
+}
+function renderPrayerTimes(timings,city){
+  const row=document.getElementById('prayer-times-row');row.innerHTML='';
+  const now=new Date();const nowMin=now.getHours()*60+now.getMinutes();
+  let nextKey=null,minDiff=Infinity;
+  PRAYER_KEYS.forEach(k=>{const t=timings[k];if(!t)return;const[h,m]=t.split(':').map(Number);const diff=(h*60+m)-nowMin;if(diff>0&&diff<minDiff){minDiff=diff;nextKey=k}});
+  PRAYER_KEYS.forEach(k=>{
+    const t=timings[k];if(!t)return;
+    const item=document.createElement('div');item.className='prayer-item'+(k===nextKey?' next-prayer':'');
+    item.innerHTML=`<span class="pname">${PRAYER_NAMES[k]||k}</span><span class="ptime">${t}</span>`;
+    row.appendChild(item);
+  });
+  if(city)document.getElementById('city-name').textContent='📍'+city;
 }
 
-function makeTileEl(a,b,cls='V',isChain=false){
-  const t=document.createElement('div');
-  t.className=(isChain?'tile chain-t ':'tile ')+cls;
+// ── PIPS ─────────────────────────────────────────────────
+const PIP_MAP={0:[],1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]};
+function makePips(n){
+  const g=document.createElement('div');g.className='pip-grid';g.dataset.n=n;
+  for(let i=1;i<=9;i++){const c=document.createElement('div');if(PIP_MAP[n].includes(i)){const p=document.createElement('div');p.className='pip';c.appendChild(p)}g.appendChild(c);}
+  return g;
+}
+function makeTileEl(a,b,cls,isChain=false){
+  const t=document.createElement('div');t.className=(isChain?'tile chain-t ':'tile ')+cls;
   const h1=document.createElement('div');h1.className='half';
   const h2=document.createElement('div');h2.className='half';
-  h1.appendChild(makePips(a,isChain));
-  h2.appendChild(makePips(b,isChain));
-  t.appendChild(h1);t.appendChild(h2);
-  return t;
+  h1.appendChild(makePips(a));h2.appendChild(makePips(b));
+  t.appendChild(h1);t.appendChild(h2);return t;
 }
 
 // ── GAME LOGIC ────────────────────────────────────────────
-function allTiles(){
-  const t=[];
-  for(let a=0;a<=6;a++) for(let b=a;b<=6;b++) t.push([a,b]);
-  return t;
-}
-function shuffle(arr){
-  const a=[...arr];
-  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
-  return a;
-}
+function allTiles(){const t=[];for(let a=0;a<=6;a++)for(let b=a;b<=6;b++)t.push([a,b]);return t}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function canFit(a,b,end){if(end===-1)return true;return a===end||b===end}
 function isDouble(a,b){return a===b}
-function canFit(a,b,end){
-  if(end===-1)return true;
-  return a===end||b===end;
-}
-
-// Place tile on chain, return updated state
-function placeTile(chain,leftEnd,rightEnd,a,b,side){
-  const newChain=[...chain];
-  let nL=leftEnd,nR=rightEnd;
-  const dbl=isDouble(a,b);
-
-  if(leftEnd===-1){
-    // First tile
-    newChain.push({a,b,dbl});
-    nL=a; nR=b;
-  } else if(side==='left'){
-    const flip=(b===leftEnd);
-    const ta=flip?b:a, tb=flip?a:b;
-    newChain.unshift({a:ta,b:tb,dbl});
-    nL=dbl?leftEnd:tb; // double doesn't change the end value
-    if(dbl) nL=ta; // for double, exposed end is same number
-  } else {
-    const flip=(a===rightEnd);
-    const ta=flip?b:a, tb=flip?a:b;
-    newChain.push({a:ta,b:tb,dbl});
-    nR=dbl?rightEnd:tb;
-    if(dbl) nR=tb;
-  }
-  return{chain:newChain,leftEnd:nL,rightEnd:nR};
-}
-
 function sumHand(h){return(h||[]).reduce((s,[a,b])=>s+a+b,0)}
-function handCanPlay(hand,lE,rE){
-  if(lE===-1)return true;
-  return(hand||[]).some(([a,b])=>canFit(a,b,lE)||canFit(a,b,rE));
+function handCanPlay(hand,lE,rE){if(lE===-1)return true;return(hand||[]).some(([a,b])=>canFit(a,b,lE)||canFit(a,b,rE))}
+
+function placeTile(chain,lE,rE,a,b,side){
+  const nc=[...chain];let nL=lE,nR=rE;const dbl=isDouble(a,b);
+  if(lE===-1){nc.push({a,b,dbl});nL=a;nR=b;}
+  else if(side==='left'){
+    const flip=b===lE;nc.unshift({a:flip?b:a,b:flip?a:b,dbl});
+    nL=dbl?a:(flip?a:b);
+  }else{
+    const flip=a===rE;nc.push({a:flip?b:a,b:flip?a:b,dbl});
+    nR=dbl?b:(flip?b:a);
+  }
+  return{chain:nc,leftEnd:nL,rightEnd:nR};
+}
+
+// Choose best side automatically
+function chooseSide(a,b,lE,rE,chain){
+  const canL=canFit(a,b,lE);const canR=canFit(a,b,rE);
+  if(!canL&&!canR)return null;
+  if(canL&&!canR)return 'left';
+  if(!canL&&canR)return 'right';
+  // Both sides — prefer right (more natural), unless left end has bigger number
+  return lE>=rE?'left':'right';
 }
 
 // ── STATE ─────────────────────────────────────────────────
 let myId=null,myName='',roomId=null,myRole=null;
 let isHost=false,vsAI=false;
 let unsubRoom=null,unsubGame=null;
-let lastGS=null;
-let localScores={};
-let dragTile=null; // {idx, el}
+let lastGS=null,localScores={};
+// Undo state
+let pendingMove=null; // {prevGS, timeout}
+let undoTimer=null,undoInterval=null;
 
-// ── UTILS ─────────────────────────────────────────────────
-function genCode(){
-  const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  return Array.from({length:5},()=>c[Math.floor(Math.random()*c.length)]).join('');
-}
+function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:5},()=>c[Math.floor(Math.random()*c.length)]).join('')}
 function genId(){return Math.random().toString(36).slice(2,10)}
 function lobbyErr(t){document.getElementById('lobby-err').textContent=t}
 function setMsg(t){document.getElementById('msg-bar').innerHTML=t}
+function showScreen(id){document.querySelectorAll('.screen,#game').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 
-function showScreen(id){
-  document.querySelectorAll('.screen,#game').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-// ── RENDER CHAIN ─────────────────────────────────────────
+// ── RENDER CHAIN ──────────────────────────────────────────
 function renderChain(gs){
   const chain=gs.chain||[];
   const el=document.getElementById('chain');
   el.innerHTML='';
+  const activePlayers=gs.activePlayers||[];
+  const amActive=activePlayers.includes(myRole);
 
   if(chain.length===0){
-    el.innerHTML='<div id="empty-hint">اسحب قطعة وضعها هنا لتبدأ 🎯</div>';
-    if(gs.turn===myRole&&!gs.winner) setupDropZoneEmpty(el);
+    const hint=document.createElement('div');
+    hint.id='empty-hint';
+    hint.style.cssText='color:rgba(255,255,255,.2);font-size:.82rem;text-align:center;padding:24px;font-style:italic;border:2px dashed rgba(255,255,255,.1);border-radius:12px;min-width:180px';
+    hint.textContent=amActive&&gs.turn===myRole?'اضغط على قطعة لتبدأ 🎯':'في انتظار…';
+    el.appendChild(hint);
     return;
   }
 
-  const isMyTurn=gs.turn===myRole&&!gs.winner;
-
-  // Left drop zone
-  if(isMyTurn){
-    const dz=makeDropZone('left');
-    el.appendChild(dz);
-  }
-
-  // Chain tiles
-  chain.forEach(({a,b,dbl})=>{
+  chain.forEach(({a,b,dbl},idx)=>{
     const cls=dbl?'DBL':'H';
     const t=makeTileEl(a,b,cls,true);
+    // Mark pending tile
+    if(gs.pendingIdx!==undefined&&gs.pendingIdx!==null&&idx===gs.pendingIdx&&gs.pendingRole===myRole){
+      t.classList.add('pending');
+    }
     el.appendChild(t);
   });
 
-  // Right drop zone
-  if(isMyTurn){
-    const dz=makeDropZone('right');
-    el.appendChild(dz);
-  }
-
-  // Scroll to end
+  // Scroll to center / end
   setTimeout(()=>{
     const s=document.getElementById('table-scroll');
-    s.scrollLeft=s.scrollWidth;
+    // Center the chain
+    const container=document.getElementById('chain-container');
+    const chainEl=document.getElementById('chain');
+    const cw=chainEl.offsetWidth;const sw=s.offsetWidth;
+    if(cw<sw){
+      // Center it
+      s.scrollLeft=Math.max(0,(cw-sw)/2);
+    }else{
+      s.scrollLeft=(cw-sw)/2+cw/2;
+    }
   },50);
 }
 
-function makeDropZone(side){
-  const dz=document.createElement('div');
-  dz.className='drop-zone';
-  dz.dataset.side=side;
-  dz.textContent=side==='left'?'←':'→';
-  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('active')});
-  dz.addEventListener('dragleave',()=>dz.classList.remove('active'));
-  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('active');if(dragTile!==null)doPlay(dragTile,side)});
-  // Touch
-  dz.addEventListener('touchend',()=>{if(dragTile!==null)doPlay(dragTile,side)});
-  return dz;
-}
-
-function setupDropZoneEmpty(el){
-  el.addEventListener('dragover',e=>e.preventDefault());
-  el.addEventListener('drop',e=>{e.preventDefault();if(dragTile!==null)doPlay(dragTile,'right')});
-  el.addEventListener('touchend',()=>{if(dragTile!==null)doPlay(dragTile,'right')});
-}
-
-// ── RENDER OPPONENTS ──────────────────────────────────────
+// ── RENDER OPPS ───────────────────────────────────────────
 function renderOpps(gs){
-  const row=document.getElementById('opps-row');
-  row.innerHTML='';
-  const scoresRow=document.getElementById('scores-row');
-  scoresRow.innerHTML='';
+  const row=document.getElementById('opps-row');row.innerHTML='';
+  const scRow=document.getElementById('scores-row');scRow.innerHTML='';
+  const roles=gs.activePlayers||[];
+  const waiting=gs.waitingPlayers||[];
 
-  const roles=gs.roles||[];
   roles.forEach(role=>{
     if(role===myRole)return;
     const name=gs.names?.[role]||role;
     const hand=gs[role+'Hand']||[];
     const sc=localScores[role]||0;
     const isT=gs.turn===role;
-
-    // Opponent tiles visual
-    const info=document.createElement('div');
-    info.className='opp-info';
-    const nm=document.createElement('div');
-    nm.className='opp-name';
-    nm.textContent=`${name} (${hand.length})${isT?' 🟢':''}`;
-    const tr=document.createElement('div');
-    tr.className='opp-tiles-row';
-    hand.slice(0,10).forEach(()=>{
-      const bt=document.createElement('div');bt.className='back-tile';tr.appendChild(bt);
-    });
-    info.appendChild(nm);info.appendChild(tr);
-    row.appendChild(info);
-
-    // Score box
-    const sb=document.createElement('div');
-    sb.className='sbox'+(isT?' myturn':'');
+    const info=document.createElement('div');info.className='opp-info';
+    const nm=document.createElement('div');nm.className='opp-name';
+    nm.textContent=`${name}(${hand.length})${isT?' 🟢':''}`;
+    const tr=document.createElement('div');tr.className='opp-tiles-row';
+    hand.slice(0,12).forEach(()=>{const bt=document.createElement('div');bt.className='back-tile';tr.appendChild(bt)});
+    info.appendChild(nm);info.appendChild(tr);row.appendChild(info);
+    const sb=document.createElement('div');sb.className='sbox'+(isT?' myturn':'');
     sb.innerHTML=`<div class="sl">${name}</div><div class="sv">${sc}</div>`;
-    scoresRow.appendChild(sb);
+    scRow.appendChild(sb);
   });
 
-  // My score box
+  if(waiting.length>0){
+    const wb=document.createElement('div');wb.className='waiting-badge';
+    wb.textContent=`⏳ ${waiting.map(r=>gs.names?.[r]||r).join('، ')}`;
+    row.appendChild(wb);
+  }
+
   const myName2=gs.names?.[myRole]||'أنا';
   const mysc=localScores[myRole]||0;
   const isMyT=gs.turn===myRole;
-  const msb=document.createElement('div');
-  msb.className='sbox'+(isMyT?' myturn':'');
+  const msb=document.createElement('div');msb.className='sbox'+(isMyT?' myturn':'');
   msb.innerHTML=`<div class="sl">${myName2}</div><div class="sv">${mysc}</div>`;
-  scoresRow.appendChild(msb);
+  scRow.appendChild(msb);
 }
 
-// ── RENDER MY HAND ────────────────────────────────────────
+// ── RENDER HAND ───────────────────────────────────────────
 function renderHand(gs){
   const myHand=gs[myRole+'Hand']||[];
-  const lE=gs.leftEnd;const rE=gs.rightEnd;
-  const isMyT=gs.turn===myRole&&!gs.winner;
-  const el=document.getElementById('my-hand');
-  el.innerHTML='';
+  const lE=gs.leftEnd,rE=gs.rightEnd;
+  const activePlayers=gs.activePlayers||[];
+  const amActive=activePlayers.includes(myRole);
+  const isMyT=gs.turn===myRole&&!gs.winner&&amActive;
+  const inUndo=pendingMove!==null;
+  const el=document.getElementById('my-hand');el.innerHTML='';
+
+  if(!amActive){
+    el.innerHTML='<div style="color:var(--muted);font-size:.78rem;padding:14px;text-align:center">⏳ انتظر الجولة القادمة…</div>';
+    document.getElementById('btn-draw').disabled=true;
+    return;
+  }
 
   myHand.forEach(([a,b],i)=>{
-    const canL=canFit(a,b,lE);
-    const canR=canFit(a,b,rE);
-    const playable=(gs.chain||[]).length===0||(isMyT&&(canL||canR));
+    const canL=canFit(a,b,lE),canR=canFit(a,b,rE);
+    const playable=myHand.length>0&&((gs.chain||[]).length===0||(canL||canR));
     const t=makeTileEl(a,b,'V');
-    if(!isMyT||(!playable&&(gs.chain||[]).length>0)) t.classList.add('dim');
-    setupDrag(t,i,isMyT&&(playable||(gs.chain||[]).length===0));
+    if(inUndo){t.classList.add('dim')}
+    else if(!isMyT||!playable){t.classList.add('dim')}
+    else{
+      t.addEventListener('click',()=>onTapTile(i));
+      t.addEventListener('touchend',(e)=>{e.preventDefault();onTapTile(i)});
+    }
     el.appendChild(t);
   });
-
-  document.getElementById('btn-draw').disabled=!isMyT||gs.winner;
+  document.getElementById('btn-draw').disabled=!isMyT||inUndo;
 }
 
-// ── DRAG & DROP ───────────────────────────────────────────
-function setupDrag(el,idx,enabled){
-  if(!enabled){el.draggable=false;return}
-  el.draggable=true;
-
-  // Mouse drag
-  el.addEventListener('dragstart',e=>{
-    dragTile=idx;
-    el.classList.add('dragging');
-    e.dataTransfer.effectAllowed='move';
-    // Highlight drop zones
-    document.querySelectorAll('.drop-zone').forEach(dz=>dz.classList.add('active'));
-    setTimeout(()=>el.classList.add('dragging'),0);
-  });
-  el.addEventListener('dragend',()=>{
-    dragTile=null;
-    el.classList.remove('dragging');
-    document.querySelectorAll('.drop-zone').forEach(dz=>dz.classList.remove('active'));
-    document.getElementById('drag-ghost').innerHTML='';
-  });
-
-  // Touch drag
-  let touchStartX=0,touchStartY=0;
-  el.addEventListener('touchstart',e=>{
-    const touch=e.touches[0];
-    touchStartX=touch.clientX;touchStartY=touch.clientY;
-    dragTile=idx;
-    el.classList.add('sel');
-    // Show ghost
-    const ghost=document.getElementById('drag-ghost');
-    ghost.innerHTML='';
-    const clone=el.cloneNode(true);
-    clone.style.transform='scale(1.1)';
-    ghost.appendChild(clone);
-    ghost.style.left=touch.clientX+'px';
-    ghost.style.top=touch.clientY+'px';
-  },{passive:true});
-
-  el.addEventListener('touchmove',e=>{
-    e.preventDefault();
-    const touch=e.touches[0];
-    const ghost=document.getElementById('drag-ghost');
-    ghost.style.left=touch.clientX+'px';
-    ghost.style.top=touch.clientY+'px';
-    // Highlight nearest drop zone
-    document.querySelectorAll('.drop-zone').forEach(dz=>{
-      const r=dz.getBoundingClientRect();
-      const over=touch.clientX>=r.left&&touch.clientX<=r.right&&touch.clientY>=r.top&&touch.clientY<=r.bottom;
-      dz.classList.toggle('active',over);
-    });
-    // Check empty chain
-    const hint=document.getElementById('empty-hint');
-    if(hint){
-      const r=hint.getBoundingClientRect();
-      if(touch.clientX>=r.left&&touch.clientX<=r.right&&touch.clientY>=r.top&&touch.clientY<=r.bottom){
-        hint.style.borderColor='var(--gold)';
-      } else {hint.style.borderColor=''}
-    }
-  },{passive:false});
-
-  el.addEventListener('touchend',e=>{
-    e.preventDefault();
-    el.classList.remove('sel');
-    document.getElementById('drag-ghost').innerHTML='';
-    const touch=e.changedTouches[0];
-    // Find drop target
-    let placed=false;
-    document.querySelectorAll('.drop-zone').forEach(dz=>{
-      const r=dz.getBoundingClientRect();
-      if(touch.clientX>=r.left&&touch.clientX<=r.right&&touch.clientY>=r.top&&touch.clientY<=r.bottom){
-        doPlay(idx,dz.dataset.side);placed=true;
-      }
-    });
-    // Check empty chain drop
-    if(!placed){
-      const hint=document.getElementById('empty-hint');
-      if(hint){
-        const r=hint.getBoundingClientRect();
-        if(touch.clientX>=r.left&&touch.clientX<=r.right&&touch.clientY>=r.top&&touch.clientY<=r.bottom){
-          doPlay(idx,'right');placed=true;
-        }
-      }
-    }
-    dragTile=null;
-    document.querySelectorAll('.drop-zone').forEach(dz=>dz.classList.remove('active'));
-  });
+// ── TAP TO PLAY ───────────────────────────────────────────
+function onTapTile(idx){
+  const gs=lastGS;
+  if(!gs||gs.turn!==myRole||gs.winner||pendingMove!==null)return;
+  const activePlayers=gs.activePlayers||[];
+  if(!activePlayers.includes(myRole))return;
+  const myHand=gs[myRole+'Hand']||[];
+  if(idx>=myHand.length)return;
+  const[a,b]=myHand[idx];
+  const lE=gs.leftEnd,rE=gs.rightEnd;
+  const side=chooseSide(a,b,lE,rE,gs.chain||[]);
+  if(!side&&(gs.chain||[]).length>0)return;
+  doPlay(idx,side||'right');
 }
 
-// ── PLAY TILE ─────────────────────────────────────────────
+// ── PLAY ─────────────────────────────────────────────────
 async function doPlay(idx,side){
   const gs=lastGS;
   if(!gs||gs.turn!==myRole||gs.winner)return;
+  const activePlayers=gs.activePlayers||[];
+  if(!activePlayers.includes(myRole))return;
   const myHand=[...(gs[myRole+'Hand']||[])];
   if(idx>=myHand.length)return;
-  const [a,b]=myHand[idx];
+  const[a,b]=myHand[idx];
   const lE=gs.leftEnd,rE=gs.rightEnd;
-
-  // Validate
   if((gs.chain||[]).length>0){
     const canL=canFit(a,b,lE),canR=canFit(a,b,rE);
-    if(side==='left'&&!canL)return;
-    if(side==='right'&&!canR)return;
     if(!canL&&!canR)return;
+    if(side==='left'&&!canL)side='right';
+    if(side==='right'&&!canR)side='left';
   }
-
   myHand.splice(idx,1);
   const res=placeTile(gs.chain||[],lE,rE,a,b,side);
-
-  // Find next turn
-  const roles=gs.roles||[];
+  const roles=activePlayers;
   const myIdx=roles.indexOf(myRole);
-  let nextRole=null;
-  // Try to find next player who can play
-  for(let i=1;i<=roles.length;i++){
-    const nr=roles[(myIdx+i)%roles.length];
-    const nh=gs[nr+'Hand']||[];
-    if(nr===myRole) continue;
-    if(handCanPlay(nh,res.leftEnd,res.rightEnd)||gs.boneyard?.length>0){
-      nextRole=nr;break;
-    }
-  }
-  if(!nextRole) nextRole=roles[(myIdx+1)%roles.length];
-
-  // Check win
+  const nextRole=roles[(myIdx+1)%roles.length];
   let winner=null;
   if(myHand.length===0){winner=myRole}
   else{
-    // Check blocked
-    const allBlocked=roles.every(r=>{
-      const h=r===myRole?myHand:(gs[r+'Hand']||[]);
-      return !handCanPlay(h,res.leftEnd,res.rightEnd);
-    });
+    const allBlocked=roles.every(r=>{const h=r===myRole?myHand:(gs[r+'Hand']||[]);return !handCanPlay(h,res.leftEnd,res.rightEnd)});
     if(allBlocked&&(!gs.boneyard||gs.boneyard.length===0)){
-      // Find player with least pips
       let minSum=Infinity;
-      roles.forEach(r=>{
-        const h=r===myRole?myHand:(gs[r+'Hand']||[]);
-        const s=sumHand(h);
-        if(s<minSum){minSum=s;winner=r}
-      });
+      roles.forEach(r=>{const h=r===myRole?myHand:(gs[r+'Hand']||[]);const s=sumHand(h);if(s<minSum){minSum=s;winner=r}});
     }
   }
+
+  // Mark pending (last tile in chain)
+  const pendingIdx=res.chain.length-1;
+
+  // Save prev state for undo
+  pendingMove={
+    prevHand:[...(gs[myRole+'Hand']||[])],
+    prevChain:[...(gs.chain||[])],
+    prevLeft:gs.leftEnd,prevRight:gs.rightEnd,
+    prevTurn:gs.turn,
+    winner,
+  };
 
   const updates={
     [`rooms/${roomId}/game/${myRole}Hand`]:myHand,
     [`rooms/${roomId}/game/chain`]:res.chain,
     [`rooms/${roomId}/game/leftEnd`]:res.leftEnd,
     [`rooms/${roomId}/game/rightEnd`]:res.rightEnd,
-    [`rooms/${roomId}/game/turn`]:winner?myRole:nextRole,
+    [`rooms/${roomId}/game/pendingRole`]:myRole,
+    [`rooms/${roomId}/game/pendingIdx`]:pendingIdx,
+    [`rooms/${roomId}/game/turn`]:winner?myRole:myRole, // keep turn on me during undo window
   };
   if(winner)updates[`rooms/${roomId}/game/winner`]=winner;
   await update(ref(db),updates);
 
-  if(vsAI&&!winner&&nextRole&&nextRole!==myRole){
-    setTimeout(()=>runAI(nextRole),800);
-  }
+  if(winner){endGame(winner,gs.names);pendingMove=null;return}
+
+  // Start 5 second undo window
+  startUndoTimer(nextRole,5);
 }
 
-// ── AI TURN ───────────────────────────────────────────────
+// ── UNDO TIMER ────────────────────────────────────────────
+function startUndoTimer(nextRole,seconds){
+  const bar=document.getElementById('undo-bar');
+  const fill=document.getElementById('undo-fill');
+  const txt=document.getElementById('undo-timer-text');
+  bar.classList.add('show');
+  fill.style.transition='none';
+  fill.style.width='100%';
+  setTimeout(()=>{
+    fill.style.transition=`width ${seconds}s linear`;
+    fill.style.width='0%';
+  },30);
+
+  let remaining=seconds;
+  txt.textContent=`تراجع؟ (${remaining}s)`;
+  undoInterval=setInterval(()=>{
+    remaining--;
+    txt.textContent=`تراجع؟ (${remaining}s)`;
+    if(remaining<=0){clearInterval(undoInterval);undoInterval=null}
+  },1000);
+
+  undoTimer=setTimeout(async()=>{
+    // Commit — pass turn to next player
+    bar.classList.remove('show');
+    pendingMove=null;
+    const updates={
+      [`rooms/${roomId}/game/turn`]:nextRole,
+      [`rooms/${roomId}/game/pendingRole`]:null,
+      [`rooms/${roomId}/game/pendingIdx`]:null,
+    };
+    await update(ref(db),updates);
+    if(vsAI&&nextRole!==myRole)setTimeout(()=>runAI(nextRole),600);
+  },seconds*1000);
+}
+
+async function doUndo(){
+  if(!pendingMove)return;
+  clearTimeout(undoTimer);clearInterval(undoInterval);undoTimer=null;undoInterval=null;
+  const bar=document.getElementById('undo-bar');bar.classList.remove('show');
+  const pm=pendingMove;pendingMove=null;
+  const updates={
+    [`rooms/${roomId}/game/${myRole}Hand`]:pm.prevHand,
+    [`rooms/${roomId}/game/chain`]:pm.prevChain,
+    [`rooms/${roomId}/game/leftEnd`]:pm.prevLeft,
+    [`rooms/${roomId}/game/rightEnd`]:pm.prevRight,
+    [`rooms/${roomId}/game/turn`]:pm.prevTurn,
+    [`rooms/${roomId}/game/pendingRole`]:null,
+    [`rooms/${roomId}/game/pendingIdx`]:null,
+    [`rooms/${roomId}/game/winner`]:null,
+  };
+  await update(ref(db),updates);
+}
+
+// ── AI ────────────────────────────────────────────────────
 async function runAI(role){
-  const gs=lastGS;
-  if(!gs||gs.winner||gs.turn!==role)return;
+  const gs=lastGS;if(!gs||gs.winner||gs.turn!==role)return;
   let hand=[...(gs[role+'Hand']||[])];
   let boneyard=[...(gs.boneyard||[])];
   let chain=[...(gs.chain||[])];
   let lE=gs.leftEnd,rE=gs.rightEnd;
-  let roles=gs.roles||[];
-
-  // Draw until can play
-  while(!handCanPlay(hand,lE,rE)&&boneyard.length>0){
-    hand.push(boneyard.pop());
-  }
-
+  const roles=gs.activePlayers||[];
+  while(!handCanPlay(hand,lE,rE)&&boneyard.length>2)hand.push(boneyard.pop());
   let played=false;
   if(handCanPlay(hand,lE,rE)){
-    // Find best tile
     let bestIdx=-1,bestSide='right',bestScore=-1;
     hand.forEach(([a,b],i)=>{
       const cL=canFit(a,b,lE),cR=canFit(a,b,rE);
@@ -679,295 +646,180 @@ async function runAI(role){
       if(sc>bestScore){bestScore=sc;bestIdx=i;bestSide=cR?'right':'left'}
     });
     if(bestIdx!==-1){
-      const [a,b]=hand[bestIdx];
-      hand.splice(bestIdx,1);
+      const[a,b]=hand[bestIdx];hand.splice(bestIdx,1);
       const res=placeTile(chain,lE,rE,a,b,bestSide);
       chain=res.chain;lE=res.leftEnd;rE=res.rightEnd;
-      played=true;
-
-      // Next role
-      const myIdx=roles.indexOf(role);
-      let nextRole=roles[(myIdx+1)%roles.length];
-
-      let winner=null;
-      if(hand.length===0)winner=role;
-
-      const updates={
-        [`rooms/${roomId}/game/${role}Hand`]:hand,
-        [`rooms/${roomId}/game/boneyard`]:boneyard,
-        [`rooms/${roomId}/game/chain`]:chain,
-        [`rooms/${roomId}/game/leftEnd`]:lE,
-        [`rooms/${roomId}/game/rightEnd`]:rE,
-        [`rooms/${roomId}/game/turn`]:winner?role:nextRole,
-      };
+      const myIdx=roles.indexOf(role);const nextRole=roles[(myIdx+1)%roles.length];
+      let winner=null;if(hand.length===0)winner=role;
+      const updates={[`rooms/${roomId}/game/${role}Hand`]:hand,[`rooms/${roomId}/game/boneyard`]:boneyard,[`rooms/${roomId}/game/chain`]:chain,[`rooms/${roomId}/game/leftEnd`]:lE,[`rooms/${roomId}/game/rightEnd`]:rE,[`rooms/${roomId}/game/turn`]:winner?role:nextRole,[`rooms/${roomId}/game/pendingRole`]:null,[`rooms/${roomId}/game/pendingIdx`]:null};
       if(winner)updates[`rooms/${roomId}/game/winner`]=winner;
-      await update(ref(db),updates);
-
-      if(!winner&&nextRole&&nextRole!==myRole){
-        setTimeout(()=>runAI(nextRole),800);
-      }
+      await update(ref(db),updates);played=true;
+      if(!winner&&nextRole!==myRole)setTimeout(()=>runAI(nextRole),800);
     }
   }
-
   if(!played){
-    // Pass
-    const myIdx=roles.indexOf(role);
-    const nextRole=roles[(myIdx+1)%roles.length];
-    const updates={
-      [`rooms/${roomId}/game/${role}Hand`]:hand,
-      [`rooms/${roomId}/game/boneyard`]:boneyard,
-      [`rooms/${roomId}/game/turn`]:nextRole,
-    };
-    await update(ref(db),updates);
+    const myIdx=roles.indexOf(role);const nextRole=roles[(myIdx+1)%roles.length];
+    await update(ref(db),{[`rooms/${roomId}/game/${role}Hand`]:hand,[`rooms/${roomId}/game/boneyard`]:boneyard,[`rooms/${roomId}/game/turn`]:nextRole});
     if(nextRole!==myRole)setTimeout(()=>runAI(nextRole),600);
   }
 }
 
 // ── DRAW ─────────────────────────────────────────────────
 async function onDraw(){
-  const gs=lastGS;
-  if(!gs||gs.turn!==myRole||gs.winner)return;
+  const gs=lastGS;if(!gs||gs.turn!==myRole||gs.winner||pendingMove)return;
   const boneyard=[...(gs.boneyard||[])];
-  if(boneyard.length<=2){setMsg('البازل شارف على النهاية 😅');return}
+  if(boneyard.length<=2){setMsg('البازل شارف على النهاية!');return}
   const myHand=[...(gs[myRole+'Hand']||[])];
   myHand.push(boneyard.pop());
-  await update(ref(db),{
-    [`rooms/${roomId}/game/${myRole}Hand`]:myHand,
-    [`rooms/${roomId}/game/boneyard`]:boneyard,
-  });
+  await update(ref(db),{[`rooms/${roomId}/game/${myRole}Hand`]:myHand,[`rooms/${roomId}/game/boneyard`]:boneyard});
 }
 
 // ── APPLY STATE ───────────────────────────────────────────
 function applyGameState(gs){
-  lastGS=gs;
-  if(!gs)return;
-  const isMyT=gs.turn===myRole&&!gs.winner;
+  lastGS=gs;if(!gs)return;
+  const activePlayers=gs.activePlayers||[];
+  const amActive=activePlayers.includes(myRole);
+  const isMyT=gs.turn===myRole&&!gs.winner&&amActive;
+  const inUndo=pendingMove!==null;
 
-  renderChain(gs);
-  renderOpps(gs);
-  renderHand(gs);
+  renderChain(gs);renderOpps(gs);renderHand(gs);
 
-  document.getElementById('btn-draw').disabled=!isMyT;
+  if(gs.winner&&!inUndo){endGame(gs.winner,gs.names);return}
 
-  if(gs.winner){
-    endGame(gs.winner,gs.names);return;
-  }
-
-  if(isMyT){
+  if(inUndo){setMsg('⏳ يمكنك التراجع خلال ثوانٍ…')}
+  else if(isMyT){
     const myHand=gs[myRole+'Hand']||[];
     if(!handCanPlay(myHand,gs.leftEnd,gs.rightEnd)&&(gs.boneyard||[]).length<=2){
-      setMsg('مش قادر تلعب — هيتمرر دورك تلقائياً…');
+      setMsg('مش قادر تلعب — هيتمرر دورك…');
       setTimeout(async()=>{
-        const roles=gs.roles||[];
-        const myIdx=roles.indexOf(myRole);
+        const roles=activePlayers;const myIdx=roles.indexOf(myRole);
         const nextRole=roles[(myIdx+1)%roles.length];
         await update(ref(db),{[`rooms/${roomId}/game/turn`]:nextRole});
       },1200);
-    } else {
-      setMsg('🟢 دورك — اسحب قطعة وضعها في الطرف المناسب!');
-    }
-  } else {
-    const turnName=gs.names?.[gs.turn]||gs.turn;
-    setMsg(`<span class="spin"></span> دور ${turnName}…`);
-  }
+    }else{setMsg('🟢 دورك — اضغط على قطعة لتلعبها!')}
+  }else if(!amActive){setMsg('⏳ انتظر الجولة القادمة للانضمام')}
+  else{const turnName=gs.names?.[gs.turn]||gs.turn;setMsg(`<span class="spin"></span> دور ${turnName}…`)}
 }
 
-// ── END GAME ─────────────────────────────────────────────
 function endGame(winner,names){
+  if(pendingMove)return; // wait for undo window
   const iWon=winner===myRole;
-  if(!localScores[winner])localScores[winner]=0;
-  localScores[winner]++;
+  if(!localScores[winner])localScores[winner]=0;localScores[winner]++;
   document.getElementById('win-emoji').textContent=iWon?'🏆':'😅';
   document.getElementById('win-title').textContent=iWon?'مبروك كسبت! 🎉':`${names?.[winner]||winner} كسب!`;
-  document.getElementById('win-sub').textContent=iWon?'أحسنت! 🌟':'حاول مرة تانية 💪';
+  document.getElementById('win-sub').textContent=iWon?'أحسنت! 🌟':'حاول مرة ثانية 💪';
   document.getElementById('win-bg').classList.add('show');
 }
 
-// ── CREATE GAME STATE ─────────────────────────────────────
+// ── CREATE GAME ───────────────────────────────────────────
 function createGameState(playersMap,botRoles=[]){
   const tiles=shuffle(allTiles());
   const roles=Object.keys(playersMap);
-  const n=roles.length;
-  const tilesPerPlayer=n<=3?7:5;
-  const hands={};
-  roles.forEach(r=>{hands[r+'Hand']=tiles.splice(0,tilesPerPlayer)});
-  // Find who has highest double or highest tile
-  let firstRole=roles[0];
-  let maxVal=-1;
-  roles.forEach(r=>{
-    hands[r+'Hand'].forEach(([a,b])=>{
-      if(a===b&&a>maxVal){maxVal=a;firstRole=r}
-    });
-  });
-  return{
-    roles,names:playersMap,hands:null,
-    ...Object.fromEntries(roles.map(r=>[r+'Hand',hands[r+'Hand']])),
-    boneyard:tiles,
-    chain:[],leftEnd:-1,rightEnd:-1,
-    turn:firstRole,winner:null,
-    botRoles,
-  };
+  const n=roles.length;const tpp=n<=3?7:5;
+  const hands={};roles.forEach(r=>{hands[r+'Hand']=tiles.splice(0,tpp)});
+  let firstRole=roles[0];let maxVal=-1;
+  roles.forEach(r=>{hands[r+'Hand'].forEach(([a,b])=>{if(a===b&&a>maxVal){maxVal=a;firstRole=r}})});
+  return{roles,activePlayers:roles,waitingPlayers:[],names:playersMap,...Object.fromEntries(roles.map(r=>[r+'Hand',hands[r+'Hand']])),boneyard:tiles,chain:[],leftEnd:-1,rightEnd:-1,turn:firstRole,winner:null,pendingRole:null,pendingIdx:null,botRoles};
 }
 
-// ── LISTEN ───────────────────────────────────────────────
 function listenGame(rid){
   if(unsubGame)unsubGame();
-  unsubGame=onValue(ref(db,`rooms/${rid}/game`),(snap)=>{
-    applyGameState(snap.val());
-  });
+  unsubGame=onValue(ref(db,`rooms/${rid}/game`),snap=>applyGameState(snap.val()));
 }
 
 function listenRoom(rid){
   if(unsubRoom)unsubRoom();
-  unsubRoom=onValue(ref(db,`rooms/${rid}`),(snap)=>{
-    const r=snap.val();
-    if(!r)return;
-    // Update players list
+  unsubRoom=onValue(ref(db,`rooms/${rid}`),snap=>{
+    const r=snap.val();if(!r)return;
     const pl=document.getElementById('players-list');
-    if(pl){
-      pl.innerHTML='';
-      Object.entries(r.players||{}).forEach(([role,name])=>{
-        const c=document.createElement('div');
-        c.className='player-chip'+(role===myRole?' me':'');
-        c.textContent=name+(role===myRole?' (أنت)':'');
-        pl.appendChild(c);
-      });
-    }
+    if(pl){pl.innerHTML='';Object.entries(r.players||{}).forEach(([role,name])=>{const c=document.createElement('div');c.className='player-chip'+(role===myRole?' me':'');c.textContent=name+(role===myRole?' (أنت)':'');pl.appendChild(c)});}
     const count=Object.keys(r.players||{}).length;
-    const startBtn=document.getElementById('btn-start-game');
-    if(startBtn&&isHost) startBtn.style.display=count>=2?'':'none';
-
-    if(r.status==='playing'){
-      showScreen('game');
-      listenGame(rid);
-    }
+    const sb=document.getElementById('btn-start-game');if(sb&&isHost)sb.style.display=count>=2?'':'none';
+    if(r.status==='playing'){showScreen('game');listenGame(rid);loadPrayerTimes();}
   });
 }
 
-// ── CREATE ROOM ───────────────────────────────────────────
 async function createRoom(){
-  const name=document.getElementById('inp-name').value.trim();
-  if(!name){lobbyErr('اكتب اسمك');return}
-  myName=name;myId=genId();myRole='p1';isHost=true;vsAI=false;
-  roomId=genCode();lobbyErr('');
-
-  await set(ref(db,`rooms/${roomId}`),{
-    hostId:myId,status:'waiting',
-    players:{p1:name},
-    created:Date.now()
-  });
-
+  const name=document.getElementById('inp-name').value.trim();if(!name){lobbyErr('اكتب اسمك');return}
+  myName=name;myId=genId();myRole='p1';isHost=true;vsAI=false;roomId=genCode();lobbyErr('');
+  await set(ref(db,`rooms/${roomId}`),{hostId:myId,status:'waiting',players:{p1:name},created:Date.now()});
   document.getElementById('room-code-display').textContent=roomId;
   document.getElementById('btn-start-game').style.display='none';
-  showScreen('waiting');
-  listenRoom(roomId);
+  showScreen('waiting');listenRoom(roomId);
 }
 
-// ── VS AI ─────────────────────────────────────────────────
 async function startVsAI(){
   const name=document.getElementById('inp-name').value.trim()||'لاعب';
-  myName=name;myId=genId();myRole='p1';isHost=true;vsAI=true;
-  roomId=genCode();
-  const playersMap={p1:name,p2:'🤖 كمبيوتر'};
-  const gs=createGameState(playersMap,['p2']);
-  await set(ref(db,`rooms/${roomId}`),{
-    hostId:myId,status:'playing',
-    players:playersMap,
-    created:Date.now()
-  });
+  myName=name;myId=genId();myRole='p1';isHost=true;vsAI=true;roomId=genCode();
+  const pm={p1:name,p2:'🤖 كمبيوتر'};const gs=createGameState(pm,['p2']);
+  await set(ref(db,`rooms/${roomId}`),{hostId:myId,status:'playing',players:pm,created:Date.now()});
   await set(ref(db,`rooms/${roomId}/game`),gs);
-  showScreen('game');
-  listenGame(roomId);
-  // If AI goes first
+  showScreen('game');listenGame(roomId);loadPrayerTimes();
   setTimeout(()=>{if(lastGS?.turn!==myRole)runAI(lastGS?.turn)},1000);
 }
 
-// ── JOIN ROOM ─────────────────────────────────────────────
 async function joinRoom(){
   const name=document.getElementById('inp-name').value.trim();
   const code=document.getElementById('inp-code').value.trim().toUpperCase();
-  if(!name){lobbyErr('اكتب اسمك');return}
-  if(!code||code.length<4){lobbyErr('اكتب كود الغرفة');return}
-  myName=name;myId=genId();isHost=false;vsAI=false;
-  roomId=code;lobbyErr('');
-
-  const snap=await get(ref(db,`rooms/${code}`));
-  if(!snap.exists()){lobbyErr('الغرفة مش موجودة ❌');return}
-  const r=snap.val();
-  if(r.status!=='waiting'){lobbyErr('اللعبة بدأت بالفعل ❌');return}
-  const players=r.players||{};
-  const count=Object.keys(players).length;
-  if(count>=6){lobbyErr('الغرفة ممتلئة (6 لاعبين) ❌');return}
-
-  myRole='p'+(count+1);
-  players[myRole]=name;
+  if(!name){lobbyErr('اكتب اسمك');return}if(!code||code.length<4){lobbyErr('اكتب كود الغرفة');return}
+  myName=name;myId=genId();isHost=false;vsAI=false;roomId=code;lobbyErr('');
+  const snap=await get(ref(db,`rooms/${code}`));if(!snap.exists()){lobbyErr('الغرفة مش موجودة ❌');return}
+  const r=snap.val();const players=r.players||{};const count=Object.keys(players).length;
+  if(count>=6){lobbyErr('الغرفة ممتلئة ❌');return}
+  myRole='p'+(count+1);players[myRole]=name;
   await update(ref(db,`rooms/${code}`),{players});
-
-  document.getElementById('room-code-display').textContent=code;
-  showScreen('waiting');
-  listenRoom(code);
+  if(r.status==='playing'){
+    const gs=(await get(ref(db,`rooms/${code}/game`))).val();
+    if(gs){
+      const boneyard=[...(gs.boneyard||[])];
+      const myTiles=boneyard.splice(0,Math.min(5,boneyard.length));
+      const waiting=[...(gs.waitingPlayers||[]),myRole];
+      const names={...(gs.names||{}),[myRole]:name};
+      await update(ref(db),{[`rooms/${code}/game/${myRole}Hand`]:myTiles,[`rooms/${code}/game/boneyard`]:boneyard,[`rooms/${code}/game/waitingPlayers`]:waiting,[`rooms/${code}/game/names`]:names});
+    }
+    showScreen('game');listenGame(code);loadPrayerTimes();
+  }else{document.getElementById('room-code-display').textContent=code;showScreen('waiting');listenRoom(code);}
 }
 
-// ── START GAME (host) ─────────────────────────────────────
 async function startGame(){
-  const snap=await get(ref(db,`rooms/${roomId}`));
-  const r=snap.val();
-  if(!r)return;
-  const players=r.players||{};
-  if(Object.keys(players).length<2){alert('محتاج لاعبين على الأقل!');return}
+  const snap=await get(ref(db,`rooms/${roomId}`));const r=snap.val();if(!r)return;
+  const players=r.players||{};if(Object.keys(players).length<2){alert('محتاج لاعبين على الأقل!');return}
   const gs=createGameState(players,[]);
   await update(ref(db,`rooms/${roomId}`),{status:'playing'});
   await set(ref(db,`rooms/${roomId}/game`),gs);
 }
 
-// ── LEAVE ─────────────────────────────────────────────────
-function leaveGame(){
-  if(unsubGame){unsubGame();unsubGame=null}
-  if(unsubRoom){unsubRoom();unsubRoom=null}
-  if(roomId&&isHost)remove(ref(db,`rooms/${roomId}`));
-  roomId=null;myRole=null;lastGS=null;dragTile=null;
-  localScores={};vsAI=false;isHost=false;
+async function newGame(){
   document.getElementById('win-bg').classList.remove('show');
+  if(!isHost){setMsg('بس صاحب الغرفة يبدأ لعبة جديدة');return}
+  const snap=await get(ref(db,`rooms/${roomId}`));const r=snap.val();if(!r)return;
+  const gs=createGameState(r.players||{},lastGS?.botRoles||[]);
+  await set(ref(db,`rooms/${roomId}/game`),gs);
+  if(vsAI)setTimeout(()=>{if(lastGS?.turn!==myRole)runAI(lastGS?.turn)},1000);
+}
+
+function leaveGame(){
+  if(unsubGame){unsubGame();unsubGame=null}if(unsubRoom){unsubRoom();unsubRoom=null}
+  if(undoTimer){clearTimeout(undoTimer);undoTimer=null}if(undoInterval){clearInterval(undoInterval);undoInterval=null}
+  if(roomId&&isHost)remove(ref(db,`rooms/${roomId}`));
+  roomId=null;myRole=null;lastGS=null;pendingMove=null;localScores={};vsAI=false;isHost=false;
+  document.getElementById('win-bg').classList.remove('show');
+  document.getElementById('undo-bar').classList.remove('show');
   showScreen('lobby');
 }
 
-// ── NEW GAME (host restarts) ──────────────────────────────
-async function newGame(){
-  document.getElementById('win-bg').classList.remove('show');
-  if(!isHost){setMsg('بس صاحب الغرفة يقدر يبدأ لعبة جديدة');return}
-  const snap=await get(ref(db,`rooms/${roomId}`));
-  const r=snap.val();
-  if(!r)return;
-  const gs=createGameState(r.players||{},lastGS?.botRoles||[]);
-  await set(ref(db,`rooms/${roomId}/game`),gs);
-  if(vsAI) setTimeout(()=>{if(lastGS?.turn!==myRole)runAI(lastGS?.turn)},1000);
-}
-
-// ── EVENTS ───────────────────────────────────────────────
 document.getElementById('btn-create').addEventListener('click',createRoom);
 document.getElementById('btn-vs-ai').addEventListener('click',startVsAI);
 document.getElementById('btn-join').addEventListener('click',joinRoom);
 document.getElementById('inp-code').addEventListener('keyup',e=>{if(e.key==='Enter')joinRoom()});
 document.getElementById('btn-start-game').addEventListener('click',startGame);
-document.getElementById('btn-cancel-wait').addEventListener('click',()=>{
-  if(unsubRoom){unsubRoom();unsubRoom=null}
-  if(roomId&&isHost)remove(ref(db,`rooms/${roomId}`));
-  roomId=null;showScreen('lobby');
-});
-document.getElementById('btn-copy-code').addEventListener('click',()=>{
-  const code=document.getElementById('room-code-display').textContent;
-  navigator.clipboard?.writeText(code).then(()=>{
-    document.getElementById('btn-copy-code').textContent='✅ اتنسخ!';
-    setTimeout(()=>document.getElementById('btn-copy-code').textContent='📋 نسخ الكود',2000);
-  });
-});
+document.getElementById('btn-cancel-wait').addEventListener('click',()=>{if(unsubRoom){unsubRoom();unsubRoom=null}if(roomId&&isHost)remove(ref(db,`rooms/${roomId}`));roomId=null;showScreen('lobby')});
+document.getElementById('btn-copy-code').addEventListener('click',()=>{const code=document.getElementById('room-code-display').textContent;navigator.clipboard?.writeText(code).then(()=>{document.getElementById('btn-copy-code').textContent='✅ اتنسخ!';setTimeout(()=>document.getElementById('btn-copy-code').textContent='📋 نسخ الكود',2000)})});
 document.getElementById('btn-draw').addEventListener('click',onDraw);
 document.getElementById('btn-leave').addEventListener('click',leaveGame);
 document.getElementById('btn-win-new').addEventListener('click',newGame);
 document.getElementById('btn-win-lobby').addEventListener('click',leaveGame);
-
-// Prevent page drag
-document.addEventListener('dragover',e=>e.preventDefault());
+document.getElementById('btn-undo').addEventListener('click',doUndo);
 </script>
 </body>
 </html>
