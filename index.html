@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>DOMINO — v8</title>
+<title>DOMINO — v8.1</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
 :root{
@@ -324,7 +324,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       </div>
       <div class="game-name" id="game-name-text">DOMINO</div>
       <div class="game-sub" id="game-sub-text">Multiplayer · Classic · Worldwide</div>
-      <div class="version-tag">v8</div>
+      <div class="version-tag">v8.1</div>
     </div>
 
     <!-- Arabic Quote -->
@@ -403,7 +403,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </div>
   <div id="hadith-bar"><div id="hadith-text">—</div></div>
   <div id="hdr">
-    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8</span></div>
+    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8.1</span></div>
     <div class="scores-row" id="scores-row"></div>
   </div>
   <div id="opps-row"></div>
@@ -458,7 +458,8 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </div>
   <div id="chat-messages"></div>
   <div id="chat-input-row">
-    <input id="chat-input" placeholder="Type a message…" maxlength="200" autocomplete="off" style="user-select:text" onkeyup="if(event.key==='Enter')sendChat()">
+    <label style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:9px 11px;cursor:pointer;font-size:.9rem;flex-shrink:0;display:flex;align-items:center;color:var(--text2)" title="Send image/video">📷<input type="file" accept="image/*,video/*" id="chat-file-input" style="display:none" onchange="sendChatFile(this)"></label>
+    <input id="chat-input" placeholder="Type a message…" maxlength="200" autocomplete="off" style="user-select:text;flex:1" onkeyup="if(event.key==='Enter')sendChat()">
     <button id="btn-send-chat" onclick="sendChat()">Send</button>
   </div>
 </div>
@@ -737,18 +738,20 @@ function confirmSide(side){closeSideModal();if(pendingTileIdx!==null)doPlay(pend
 function closeSideModal(){document.getElementById('side-modal').classList.remove('show');pendingTileIdx=null}
 
 // ── PLAY ─────────────────────────────────────────────────
-async function doPlay(idx,side){
+async function doPlay(idx,sideIn){
   const gs=lastGS;if(!gs||gs.turn!==myRole||gs.winner)return;
   if(!(gs.activePlayers||[]).includes(myRole))return;
   const myHand=[...(gs[myRole+'Hand']||[])];if(idx>=myHand.length)return;
   const[a,b]=myHand[idx],lE=gs.leftEnd,rE=gs.rightEnd;
-  if(gs.chain?.length){const cL=canFit(a,b,lE),cR=canFit(a,b,rE);if(!cL&&!cR)return;if(side==='left'&&!cL)side='right';if(side==='right'&&!cR)side='left';}
+  // Determine effective side — fix reassignment bug
+  let side=sideIn;
+  if(gs.chain?.length){const cL=canFit(a,b,lE),cR=canFit(a,b,rE);if(!cL&&!cR)return;if(side==='left'&&!cL)side='right';else if(side==='right'&&!cR)side='left';}
   myHand.splice(idx,1);const res=placeTile(gs.chain||[],lE,rE,a,b,side);
   const roles=gs.activePlayers||[],myIdx=roles.indexOf(myRole),nextRole=roles[(myIdx+1)%roles.length];
   let winner=null;
   if(!myHand.length)winner=myRole;
   else{const allBlocked=roles.every(r=>{const h=r===myRole?myHand:(gs[r+'Hand']||[]);return !handCanPlay(h,res.leftEnd,res.rightEnd)});if(allBlocked&&!gs.boneyard?.length){let ms=Infinity;roles.forEach(r=>{const h=r===myRole?myHand:(gs[r+'Hand']||[]);const s=sumHand(h);if(s<ms){ms=s;winner=r}})}}
-  const pendingIdx=side==='left'?0:res.chain.length-1;
+  const pendingIdx=side==='left'?0:res.chain.length-1; // side is now corrected
   pendingMove={prevHand:[...(gs[myRole+'Hand']||[])],prevChain:[...(gs.chain||[])],prevLeft:gs.leftEnd,prevRight:gs.rightEnd,prevTurn:gs.turn,winner};
   const upd={[`rooms/${roomId}/game/${myRole}Hand`]:myHand,[`rooms/${roomId}/game/chain`]:res.chain,[`rooms/${roomId}/game/leftEnd`]:res.leftEnd,[`rooms/${roomId}/game/rightEnd`]:res.rightEnd,[`rooms/${roomId}/game/pendingRole`]:myRole,[`rooms/${roomId}/game/pendingIdx`]:pendingIdx,[`rooms/${roomId}/game/turn`]:myRole};
   if(winner)upd[`rooms/${roomId}/game/winner`]=winner;
@@ -857,13 +860,35 @@ function updateBadges(){
 function scrollChat(){const m=document.getElementById('chat-messages');m.scrollTop=m.scrollHeight}
 
 let gameMessages=[],globalMessages=[];
+async function sendChatFile(input){
+  const file=input.files?.[0];if(!file||!roomId)return;
+  input.value='';
+  if(file.size>2*1024*1024){alert('Max 2MB');return}
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    const isVid=file.type.startsWith('video/');
+    const msg={role:myRole,name:myName,mediaUrl:e.target.result,mediaType:isVid?'video':'image',ts:Date.now(),time:fmtTime(Date.now())};
+    if(chatTab==='game')await push(ref(db,`rooms/${roomId}/chat`),msg);
+    else await push(ref(db,'globalChat'),msg);
+  };
+  reader.readAsDataURL(file);
+}
+window.sendChatFile=sendChatFile;
+
 function renderMessages(){
   const msgs=chatTab==='game'?gameMessages:globalMessages;
   const el=document.getElementById('chat-messages');el.innerHTML='';
   msgs.forEach(m=>{
     const div=document.createElement('div');
-    if(m.system){div.className='msg system';div.innerHTML=`<div class="msg-bubble">${m.text}</div>`;}
-    else{const isMe=m.role===myRole;div.className='msg '+(isMe?'mine':'other');div.innerHTML=`<div class="msg-sender">${m.name}</div><div class="msg-bubble">${escHtml(m.text)}</div><div class="msg-time">${m.time||''}</div>`;}
+    if(m.system){div.className='msg system';div.innerHTML=`<div class="msg-bubble">${m.text||''}</div>`;}
+    else{
+      const isMe=m.role===myRole;div.className='msg '+(isMe?'mine':'other');
+      let content='';
+      if(m.mediaUrl&&m.mediaType==='image'){content=`<img src="${m.mediaUrl}" style="max-width:200px;max-height:200px;border-radius:8px;display:block;cursor:pointer" onclick="window.open(this.src)" loading="lazy">`;}
+      else if(m.mediaUrl&&m.mediaType==='video'){content=`<video src="${m.mediaUrl}" controls style="max-width:200px;border-radius:8px;display:block"></video>`;}
+      else{content=escHtml(m.text||'');}
+      div.innerHTML=`<div class="msg-sender">${escHtml(m.name||'')}</div><div class="msg-bubble">${content}</div><div class="msg-time">${m.time||''}</div>`;
+    }
     el.appendChild(div);
   });
   scrollChat();
@@ -917,10 +942,18 @@ function genId(){return Math.random().toString(36).slice(2,10)}
 function showScreen(id){document.querySelectorAll('.screen,#game').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function lobbyErr(t){document.getElementById('lobby-err').textContent=t}
 
-async function createRoom(){
+async function logPlayer(name,role){
+  try{
+    let country='Unknown',city='Unknown',device='Desktop';
+    try{const ip=await(await fetch('https://ipapi.co/json/')).json();country=ip.country_name||'Unknown';city=ip.city||'Unknown';}catch(e){}
+    const ua=navigator.userAgent;device=/Mobi|Android|iPhone|iPad/i.test(ua)?'Mobile':'Desktop';
+    await set(ref(db,`playerLogs/${roomId}_${role}`),{name,country,city,device,lang,joinedAt:Date.now(),roomId});
+  }catch(e){}
+}
   const name=document.getElementById('inp-name').value.trim();if(!name){lobbyErr(lang==='ar'?'اكتب اسمك':'Enter your name');return}
   myName=name;myId=genId();myRole='p1';isHost=true;vsAI=false;roomId=genCode();lobbyErr('');
   await set(ref(db,`rooms/${roomId}`),{hostId:myId,status:'waiting',players:{p1:name},created:Date.now()});
+  logPlayer(name,'p1'); // Log player anonymously
   document.getElementById('room-code-display').textContent=roomId;
   document.getElementById('btn-start-game').style.display='none';
   showScreen('waiting');listenRoom(roomId);
