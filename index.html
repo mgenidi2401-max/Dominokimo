@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>DOMINO — v9.0</title>
+<title>DOMINO — v9.1</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
 :root{
@@ -436,7 +436,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <div class="islamic-ornament">✦ ☽ ✦</div>
       <div class="game-name" id="game-name-text">DOMINO</div>
       <div class="game-sub" id="game-sub-text">Multiplayer · Classic · Worldwide</div>
-      <div class="version-tag">v9.0</div>
+      <div class="version-tag">v9.1</div>
     </div>
 
     <!-- Arabic Quote -->
@@ -522,7 +522,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </div>
   <div id="hadith-bar"><div id="hadith-text">—</div></div>
   <div id="hdr">
-    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v9.0</span></div>
+    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v9.1</span></div>
     <div class="scores-row" id="scores-row"></div>
   </div>
   <div id="opps-row"></div>
@@ -541,6 +541,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   <div id="controls">
     <button class="gbtn" id="btn-draw">🎲 Draw</button>
     <button class="gbtn" id="btn-chat-toggle">💬 Chat</button>
+    <button class="gbtn" id="btn-settings-toggle">⚙️</button>
     <button class="gbtn" id="btn-leave">✕</button>
   </div>
 </div>
@@ -600,6 +601,58 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </div>
 </div>
 <audio id="ap-audio" style="display:none"></audio>
+
+<!-- IN-GAME SETTINGS PANEL -->
+<div id="game-settings-panel" style="display:none;position:fixed;inset:0;z-index:55;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center">
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-bottom:none;border-radius:20px 20px 0 0;padding:20px 18px 28px;width:100%;max-width:720px;box-shadow:0 -12px 40px rgba(0,0,0,.5);animation:slideUp .22s ease">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <span style="font-size:.85rem;font-weight:700;color:var(--gold2);letter-spacing:1px">⚙️ IN-GAME SETTINGS</span>
+      <button id="btn-close-settings" style="background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer">✕</button>
+    </div>
+    <!-- Prayer -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:.82rem;color:var(--text2)">🕌 Prayer Times</div><div style="font-size:.6rem;color:var(--text3)" id="lbl-prayer-sub2">Show daily prayer schedule</div></div>
+      <div class="toggle" id="ig-tog-prayer"></div>
+    </div>
+    <!-- Hadith -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:.82rem;color:var(--text2)">📿 Daily Hadith</div><div style="font-size:.6rem;color:var(--text3)">Islamic wisdom strip</div></div>
+      <div class="toggle" id="ig-tog-hadith"></div>
+    </div>
+    <!-- Weather -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:.82rem;color:var(--text2)">🌤️ Weather</div><div style="font-size:.6rem;color:var(--text3)">Live local weather</div></div>
+      <div class="toggle" id="ig-tog-weather"></div>
+    </div>
+    <!-- Audio -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
+      <div><div style="font-size:.82rem;color:var(--text2)">🎵 Background Audio</div><div style="font-size:.6rem;color:var(--text3)">Quran Radio or local file</div></div>
+      <div class="toggle" id="ig-tog-audio"></div>
+    </div>
+    <!-- Audio source selector -->
+    <div id="ig-audio-options" style="display:none;margin-top:10px;background:var(--surface);border-radius:12px;padding:12px">
+      <div style="font-size:.68rem;color:var(--text3);margin-bottom:8px;letter-spacing:1px">AUDIO SOURCE</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="ig-src-btn" id="ig-src-cairo" style="flex:1;font-family:inherit;background:var(--surface2);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:8px 10px;font-size:.72rem;color:var(--gold);cursor:pointer;touch-action:manipulation">
+          🕌 إذاعة القرآن القاهرة
+        </button>
+        <button class="ig-src-btn" id="ig-src-saudi" style="flex:1;font-family:inherit;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;font-size:.72rem;color:var(--text2);cursor:pointer;touch-action:manipulation">
+          🕌 إذاعة القرآن السعودية
+        </button>
+        <label style="flex:1;font-family:inherit;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:8px 10px;font-size:.72rem;color:var(--text2);cursor:pointer;text-align:center;touch-action:manipulation">
+          📁 Upload File<input type="file" id="ig-file-input" accept="audio/*" style="display:none">
+        </label>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+        <button id="ig-ap-prev" style="background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer">⏮</button>
+        <button id="ig-ap-play" style="background:var(--gold);border:none;border-radius:50%;width:32px;height:32px;font-size:.9rem;cursor:pointer">▶</button>
+        <button id="ig-ap-next" style="background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer">⏭</button>
+        <input type="range" id="ig-ap-vol" min="0" max="1" step="0.05" value="0.5" style="flex:1;accent-color:var(--gold)">
+        <span id="ig-ap-title" style="font-size:.6rem;color:var(--text3);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- PRAYER POPUP -->
 <div id="prayer-notify">
@@ -805,7 +858,46 @@ function placeTile(chain,lE,rE,a,b,side){
 }
 
 // ── RENDER CHAIN ──────────────────────────────────────────
-// ── AUDIO PLAYER SYSTEM ──────────────────────────────────
+// ── IN-GAME SETTINGS ─────────────────────────────────────
+function openSettings(){
+  // Sync toggles with current feature state
+  ['prayer','hadith','weather','audio'].forEach(f=>{
+    const tog=document.getElementById('ig-tog-'+f);
+    if(tog)tog.className='toggle'+(features[f]?' on':'');
+  });
+  const ao=document.getElementById('ig-audio-options');
+  if(ao)ao.style.display=features.audio?'block':'none';
+  document.getElementById('game-settings-panel').style.display='flex';
+}
+function closeSettings(){
+  document.getElementById('game-settings-panel').style.display='none';
+}
+function igToggle(f){
+  toggleFeature(f);
+  const tog=document.getElementById('ig-tog-'+f);
+  if(tog)tog.className='toggle'+(features[f]?' on':'');
+  const ao=document.getElementById('ig-audio-options');
+  if(ao)ao.style.display=features.audio?'block':'none';
+  // Update title if audio playing
+  if(f==='audio'&&features.audio){
+    document.getElementById('ig-ap-title').textContent=QURAN_STREAMS[apCurrentIdx]?.title||'—';
+  }
+}
+function igSetSrc(idx){
+  apMode='quran';apCurrentIdx=idx;apLoad(idx);
+  document.getElementById('ig-ap-title').textContent=QURAN_STREAMS[idx]?.title||'—';
+  // Highlight active button
+  document.querySelectorAll('.ig-src-btn').forEach((b,i)=>{
+    b.style.borderColor=i===idx?'rgba(201,168,76,.6)':'var(--border2)';
+    b.style.color=i===idx?'var(--gold)':'var(--text2)';
+  });
+}
+
+window.openSettings=openSettings;
+window.closeSettings=closeSettings;
+window.igToggle=igToggle;
+
+
 const QURAN_STREAMS=[
   {title:'إذاعة القرآن الكريم — القاهرة 🇪🇬',sub:'Egyptian Holy Quran Radio — Cairo 98.2 FM',url:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'🕌'},
   {title:'إذاعة القرآن الكريم — السعودية 🇸🇦',sub:'Saudi Holy Quran Radio — Riyadh',url:'https://stream.radiojar.com/0tpy1h0kxtzuv',icon:'🕌'},
@@ -950,95 +1042,100 @@ function renderChain(gs){
   const isMyT=gs.turn===myRole&&!gs.winner&&amActive&&!pendingMove;
 
   if(!chain.length){
+    const wrap=document.createElement('div');
+    wrap.style.cssText='display:flex;align-items:center;justify-content:center;width:100%;height:100%;min-height:120px';
     const hint=document.createElement('div');
-    hint.style.cssText='color:rgba(255,255,255,.2);font-size:.82rem;text-align:center;padding:28px 40px;border:2px dashed rgba(201,168,76,.2);border-radius:14px;min-width:180px';
+    hint.style.cssText='color:rgba(255,255,255,.22);font-size:.82rem;text-align:center;padding:24px 36px;border:2px dashed rgba(201,168,76,.2);border-radius:14px';
     hint.textContent=amActive&&isMyT?(lang==='ar'?'اسحب قطعة هنا':'Drag a tile here'):'Waiting…';
     if(isMyT)addDropHandlers(hint,'right');
-    el.appendChild(hint);return;
+    wrap.appendChild(hint);el.appendChild(wrap);return;
   }
 
-  // ── SNAKE LAYOUT ─────────────────────────────────────
-  // Each tile ~63px wide (H) or ~35px wide (DBL/V in chain)
   // Measure available width
-  const tableW=document.getElementById('table-scroll').clientWidth||600;
-  const TILE_W=64; // approximate width per tile slot
-  const tilesPerRow=Math.max(4,Math.floor((tableW-20)/TILE_W));
+  const scrollEl=document.getElementById('table-scroll');
+  const tableW=scrollEl.clientWidth||window.innerWidth||600;
+  const TILE_W=66; // px per tile slot (H tile ~60px + 3px gap + buffer)
+  const tilesPerRow=Math.max(3,Math.floor((tableW-24)/TILE_W));
 
-  // Split chain into rows, alternating direction
+  // Split into rows
   const rows=[];
-  for(let i=0;i<chain.length;i+=tilesPerRow){
+  for(let i=0;i<chain.length;i+=tilesPerRow)
     rows.push(chain.slice(i,i+tilesPerRow));
-  }
 
-  // Render snake rows
+  // Build snake: alternate LTR / RTL per row
   rows.forEach((row,rowIdx)=>{
+    const isRTL=rowIdx%2===1;
+    const startChainIdx=rowIdx*tilesPerRow;
+
     const rowEl=document.createElement('div');
-    rowEl.style.cssText='display:flex;align-items:center;gap:3px;flex-shrink:0;';
+    rowEl.style.cssText='display:flex;align-items:center;gap:3px;width:100%;';
 
-    const isRTLrow=rowIdx%2===1; // odd rows go right-to-left
-    const tiles=isRTLrow?[...row].reverse():row;
-    const startIdx=rowIdx*tilesPerRow;
-
-    // Left drop zone on first tile of first row
+    // ← drop zone: only on row 0, at start
     if(rowIdx===0&&isMyT){
-      const dz=makeDropZone('left');
-      rowEl.appendChild(dz);
+      rowEl.appendChild(makeDropZone('left'));
     }
 
-    tiles.forEach(({a,b,dbl},tIdx)=>{
-      const origIdx=isRTLrow?(startIdx+row.length-1-tIdx):(startIdx+tIdx);
+    // If RTL row: push tiles to the right with spacer
+    if(isRTL){
+      const spacer=document.createElement('div');spacer.style.flex='1';
+      rowEl.appendChild(spacer);
+    }
+
+    // Tiles — RTL rows are rendered reversed visually but chain order preserved
+    const displayed=isRTL?[...row].reverse():row;
+    displayed.forEach(({a,b,dbl},dIdx)=>{
+      const chainIdx=isRTL?(startChainIdx+row.length-1-dIdx):(startChainIdx+dIdx);
       const cls=dbl?'DBL':'H';
       const t=mkTile(a,b,cls,true);
-      if(gs.pendingIdx!=null&&origIdx===gs.pendingIdx&&gs.pendingRole===myRole)t.classList.add('pending');
+      if(gs.pendingIdx!=null&&chainIdx===gs.pendingIdx&&gs.pendingRole===myRole)
+        t.classList.add('pending');
       rowEl.appendChild(t);
     });
 
-    // Right drop zone after last tile of last row
-    const isLastRow=rowIdx===rows.length-1;
-    if(isLastRow&&isMyT){
-      const dz=makeDropZone('right');
-      // If last row is RTL, right→left means the "right end" visually is on the left
-      if(isRTLrow){rowEl.insertBefore(dz,rowEl.firstChild);}
-      else{rowEl.appendChild(dz);}
+    // LTR rows: spacer after tiles to push drop zone to right
+    if(!isRTL&&rowIdx===rows.length-1&&isMyT){
+      const spacer=document.createElement('div');spacer.style.flex='1';
+      rowEl.appendChild(spacer);
+      rowEl.appendChild(makeDropZone('right'));
+    }
+    if(isRTL&&rowIdx===rows.length-1&&isMyT){
+      rowEl.insertBefore(makeDropZone('right'),rowEl.querySelector('div[data-side]')||rowEl.children[1]);
     }
 
-    // Add connector arrow between rows (snake turn indicator)
-    if(rowIdx<rows.length-1){
-      const connector=document.createElement('div');
-      connector.style.cssText='display:flex;align-items:center;justify-content:'+(rowIdx%2===0?'flex-end':'flex-start')+';padding:1px 4px;color:rgba(255,255,255,.15);font-size:.8rem;width:100%';
-      connector.textContent=rowIdx%2===0?'↙':'↘';
-      el.appendChild(rowEl);
-      el.appendChild(connector);
-      return;
-    }
     el.appendChild(rowEl);
+
+    // Snake turn indicator between rows
+    if(rowIdx<rows.length-1){
+      const conn=document.createElement('div');
+      conn.style.cssText='font-size:.75rem;color:rgba(255,255,255,.18);padding:0 4px;text-align:'+(isRTL?'left':'right');
+      conn.textContent=isRTL?'↙':'↘';
+      el.appendChild(conn);
+    }
   });
 
-  // Scroll to bottom to show latest tiles
-  setTimeout(()=>{
-    const s=document.getElementById('table-scroll');
-    s.scrollTop=s.scrollHeight;
-    s.scrollLeft=0;
-  },50);
+  // Scroll to show latest tiles (bottom)
+  requestAnimationFrame(()=>{
+    scrollEl.scrollTop=scrollEl.scrollHeight;
+  });
 }
 
 function addDropHandlers(el,side){
   el.addEventListener('dragover',e=>{e.preventDefault();el.style.borderColor='var(--gold)';el.style.background='rgba(201,168,76,.1)';el.style.transform='scale(1.08)'});
-  el.addEventListener('dragleave',()=>{el.style.borderColor='rgba(201,168,76,.28)';el.style.background='';el.style.transform=''});
-  el.addEventListener('drop',e=>{e.preventDefault();el.style.borderColor='rgba(201,168,76,.28)';el.style.background='';el.style.transform='';if(dragIdx!==null)doPlay(dragIdx,side)});
+  el.addEventListener('dragleave',()=>{el.style.borderColor='rgba(201,168,76,.25)';el.style.background='';el.style.transform=''});
+  el.addEventListener('drop',e=>{e.preventDefault();el.style.borderColor='rgba(201,168,76,.25)';el.style.background='';el.style.transform='';if(dragIdx!==null)doPlay(dragIdx,side)});
   el.addEventListener('touchend',e=>{e.preventDefault();if(dragIdx!==null){doPlay(dragIdx,side);dragIdx=null;clearGhost()}});
   el.addEventListener('click',()=>{if(dragIdx!==null)doPlay(dragIdx,side)});
 }
 
 function makeDropZone(side){
-  const lbl=side==='left'?'←':'→';
   const dz=document.createElement('div');
   dz.dataset.side=side;
-  dz.style.cssText='min-width:44px;height:44px;border:2px dashed rgba(201,168,76,.28);border-radius:10px;display:flex;align-items:center;justify-content:center;color:rgba(201,168,76,.4);font-size:1.2rem;transition:all .18s;flex-shrink:0;cursor:pointer';
-  dz.textContent=lbl;
+  dz.style.cssText='min-width:42px;height:42px;border:2px dashed rgba(201,168,76,.25);border-radius:10px;display:flex;align-items:center;justify-content:center;color:rgba(201,168,76,.4);font-size:1.1rem;transition:all .18s;flex-shrink:0;cursor:pointer';
+  dz.textContent=side==='left'?'←':'→';
   addDropHandlers(dz,side);
   return dz;
 }
+
 
 function renderOpps(gs){
   const row=document.getElementById('opps-row');row.innerHTML='';const scRow=document.getElementById('scores-row');scRow.innerHTML='';
@@ -1487,7 +1584,21 @@ document.getElementById('btn-close-prayer').addEventListener('click',()=>documen
 document.getElementById('btn-close-wt').addEventListener('click',closeWeatherToast);
 document.getElementById('btn-win-new').addEventListener('click',newGame);
 document.getElementById('btn-win-lobby').addEventListener('click',leaveGame);
-document.getElementById('inp-code').addEventListener('keyup',e=>{if(e.key==='Enter')joinRoom()});
+document.getElementById('btn-settings-toggle').addEventListener('click',openSettings);
+document.getElementById('btn-close-settings').addEventListener('click',closeSettings);
+document.getElementById('ig-tog-prayer').addEventListener('click',()=>igToggle('prayer'));
+document.getElementById('ig-tog-hadith').addEventListener('click',()=>igToggle('hadith'));
+document.getElementById('ig-tog-weather').addEventListener('click',()=>igToggle('weather'));
+document.getElementById('ig-tog-audio').addEventListener('click',()=>igToggle('audio'));
+document.getElementById('ig-src-cairo').addEventListener('click',()=>igSetSrc(0));
+document.getElementById('ig-src-saudi').addEventListener('click',()=>igSetSrc(1));
+document.getElementById('ig-file-input').addEventListener('change',function(){apMode='file';apLoadFile(this);document.getElementById('ig-ap-title').textContent=this.files[0]?.name||'—'});
+document.getElementById('ig-ap-prev').addEventListener('click',apPrev);
+document.getElementById('ig-ap-play').addEventListener('click',()=>{apToggle();document.getElementById('ig-ap-play').textContent=apPlaying?'⏸':'▶'});
+document.getElementById('ig-ap-next').addEventListener('click',apNext);
+document.getElementById('ig-ap-vol').addEventListener('input',function(){apSetVol(this.value)});
+// Close settings panel when clicking backdrop
+document.getElementById('game-settings-panel').addEventListener('click',function(e){if(e.target===this)closeSettings()});
 document.getElementById('inp-name').addEventListener('keyup',e=>{if(e.key==='Enter')document.getElementById('inp-code').value?joinRoom():createRoom()});
 document.getElementById('chat-input').addEventListener('keyup',e=>{if(e.key==='Enter')sendChat()});
 document.getElementById('ap-vol').addEventListener('input',function(){apSetVol(this.value)});
