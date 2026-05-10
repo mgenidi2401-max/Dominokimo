@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>DOMINO — v8.9</title>
+<title>DOMINO — v9.0</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
 :root{
@@ -238,21 +238,19 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .back-tile{width:12px;height:22px;background:linear-gradient(135deg,var(--surface2),var(--surface));border-radius:3px;border:1px solid rgba(201,168,76,.08)}
 .wait-badge{font-size:.5rem;background:rgba(21,101,192,.18);border:1px solid rgba(21,101,192,.25);border-radius:8px;padding:2px 7px;color:#90caf9}
 
-/* ═══ FELT TABLE — wrapping chain ═══ */
+/* ═══ FELT TABLE ═══ */
 #table-wrap{flex:1;overflow:hidden;position:relative;background:radial-gradient(ellipse at 50% 40%,#1e7a35 0%,var(--felt) 55%,var(--felt2) 100%)}
 #table-wrap::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.014) 0,rgba(255,255,255,.014) 1px,transparent 1px,transparent 28px),repeating-linear-gradient(90deg,rgba(255,255,255,.014) 0,rgba(255,255,255,.014) 1px,transparent 1px,transparent 28px);pointer-events:none}
 #table-wrap::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 60px rgba(0,0,0,.5);pointer-events:none}
-#table-scroll{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;z-index:1;padding:14px}
-/* Chain wraps into multiple rows */
+#table-scroll{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;z-index:1;padding:10px 8px}
+
+/* Snake chain — column of rows */
 #chain{
   display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  min-width:100%;
-  min-height:100%;
-  align-content:center;
+  flex-direction:column;
+  align-items:stretch;
+  gap:4px;
+  width:100%;
 }
 
 /* UNDO BAR */
@@ -438,7 +436,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <div class="islamic-ornament">✦ ☽ ✦</div>
       <div class="game-name" id="game-name-text">DOMINO</div>
       <div class="game-sub" id="game-sub-text">Multiplayer · Classic · Worldwide</div>
-      <div class="version-tag">v8.9</div>
+      <div class="version-tag">v9.0</div>
     </div>
 
     <!-- Arabic Quote -->
@@ -524,7 +522,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </div>
   <div id="hadith-bar"><div id="hadith-text">—</div></div>
   <div id="hdr">
-    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8.9</span></div>
+    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v9.0</span></div>
     <div class="scores-row" id="scores-row"></div>
   </div>
   <div id="opps-row"></div>
@@ -952,53 +950,93 @@ function renderChain(gs){
   const isMyT=gs.turn===myRole&&!gs.winner&&amActive&&!pendingMove;
 
   if(!chain.length){
-    // Empty board — one big drop zone
     const hint=document.createElement('div');
-    hint.style.cssText='color:rgba(255,255,255,.18);font-size:.8rem;text-align:center;padding:28px 40px;border:2px dashed rgba(201,168,76,.25);border-radius:14px;min-width:180px;transition:all .2s;cursor:default';
-    hint.textContent=amActive&&isMyT?(lang==='ar'?'اسحب قطعة وضعها هنا':'Drag a tile here'):'Waiting…';
-    if(isMyT){
-      hint.addEventListener('dragover',e=>{e.preventDefault();hint.style.borderColor='rgba(201,168,76,.7)';hint.style.background='rgba(201,168,76,.06)'});
-      hint.addEventListener('dragleave',()=>{hint.style.borderColor='rgba(201,168,76,.25)';hint.style.background=''});
-      hint.addEventListener('drop',e=>{e.preventDefault();hint.style.borderColor='rgba(201,168,76,.25)';hint.style.background='';if(dragIdx!==null)doPlay(dragIdx,'right')});
-      // Touch: tap = play right
-      hint.addEventListener('touchend',e=>{e.preventDefault();if(dragIdx!==null){doPlay(dragIdx,'right');dragIdx=null;clearGhost()}});
-    }
+    hint.style.cssText='color:rgba(255,255,255,.2);font-size:.82rem;text-align:center;padding:28px 40px;border:2px dashed rgba(201,168,76,.2);border-radius:14px;min-width:180px';
+    hint.textContent=amActive&&isMyT?(lang==='ar'?'اسحب قطعة هنا':'Drag a tile here'):'Waiting…';
+    if(isMyT)addDropHandlers(hint,'right');
     el.appendChild(hint);return;
   }
 
-  // Left drop zone
-  if(isMyT){el.appendChild(makeDropZone('left'));}
+  // ── SNAKE LAYOUT ─────────────────────────────────────
+  // Each tile ~63px wide (H) or ~35px wide (DBL/V in chain)
+  // Measure available width
+  const tableW=document.getElementById('table-scroll').clientWidth||600;
+  const TILE_W=64; // approximate width per tile slot
+  const tilesPerRow=Math.max(4,Math.floor((tableW-20)/TILE_W));
 
-  chain.forEach(({a,b,dbl},idx)=>{
-    const cls=dbl?'DBL':'H';const t=mkTile(a,b,cls,true);
-    if(gs.pendingIdx!=null&&idx===gs.pendingIdx&&gs.pendingRole===myRole)t.classList.add('pending');
-    el.appendChild(t);
+  // Split chain into rows, alternating direction
+  const rows=[];
+  for(let i=0;i<chain.length;i+=tilesPerRow){
+    rows.push(chain.slice(i,i+tilesPerRow));
+  }
+
+  // Render snake rows
+  rows.forEach((row,rowIdx)=>{
+    const rowEl=document.createElement('div');
+    rowEl.style.cssText='display:flex;align-items:center;gap:3px;flex-shrink:0;';
+
+    const isRTLrow=rowIdx%2===1; // odd rows go right-to-left
+    const tiles=isRTLrow?[...row].reverse():row;
+    const startIdx=rowIdx*tilesPerRow;
+
+    // Left drop zone on first tile of first row
+    if(rowIdx===0&&isMyT){
+      const dz=makeDropZone('left');
+      rowEl.appendChild(dz);
+    }
+
+    tiles.forEach(({a,b,dbl},tIdx)=>{
+      const origIdx=isRTLrow?(startIdx+row.length-1-tIdx):(startIdx+tIdx);
+      const cls=dbl?'DBL':'H';
+      const t=mkTile(a,b,cls,true);
+      if(gs.pendingIdx!=null&&origIdx===gs.pendingIdx&&gs.pendingRole===myRole)t.classList.add('pending');
+      rowEl.appendChild(t);
+    });
+
+    // Right drop zone after last tile of last row
+    const isLastRow=rowIdx===rows.length-1;
+    if(isLastRow&&isMyT){
+      const dz=makeDropZone('right');
+      // If last row is RTL, right→left means the "right end" visually is on the left
+      if(isRTLrow){rowEl.insertBefore(dz,rowEl.firstChild);}
+      else{rowEl.appendChild(dz);}
+    }
+
+    // Add connector arrow between rows (snake turn indicator)
+    if(rowIdx<rows.length-1){
+      const connector=document.createElement('div');
+      connector.style.cssText='display:flex;align-items:center;justify-content:'+(rowIdx%2===0?'flex-end':'flex-start')+';padding:1px 4px;color:rgba(255,255,255,.15);font-size:.8rem;width:100%';
+      connector.textContent=rowIdx%2===0?'↙':'↘';
+      el.appendChild(rowEl);
+      el.appendChild(connector);
+      return;
+    }
+    el.appendChild(rowEl);
   });
 
-  // Right drop zone
-  if(isMyT){el.appendChild(makeDropZone('right'));}
-
+  // Scroll to bottom to show latest tiles
   setTimeout(()=>{
     const s=document.getElementById('table-scroll');
-    s.scrollTop=Math.max(0,(s.scrollHeight-s.clientHeight)/2);
-    s.scrollLeft=Math.max(0,(s.scrollWidth-s.clientWidth)/2);
+    s.scrollTop=s.scrollHeight;
+    s.scrollLeft=0;
   },50);
 }
 
+function addDropHandlers(el,side){
+  el.addEventListener('dragover',e=>{e.preventDefault();el.style.borderColor='var(--gold)';el.style.background='rgba(201,168,76,.1)';el.style.transform='scale(1.08)'});
+  el.addEventListener('dragleave',()=>{el.style.borderColor='rgba(201,168,76,.28)';el.style.background='';el.style.transform=''});
+  el.addEventListener('drop',e=>{e.preventDefault();el.style.borderColor='rgba(201,168,76,.28)';el.style.background='';el.style.transform='';if(dragIdx!==null)doPlay(dragIdx,side)});
+  el.addEventListener('touchend',e=>{e.preventDefault();if(dragIdx!==null){doPlay(dragIdx,side);dragIdx=null;clearGhost()}});
+  el.addEventListener('click',()=>{if(dragIdx!==null)doPlay(dragIdx,side)});
+}
+
 function makeDropZone(side){
-  const dz=document.createElement('div');
   const lbl=side==='left'?'←':'→';
-  dz.style.cssText=`width:46px;height:46px;border:2px dashed rgba(201,168,76,.3);border-radius:10px;display:flex;align-items:center;justify-content:center;color:rgba(201,168,76,.35);font-size:1.2rem;transition:all .2s;flex-shrink:0;cursor:pointer`;
-  dz.textContent=lbl;
+  const dz=document.createElement('div');
   dz.dataset.side=side;
-  // Mouse drag
-  dz.addEventListener('dragover',e=>{e.preventDefault();dz.style.borderColor='var(--gold)';dz.style.background='rgba(201,168,76,.1)';dz.style.transform='scale(1.1)'});
-  dz.addEventListener('dragleave',()=>{dz.style.borderColor='rgba(201,168,76,.3)';dz.style.background='';dz.style.transform=''});
-  dz.addEventListener('drop',e=>{e.preventDefault();dz.style.borderColor='rgba(201,168,76,.3)';dz.style.background='';dz.style.transform='';if(dragIdx!==null)doPlay(dragIdx,side)});
-  // Touch: finger release on zone
-  dz.addEventListener('touchend',e=>{e.preventDefault();if(dragIdx!==null){doPlay(dragIdx,side);dragIdx=null;clearGhost()}});
-  // Click (fallback for selected tile)
-  dz.addEventListener('click',()=>{if(dragIdx!==null)doPlay(dragIdx,side)});
+  dz.style.cssText='min-width:44px;height:44px;border:2px dashed rgba(201,168,76,.28);border-radius:10px;display:flex;align-items:center;justify-content:center;color:rgba(201,168,76,.4);font-size:1.2rem;transition:all .18s;flex-shrink:0;cursor:pointer';
+  dz.textContent=lbl;
+  addDropHandlers(dz,side);
   return dz;
 }
 
