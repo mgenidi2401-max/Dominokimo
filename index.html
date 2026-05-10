@@ -3,84 +3,124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NewsLine - الدردشة</title>
+<title>NewsLine</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  font-family:Arial,Tahoma,sans-serif;
+  font-family:Tahoma,Arial,sans-serif;
   background:#0d1117;
-  color:#fff;
+  color:white;
   height:100vh;
   overflow:hidden;
 }
-.app{
+button,input{font-family:inherit}
+
+.login-page{
+  height:100vh;
   display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0d1117;
+}
+.login-box{
+  width:340px;
+  background:#161b22;
+  padding:25px;
+  border:1px solid #30363d;
+  border-radius:14px;
+}
+.logo{
+  font-size:28px;
+  font-weight:bold;
+  margin-bottom:20px;
+  text-align:center;
+}
+.logo span{color:#39d353}
+.login-box input{
+  width:100%;
+  padding:13px;
+  margin-bottom:12px;
+  background:#21262d;
+  border:1px solid #30363d;
+  border-radius:8px;
+  color:white;
+}
+.login-box button{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  border:0;
+  border-radius:8px;
+  cursor:pointer;
+  color:white;
+}
+.green{background:#238636}
+.blue{background:#1f6feb}
+
+.app{
+  display:none;
   height:100vh;
 }
 .sidebar{
-  width:270px;
+  width:300px;
   background:#161b22;
   border-left:1px solid #30363d;
   padding:15px;
   display:flex;
   flex-direction:column;
 }
-.logo{
-  font-size:22px;
-  font-weight:bold;
-  margin-bottom:20px;
+.top-info{
+  margin-bottom:15px;
+  border-bottom:1px solid #30363d;
+  padding-bottom:12px;
 }
-.logo span{color:#39d353}
+.version{
+  color:#39d353;
+  font-size:12px;
+  font-weight:bold;
+  margin-top:4px;
+}
 .search{
   width:100%;
   padding:12px;
   background:#21262d;
   border:1px solid #30363d;
+  color:white;
   border-radius:8px;
-  color:#fff;
-  margin-bottom:15px;
+  margin-bottom:12px;
 }
-.contacts{
+.user-list{
   flex:1;
   overflow:auto;
 }
-.contact{
+.user{
   padding:12px;
   background:#21262d;
   border-radius:8px;
   margin-bottom:8px;
   cursor:pointer;
 }
-.contact:hover{background:#30363d}
-.add-btn{
-  padding:12px;
-  background:#238636;
-  color:white;
-  border:0;
-  border-radius:8px;
-  cursor:pointer;
-  margin-top:10px;
-}
+.user:hover{background:#30363d}
 .main{
   flex:1;
   display:flex;
   flex-direction:column;
 }
 .topbar{
-  height:60px;
+  height:65px;
   background:#161b22;
   border-bottom:1px solid #30363d;
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
   padding:0 20px;
 }
 .logout{
   background:#da3633;
-  color:white;
   border:0;
-  padding:8px 18px;
+  color:white;
+  padding:9px 18px;
   border-radius:8px;
   cursor:pointer;
 }
@@ -92,26 +132,27 @@ body{
 .empty{
   height:100%;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
   color:#8b949e;
 }
-.message{
+.msg{
   max-width:60%;
   padding:12px;
-  border-radius:12px;
   margin-bottom:10px;
+  border-radius:12px;
+  line-height:1.5;
 }
-.sent{
+.me{
   background:#238636;
   margin-right:auto;
 }
-.received{
+.other{
   background:#21262d;
   margin-left:auto;
 }
 .input-area{
-  display:flex;
+  display:none;
   gap:10px;
   padding:15px;
   background:#161b22;
@@ -122,133 +163,200 @@ body{
   padding:12px;
   background:#21262d;
   border:1px solid #30363d;
+  color:white;
   border-radius:8px;
-  color:#fff;
 }
 .input-area button{
-  padding:12px 20px;
+  padding:12px 22px;
   background:#1f6feb;
-  color:white;
   border:0;
+  color:white;
   border-radius:8px;
   cursor:pointer;
 }
-.hidden{display:none}
+.small{
+  color:#8b949e;
+  font-size:12px;
+  margin-top:5px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <div class="logo">News<span>Line</span></div>
+
+    <input id="usernameInput" placeholder="اسم المستخدم مثل test">
+    <input id="passwordInput" type="password" placeholder="كلمة المرور">
+
+    <button class="green" onclick="login()">تسجيل الدخول</button>
+    <button class="blue" onclick="register()">إنشاء حساب جديد</button>
+
+    <div class="small">
+      ملاحظة: البيانات محفوظة على نفس المتصفح فقط.
+    </div>
+  </div>
+</div>
+
+<div class="app" id="app">
 
   <div class="main">
     <div class="topbar">
       <button class="logout" onclick="logout()">خروج</button>
-      <div id="chatTitle">اختر محادثة</div>
+
+      <div style="text-align:left">
+        <div id="chatTitle" style="font-size:18px;font-weight:bold">اختر شخص للمحادثة</div>
+        <div class="version">Version 1.1.0</div>
+      </div>
     </div>
 
     <div class="chat" id="chatBox">
-      <div class="empty">اختر محادثة من القائمة</div>
+      <div class="empty">ابحث عن مستخدم وابدأ الشات</div>
     </div>
 
-    <div class="input-area hidden" id="messageArea">
-      <input type="text" id="messageInput" placeholder="اكتب رسالة...">
+    <div class="input-area" id="inputArea">
+      <input id="messageInput" placeholder="اكتب رسالة...">
       <button onclick="sendMessage()">إرسال</button>
     </div>
   </div>
 
   <div class="sidebar">
-    <div class="logo">News<span>Line</span></div>
+    <div class="top-info">
+      <div class="logo" style="font-size:22px;text-align:right;margin-bottom:5px">
+        News<span>Line</span>
+      </div>
+      <div>الحساب الحالي: <b id="currentUserText"></b></div>
+      <div class="version">Version 1.1.0</div>
+    </div>
 
-    <input class="search" id="searchInput" placeholder="بحث..." oninput="renderContacts()">
+    <input class="search" id="searchInput" placeholder="ابحث عن شخص مثل test..." oninput="renderUsers()">
 
-    <div class="contacts" id="contactsList"></div>
-
-    <button class="add-btn" onclick="addContact()">+ إضافة شخص جديد</button>
+    <div class="user-list" id="userList"></div>
   </div>
 
 </div>
 
 <script>
-let contacts = JSON.parse(localStorage.getItem("newsline_contacts")) || [];
-let chats = JSON.parse(localStorage.getItem("newsline_chats")) || {};
-let currentContact = null;
+let users = JSON.parse(localStorage.getItem("newsline_users")) || [];
+let messages = JSON.parse(localStorage.getItem("newsline_messages")) || [];
+let currentUser = localStorage.getItem("newsline_current_user") || null;
+let selectedUser = null;
 
-function saveData(){
-  localStorage.setItem("newsline_contacts", JSON.stringify(contacts));
-  localStorage.setItem("newsline_chats", JSON.stringify(chats));
+function save(){
+  localStorage.setItem("newsline_users", JSON.stringify(users));
+  localStorage.setItem("newsline_messages", JSON.stringify(messages));
 }
 
-function renderContacts(){
-  const list = document.getElementById("contactsList");
-  const search = document.getElementById("searchInput").value.trim().toLowerCase();
+function register(){
+  let username = document.getElementById("usernameInput").value.trim();
+  let password = document.getElementById("passwordInput").value.trim();
+
+  if(!username || !password){
+    alert("اكتب اسم المستخدم وكلمة المرور");
+    return;
+  }
+
+  if(users.find(u => u.username === username)){
+    alert("هذا الاسم موجود بالفعل");
+    return;
+  }
+
+  users.push({username,password});
+  save();
+
+  alert("تم إنشاء الحساب بنجاح، سجل دخول الآن");
+}
+
+function login(){
+  let username = document.getElementById("usernameInput").value.trim();
+  let password = document.getElementById("passwordInput").value.trim();
+
+  let user = users.find(u => u.username === username && u.password === password);
+
+  if(!user){
+    alert("بيانات الدخول غير صحيحة أو الحساب غير موجود");
+    return;
+  }
+
+  currentUser = username;
+  localStorage.setItem("newsline_current_user", currentUser);
+  showApp();
+}
+
+function logout(){
+  localStorage.removeItem("newsline_current_user");
+  currentUser = null;
+  selectedUser = null;
+  document.getElementById("app").style.display = "none";
+  document.getElementById("loginPage").style.display = "flex";
+}
+
+function showApp(){
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("app").style.display = "flex";
+  document.getElementById("currentUserText").innerText = currentUser;
+  renderUsers();
+}
+
+function renderUsers(){
+  let list = document.getElementById("userList");
+  let search = document.getElementById("searchInput").value.trim().toLowerCase();
 
   list.innerHTML = "";
 
-  const filtered = contacts.filter(c => c.name.toLowerCase().includes(search));
+  let result = users.filter(u =>
+    u.username !== currentUser &&
+    u.username.toLowerCase().includes(search)
+  );
 
-  if(filtered.length === 0){
+  if(result.length === 0){
     list.innerHTML = `
       <div style="color:#8b949e;text-align:center;margin-top:30px">
-        لا توجد جهات اتصال<br>
-        اضغط إضافة شخص جديد أدناه
+        لا يوجد مستخدمين<br>
+        اكتب اسم الحساب مثل test
       </div>
     `;
     return;
   }
 
-  filtered.forEach(contact => {
-    const div = document.createElement("div");
-    div.className = "contact";
-    div.innerHTML = "👤 " + contact.name;
-    div.onclick = () => openChat(contact.id);
+  result.forEach(u => {
+    let div = document.createElement("div");
+    div.className = "user";
+    div.innerHTML = "👤 " + u.username;
+    div.onclick = () => openChat(u.username);
     list.appendChild(div);
   });
 }
 
-function addContact(){
-  const name = prompt("اكتب اسم الشخص:");
-  if(!name || name.trim() === "") return;
-
-  const id = Date.now().toString();
-
-  contacts.push({
-    id: id,
-    name: name.trim()
-  });
-
-  chats[id] = [];
-
-  saveData();
-  renderContacts();
-  openChat(id);
+function chatKey(a,b){
+  return [a,b].sort().join("_");
 }
 
-function openChat(id){
-  currentContact = id;
-
-  const contact = contacts.find(c => c.id === id);
-  document.getElementById("chatTitle").innerText = contact.name;
-  document.getElementById("messageArea").classList.remove("hidden");
-
+function openChat(username){
+  selectedUser = username;
+  document.getElementById("chatTitle").innerText = "محادثة مع " + username;
+  document.getElementById("inputArea").style.display = "flex";
   renderMessages();
 }
 
 function renderMessages(){
-  const box = document.getElementById("chatBox");
+  let box = document.getElementById("chatBox");
   box.innerHTML = "";
 
-  const messages = chats[currentContact] || [];
+  let key = chatKey(currentUser, selectedUser);
+  let chatMessages = messages.filter(m => m.key === key);
 
-  if(messages.length === 0){
-    box.innerHTML = `<div class="empty">لا توجد رسائل بعد</div>`;
+  if(chatMessages.length === 0){
+    box.innerHTML = `<div class="empty">ابدأ أول رسالة مع ${selectedUser}</div>`;
     return;
   }
 
-  messages.forEach(msg => {
-    const div = document.createElement("div");
-    div.className = "message sent";
-    div.innerText = msg;
+  chatMessages.forEach(m => {
+    let div = document.createElement("div");
+    div.className = "msg " + (m.from === currentUser ? "me" : "other");
+    div.innerText = m.text;
     box.appendChild(div);
   });
 
@@ -256,20 +364,22 @@ function renderMessages(){
 }
 
 function sendMessage(){
-  const input = document.getElementById("messageInput");
-  const text = input.value.trim();
+  let input = document.getElementById("messageInput");
+  let text = input.value.trim();
 
-  if(!text || !currentContact) return;
+  if(!text || !selectedUser) return;
 
-  chats[currentContact].push(text);
+  messages.push({
+    key: chatKey(currentUser, selectedUser),
+    from: currentUser,
+    to: selectedUser,
+    text: text,
+    time: new Date().toLocaleString()
+  });
+
   input.value = "";
-
-  saveData();
+  save();
   renderMessages();
-}
-
-function logout(){
-  alert("تم تسجيل الخروج");
 }
 
 document.getElementById("messageInput").addEventListener("keydown", function(e){
@@ -278,7 +388,9 @@ document.getElementById("messageInput").addEventListener("keydown", function(e){
   }
 });
 
-renderContacts();
+if(currentUser){
+  showApp();
+}
 </script>
 
 </body>
