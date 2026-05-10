@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>DOMINO — v8.6</title>
+<title>DOMINO — v8.9</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
 :root{
-  --bg:#080c12;--bg2:#0e1420;--surface:#141c2a;--surface2:#1a2436;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
-  --gold:#c9a84c;--gold2:#e8c96d;--gold3:#f5e0a0;
+  --bg:#1a2535;--bg2:#243347;--surface:#2c3e56;--surface2:#334a65;
+  --border:rgba(255,255,255,0.13);--border2:rgba(255,255,255,0.22);
+  --gold:#d4a847;--gold2:#ecc96d;--gold3:#f5e0a0;
   --red:#c0392b;--red2:#e74c3c;
-  --felt:#0d3d18;--felt2:#061208;
-  --ivory:#f5f0e8;--pip:#111;
-  --text:#d4dae8;--text2:#8a9ab5;--text3:#4a5a72;
-  --shadow:rgba(0,0,0,0.7);
+  --felt:#1a6b30;--felt2:#0f4020;
+  --ivory:#f8f4ec;--pip:#111;
+  --text:#edf2f8;--text2:#b8c8dc;--text3:#7a90aa;
+  --shadow:rgba(0,0,0,0.4);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
 html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
@@ -99,7 +99,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
 /* ═══ LANDING ═══ */
 #landing{
-  background:radial-gradient(ellipse at 50% 0%,#1a2436 0%,#080c12 70%);
+  background:radial-gradient(ellipse at 50% 0%,#263548 0%,#111827 70%);
   align-items:center;justify-content:center;overflow-y:auto;padding:24px 20px 40px;position:relative;
 }
 #landing::before,#landing::after{content:'';position:fixed;width:120px;height:120px;border-color:var(--gold);border-style:solid;opacity:.12;pointer-events:none}
@@ -144,9 +144,15 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .version-tag{display:inline-block;font-size:.55rem;letter-spacing:2px;color:var(--gold);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:2px 8px;margin-top:6px}
 
 /* Language selector */
-.lang-selector{display:flex;gap:8px;animation:fadeUp .8s .1s ease both}
-.lang-btn{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:8px 14px;font-family:inherit;font-size:.78rem;color:var(--text2);cursor:pointer;transition:all .2s;touch-action:manipulation}
-.lang-btn:hover,.lang-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+.lang-selector{display:flex;gap:8px;animation:fadeUp .8s .1s ease both;flex-wrap:wrap;justify-content:center}
+.lang-btn{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:8px 14px;font-family:inherit;cursor:pointer;transition:all .2s;touch-action:manipulation;text-align:right}
+.lang-btn:hover,.lang-btn.active{border-color:var(--gold);background:rgba(212,168,71,.1)}
+.lang-flag{font-size:1.3rem;flex-shrink:0}
+.lang-labels{display:flex;flex-direction:column}
+.lang-l1{font-size:.8rem;font-weight:700;color:var(--text);line-height:1.2}
+.lang-l2{font-size:.58rem;color:var(--text3);line-height:1.2}
+.lang-btn.active .lang-l1{color:var(--gold)}
+.lang-btn.active .lang-l2{color:rgba(212,168,71,.6)}
 .lang-flag{font-size:1rem}
 
 /* Main card */
@@ -181,7 +187,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .toggle.on::after{transform:translateX(18px);background:var(--gold)}
 
 /* ═══ WAITING ═══ */
-#waiting{background:var(--bg);align-items:center;justify-content:center;padding:30px 20px;text-align:center}
+#waiting{background:var(--bg2);align-items:center;justify-content:center;padding:30px 20px;text-align:center}
 .waiting-inner{width:100%;max-width:380px}
 .wait-title{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--gold2);margin-bottom:6px}
 .wait-sub{font-size:.74rem;color:var(--text3);margin-bottom:22px}
@@ -233,7 +239,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .wait-badge{font-size:.5rem;background:rgba(21,101,192,.18);border:1px solid rgba(21,101,192,.25);border-radius:8px;padding:2px 7px;color:#90caf9}
 
 /* ═══ FELT TABLE — wrapping chain ═══ */
-#table-wrap{flex:1;overflow:hidden;position:relative;background:radial-gradient(ellipse at 50% 40%,#1a5c2a 0%,var(--felt) 55%,var(--felt2) 100%)}
+#table-wrap{flex:1;overflow:hidden;position:relative;background:radial-gradient(ellipse at 50% 40%,#1e7a35 0%,var(--felt) 55%,var(--felt2) 100%)}
 #table-wrap::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.014) 0,rgba(255,255,255,.014) 1px,transparent 1px,transparent 28px),repeating-linear-gradient(90deg,rgba(255,255,255,.014) 0,rgba(255,255,255,.014) 1px,transparent 1px,transparent 28px);pointer-events:none}
 #table-wrap::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 60px rgba(0,0,0,.5);pointer-events:none}
 #table-scroll{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;z-index:1;padding:14px}
@@ -432,7 +438,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <div class="islamic-ornament">✦ ☽ ✦</div>
       <div class="game-name" id="game-name-text">DOMINO</div>
       <div class="game-sub" id="game-sub-text">Multiplayer · Classic · Worldwide</div>
-      <div class="version-tag">v8.6</div>
+      <div class="version-tag">v8.9</div>
     </div>
 
     <!-- Arabic Quote -->
@@ -443,14 +449,17 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
     <!-- Language -->
     <div class="lang-selector">
-      <button class="lang-btn active" data-lang="en" onclick="setLang('en')">
-        <span class="lang-flag">🌐</span> English
+      <button class="lang-btn active" data-lang="en" id="lang-en">
+        <span class="lang-flag">🌐</span>
+        <span class="lang-labels"><span class="lang-l1">English</span><span class="lang-l2">الإنجليزية</span></span>
       </button>
-      <button class="lang-btn" data-lang="ar" onclick="setLang('ar')">
-        <span class="lang-flag">🇸🇦</span> العربية
+      <button class="lang-btn" data-lang="ar" id="lang-ar">
+        <span class="lang-flag">🇪🇬</span>
+        <span class="lang-labels"><span class="lang-l1">العربية</span><span class="lang-l2">Arabic</span></span>
       </button>
-      <button class="lang-btn" data-lang="fr" onclick="setLang('fr')">
-        <span class="lang-flag">🇫🇷</span> Français
+      <button class="lang-btn" data-lang="fr" id="lang-fr">
+        <span class="lang-flag">🇫🇷</span>
+        <span class="lang-labels"><span class="lang-l1">Français</span><span class="lang-l2">الفرنسية</span></span>
       </button>
     </div>
 
@@ -458,12 +467,12 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div class="main-card">
       <div class="name-label" id="lbl-name">YOUR NAME</div>
       <input class="name-input" id="inp-name" placeholder="Enter your name..." maxlength="14" autocomplete="off">
-      <button class="pbtn primary" id="btn-create" onclick="createRoom()">+ <span id="lbl-create">Create Room</span></button>
-      <button class="pbtn secondary" id="btn-vs-ai" onclick="startVsAI()">🤖 <span id="lbl-vsai">Play vs Computer</span></button>
+      <button class="pbtn primary" id="btn-create">+ <span id="lbl-create">Create Room</span></button>
+      <button class="pbtn secondary" id="btn-vs-ai">🤖 <span id="lbl-vsai">Play vs Computer</span></button>
       <div class="divider-line"><span id="lbl-or">OR JOIN</span></div>
       <div class="join-row">
         <input class="code-input" id="inp-code" placeholder="ROOM CODE" maxlength="6" autocomplete="off">
-        <button class="pbtn join-btn" id="btn-join" onclick="joinRoom()"><span id="lbl-join">Join →</span></button>
+        <button class="pbtn join-btn" id="btn-join"><span id="lbl-join">Join →</span></button>
       </div>
       <div id="lobby-err"></div>
     </div>
@@ -473,19 +482,19 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <div class="features-title" id="lbl-features">Optional Features</div>
       <div class="feature-row">
         <div><div class="feature-label" id="lbl-prayer-feat">Prayer Times</div><div class="feature-sub" id="lbl-prayer-sub">Show daily prayer schedule</div></div>
-        <div class="toggle" id="tog-prayer" onclick="toggleFeature('prayer')"></div>
+        <div class="toggle" id="tog-prayer"></div>
       </div>
       <div class="feature-row">
         <div><div class="feature-label" id="lbl-hadith-feat">Daily Hadith</div><div class="feature-sub" id="lbl-hadith-sub">Islamic wisdom, updated every minute</div></div>
-        <div class="toggle" id="tog-hadith" onclick="toggleFeature('hadith')"></div>
+        <div class="toggle" id="tog-hadith"></div>
       </div>
       <div class="feature-row">
         <div><div class="feature-label" id="lbl-weather-feat">Weather</div><div class="feature-sub" id="lbl-weather-sub">Live local weather</div></div>
-        <div class="toggle" id="tog-weather" onclick="toggleFeature('weather')"></div>
+        <div class="toggle" id="tog-weather"></div>
       </div>
       <div class="feature-row">
         <div><div class="feature-label" id="lbl-audio-feat">🎵 Background Music</div><div class="feature-sub" id="lbl-audio-sub">Quran Radio or your own music file</div></div>
-        <div class="toggle" id="tog-audio" onclick="toggleFeature('audio')"></div>
+        <div class="toggle" id="tog-audio"></div>
       </div>
     </div>
   </div>
@@ -500,9 +509,9 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div class="players-grid" id="players-list"></div>
     <div class="wait-sub" id="lbl-wait-hint" style="margin-bottom:16px">2–6 players · Host starts</div>
     <div class="wait-actions">
-      <button class="wbtn gold" id="btn-start-game" onclick="startGame()">▶ Start</button>
-      <button class="wbtn" id="btn-copy-code" onclick="copyCode()">📋 Copy</button>
-      <button class="wbtn danger" id="btn-cancel-wait" onclick="cancelWait()">✕ Cancel</button>
+      <button class="wbtn gold" id="btn-start-game">▶ Start</button>
+      <button class="wbtn" id="btn-copy-code">📋 Copy</button>
+      <button class="wbtn danger" id="btn-cancel-wait">✕ Cancel</button>
     </div>
   </div>
 </div>
@@ -515,7 +524,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </div>
   <div id="hadith-bar"><div id="hadith-text">—</div></div>
   <div id="hdr">
-    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8.6</span></div>
+    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8.9</span></div>
     <div class="scores-row" id="scores-row"></div>
   </div>
   <div id="opps-row"></div>
@@ -526,15 +535,15 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div id="undo-bar">
       <span id="undo-text">Undo?</span>
       <div id="undo-prog"><div id="undo-fill"></div></div>
-      <button id="btn-undo" onclick="doUndo()">↩ Undo</button>
+      <button id="btn-undo">↩ Undo</button>
     </div>
   </div>
   <div id="msg-bar">Loading…</div>
   <div id="my-zone"><div id="my-hand"></div></div>
   <div id="controls">
-    <button class="gbtn" id="btn-draw" onclick="onDraw()">🎲 Draw</button>
-    <button class="gbtn" id="btn-chat-toggle" onclick="openChat()">💬 Chat</button>
-    <button class="gbtn" id="btn-leave" onclick="leaveGame()">✕</button>
+    <button class="gbtn" id="btn-draw">🎲 Draw</button>
+    <button class="gbtn" id="btn-chat-toggle">💬 Chat</button>
+    <button class="gbtn" id="btn-leave">✕</button>
   </div>
 </div>
 </div>
@@ -545,10 +554,10 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <h3 id="side-title">Choose Side</h3>
     <div class="side-preview" id="side-preview"></div>
     <div class="side-btns">
-      <button class="side-btn" id="sbtn-left" onclick="confirmSide('left')">← Left</button>
-      <button class="side-btn" id="sbtn-right" onclick="confirmSide('right')">Right →</button>
+      <button class="side-btn" id="sbtn-left">← Left</button>
+      <button class="side-btn" id="sbtn-right">Right →</button>
     </div>
-    <button id="sbtn-cancel" onclick="closeSideModal()">Cancel</button>
+    <button id="sbtn-cancel">Cancel</button>
   </div>
 </div>
 
@@ -556,23 +565,23 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 <div id="chat-panel">
   <div id="chat-header">
     <h3>💬 Chat</h3>
-    <button id="btn-chat-close" onclick="closeChat()">✕</button>
+    <button id="btn-chat-close">✕</button>
   </div>
   <div class="chat-tabs">
-    <button class="chat-tab active" id="tab-game" onclick="switchTab('game')">
+    <button class="chat-tab active" id="tab-game">
       Game Chat
       <span class="tab-badge" id="badge-game"></span>
     </button>
-    <button class="chat-tab" id="tab-global" onclick="switchTab('global')">
+    <button class="chat-tab" id="tab-global">
       Global Chat
       <span class="tab-badge" id="badge-global"></span>
     </button>
   </div>
   <div id="chat-messages"></div>
   <div id="chat-input-row">
-    <label style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:9px 11px;cursor:pointer;font-size:.9rem;flex-shrink:0;display:flex;align-items:center;color:var(--text2)" title="Send image/video">📷<input type="file" accept="image/*,video/*" id="chat-file-input" style="display:none" onchange="sendChatFile(this)"></label>
-    <input id="chat-input" placeholder="Type a message…" maxlength="200" autocomplete="off" style="user-select:text;flex:1" onkeyup="if(event.key==='Enter')sendChat()">
-    <button id="btn-send-chat" onclick="sendChat()">Send</button>
+    <label style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:9px 11px;cursor:pointer;font-size:.9rem;flex-shrink:0;display:flex;align-items:center;color:var(--text2)" title="Send image/video">📷<input type="file" accept="image/*,video/*" id="chat-file-input" style="display:none"></label>
+    <input id="chat-input" placeholder="Type a message…" maxlength="200" autocomplete="off" style="user-select:text;flex:1">
+    <button id="btn-send-chat">Send</button>
   </div>
 </div>
 
@@ -584,12 +593,12 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div id="ap-sub">Background Audio</div>
   </div>
   <div id="ap-controls">
-    <button class="ap-btn" id="ap-prev" onclick="apPrev()" title="Previous">⏮</button>
-    <button class="ap-btn" id="ap-play" onclick="apToggle()" title="Play/Pause">▶</button>
-    <button class="ap-btn" id="ap-next" onclick="apNext()" title="Next">⏭</button>
+    <button class="ap-btn" id="ap-prev" title="Previous">⏮</button>
+    <button class="ap-btn" id="ap-play" title="Play/Pause">▶</button>
+    <button class="ap-btn" id="ap-next" title="Next">⏭</button>
     <input type="range" id="ap-vol" min="0" max="1" step="0.05" value="0.5" oninput="apSetVol(this.value)" title="Volume">
-    <label class="ap-btn" title="Upload music file" style="cursor:pointer">📁<input type="file" id="ap-file" accept="audio/*" style="display:none" onchange="apLoadFile(this)"></label>
-    <button class="ap-btn" id="btn-close-ap" onclick="apClose()">✕</button>
+    <label class="ap-btn" title="Upload music file" style="cursor:pointer">📁<input type="file" id="ap-file" accept="audio/*" style="display:none"></label>
+    <button class="ap-btn" id="btn-close-ap">✕</button>
   </div>
 </div>
 <audio id="ap-audio" style="display:none"></audio>
@@ -601,7 +610,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div class="p-name" id="prayer-notify-name"></div>
     <div class="p-time" id="prayer-notify-time"></div>
     <div class="p-msg" id="prayer-notify-msg">Prayer time</div>
-    <button id="btn-close-prayer" onclick="document.getElementById('prayer-notify').classList.remove('show')">OK ✓</button>
+    <button id="btn-close-prayer">OK ✓</button>
   </div>
 </div>
 
@@ -610,7 +619,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   <div id="weather-toast-inner">
     <span class="wt-icon" id="wt-icon">🌤️</span>
     <div class="wt-info"><div class="wt-title" id="wt-title">Weather Update</div><div class="wt-sub" id="wt-sub"></div></div>
-    <button id="btn-close-wt" onclick="closeWeatherToast()">✕</button>
+    <button id="btn-close-wt">✕</button>
   </div>
 </div>
 
@@ -620,8 +629,8 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div id="win-emoji">🏆</div>
     <div id="win-title">You Won!</div>
     <div id="win-sub"></div>
-    <button class="wwin-btn gold" id="btn-win-new" onclick="newGame()">Play Again 🔄</button>
-    <button class="wwin-btn ghost" id="btn-win-lobby" onclick="leaveGame()">Main Menu 🏠</button>
+    <button class="wwin-btn gold" id="btn-win-new">Play Again 🔄</button>
+    <button class="wwin-btn ghost" id="btn-win-lobby">Main Menu 🏠</button>
   </div>
 </div>
 
@@ -699,14 +708,6 @@ let locationLoaded=false,lastWCode=null,wToastTimer=null;
 let notifiedPrayers=new Set();
 let pendingTileIdx=null;
 let chatTab='game',chatOpen=false,unreadGame=0,unreadGlobal=0;
-
-// Expose globals
-window.setLang=setLang;window.toggleFeature=toggleFeature;
-window.createRoom=createRoom;window.startVsAI=startVsAI;window.joinRoom=joinRoom;
-window.startGame=startGame;window.cancelWait=cancelWait;window.copyCode=copyCode;
-window.onDraw=onDraw;window.leaveGame=leaveGame;window.newGame=newGame;window.doUndo=doUndo;
-window.closeWeatherToast=closeWeatherToast;window.confirmSide=confirmSide;window.closeSideModal=closeSideModal;
-window.openChat=openChat;window.closeChat=closeChat;window.sendChat=sendChat;window.switchTab=switchTab;
 
 // ── LANGUAGE ──────────────────────────────────────────────
 function setLang(l){
@@ -808,9 +809,9 @@ function placeTile(chain,lE,rE,a,b,side){
 // ── RENDER CHAIN ──────────────────────────────────────────
 // ── AUDIO PLAYER SYSTEM ──────────────────────────────────
 const QURAN_STREAMS=[
-  {title:'إذاعة القرآن الكريم — مصر',sub:'Egyptian Quran Radio',url:'https://stream.radiojar.com/0tpy1h0kxtzuv',icon:'🕌'},
-  {title:'إذاعة القرآن الكريم — السعودية',sub:'Saudi Quran Radio',url:'http://stream.srrs.sa:8000/quran.mp3',icon:'🕌'},
-  {title:'Holy Quran Radio — Worldwide',sub:'24/7 Quran Recitation',url:'https://Quranradio.com/en/',icon:'📻'},
+  {title:'إذاعة القرآن الكريم — القاهرة 🇪🇬',sub:'Egyptian Holy Quran Radio — Cairo 98.2 FM',url:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'🕌'},
+  {title:'إذاعة القرآن الكريم — السعودية 🇸🇦',sub:'Saudi Holy Quran Radio — Riyadh',url:'https://stream.radiojar.com/0tpy1h0kxtzuv',icon:'🕌'},
+  {title:'Holy Quran Radio — International 🌍',sub:'24/7 Quran Recitation Worldwide',url:'https://Quranradio.com/en/',icon:'📻'},
 ];
 
 let apPlaying=false,apCurrentIdx=0,apUserFiles=[],apMode='quran'; // quran or file
@@ -865,7 +866,6 @@ function apLoadFile(input){
 
 // Switch between Quran and file mode
 function apSwitchMode(mode){apMode=mode;apLoad(0)}
-window.apToggle=apToggle;window.apNext=apNext;window.apPrev=apPrev;window.apSetVol=apSetVol;window.apLoadFile=apLoadFile;window.apClose=apClose;window.apSwitchMode=apSwitchMode;
 
 
 let audioCtx=null;
@@ -1270,7 +1270,6 @@ async function sendChatFile(input){
   };
   reader.readAsDataURL(file);
 }
-window.sendChatFile=sendChatFile;
 
 function renderMessages(){
   const msgs=chatTab==='game'?gameMessages:globalMessages;
@@ -1415,8 +1414,45 @@ function leaveGame(){
   showScreen('landing');
 }
 
+// ── BIND ALL EVENTS ───────────────────────────────────────
+document.getElementById('lang-en').addEventListener('click',()=>setLang('en'));
+document.getElementById('lang-ar').addEventListener('click',()=>setLang('ar'));
+document.getElementById('lang-fr').addEventListener('click',()=>setLang('fr'));
+document.getElementById('tog-prayer').addEventListener('click',()=>toggleFeature('prayer'));
+document.getElementById('tog-hadith').addEventListener('click',()=>toggleFeature('hadith'));
+document.getElementById('tog-weather').addEventListener('click',()=>toggleFeature('weather'));
+document.getElementById('tog-audio').addEventListener('click',()=>toggleFeature('audio'));
+document.getElementById('btn-create').addEventListener('click',createRoom);
+document.getElementById('btn-vs-ai').addEventListener('click',startVsAI);
+document.getElementById('btn-join').addEventListener('click',joinRoom);
+document.getElementById('btn-start-game').addEventListener('click',startGame);
+document.getElementById('btn-copy-code').addEventListener('click',copyCode);
+document.getElementById('btn-cancel-wait').addEventListener('click',cancelWait);
+document.getElementById('btn-undo').addEventListener('click',doUndo);
+document.getElementById('btn-draw').addEventListener('click',onDraw);
+document.getElementById('btn-chat-toggle').addEventListener('click',openChat);
+document.getElementById('btn-leave').addEventListener('click',leaveGame);
+document.getElementById('sbtn-left').addEventListener('click',()=>confirmSide('left'));
+document.getElementById('sbtn-right').addEventListener('click',()=>confirmSide('right'));
+document.getElementById('sbtn-cancel').addEventListener('click',closeSideModal);
+document.getElementById('btn-chat-close').addEventListener('click',closeChat);
+document.getElementById('tab-game').addEventListener('click',()=>switchTab('game'));
+document.getElementById('tab-global').addEventListener('click',()=>switchTab('global'));
+document.getElementById('chat-file-input').addEventListener('change',function(){sendChatFile(this)});
+document.getElementById('btn-send-chat').addEventListener('click',sendChat);
+document.getElementById('ap-prev').addEventListener('click',apPrev);
+document.getElementById('ap-play').addEventListener('click',apToggle);
+document.getElementById('ap-next').addEventListener('click',apNext);
+document.getElementById('ap-file').addEventListener('change',function(){apLoadFile(this)});
+document.getElementById('btn-close-ap').addEventListener('click',apClose);
+document.getElementById('btn-close-prayer').addEventListener('click',()=>document.getElementById('prayer-notify').classList.remove('show'));
+document.getElementById('btn-close-wt').addEventListener('click',closeWeatherToast);
+document.getElementById('btn-win-new').addEventListener('click',newGame);
+document.getElementById('btn-win-lobby').addEventListener('click',leaveGame);
 document.getElementById('inp-code').addEventListener('keyup',e=>{if(e.key==='Enter')joinRoom()});
 document.getElementById('inp-name').addEventListener('keyup',e=>{if(e.key==='Enter')document.getElementById('inp-code').value?joinRoom():createRoom()});
+document.getElementById('chat-input').addEventListener('keyup',e=>{if(e.key==='Enter')sendChat()});
+document.getElementById('ap-vol').addEventListener('input',function(){apSetVol(this.value)});
 </script>
 </body>
 </html>
