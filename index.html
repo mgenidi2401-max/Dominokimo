@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>DOMINO — v8.5</title>
+<title>DOMINO — v8.6</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
 :root{
@@ -276,13 +276,13 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
 /* ═══ TILES ═══ */
 .tile{background:var(--ivory);border-radius:6px;border:1.5px solid #d4c9b8;box-shadow:1px 3px 8px var(--shadow),inset 0 1px 0 rgba(255,255,255,.8);display:inline-flex;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s,opacity .15s;position:relative;flex-shrink:0;touch-action:manipulation}
-.tile.V{flex-direction:column;width:32px;height:60px}
-.tile.H{flex-direction:row;width:60px;height:32px}
-.tile.DBL{flex-direction:column;width:30px;height:56px}
+.tile.V{flex-direction:column;width:38px;height:72px}
+.tile.H{flex-direction:row;width:72px;height:38px}
+.tile.DBL{flex-direction:column;width:36px;height:68px}
 .chain-t{cursor:default;pointer-events:none}
-.chain-t.H{flex-direction:row;width:50px;height:27px}
-.chain-t.V{flex-direction:column;width:27px;height:50px}
-.chain-t.DBL{flex-direction:column;width:27px;height:50px}
+.chain-t.H{flex-direction:row;width:60px;height:32px}
+.chain-t.V{flex-direction:column;width:32px;height:60px}
+.chain-t.DBL{flex-direction:column;width:32px;height:60px}
 .chain-t.pending{border-color:var(--gold)!important;box-shadow:0 0 12px rgba(201,168,76,.6)!important;animation:pendPulse 1s ease-in-out infinite}
 @keyframes pendPulse{0%,100%{box-shadow:0 0 8px rgba(201,168,76,.4)}50%{box-shadow:0 0 18px rgba(201,168,76,.9)}}
 .tile:hover{transform:translateY(-6px);box-shadow:1px 8px 16px var(--shadow)}
@@ -294,8 +294,8 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .chain-t.H .half:first-child{border-right:1.5px solid #c8bfaa}
 .chain-t.V .half:first-child,.chain-t.DBL .half:first-child{border-bottom:1.5px solid #c8bfaa}
 .pip-grid{display:grid;width:100%;height:100%;padding:3px;gap:1px}
-.pip{width:5px;height:5px;background:var(--pip);border-radius:50%;box-shadow:0 1px 2px rgba(0,0,0,.5);justify-self:center;align-self:center}
-.chain-t .pip{width:4px;height:4px}
+.pip{width:6px;height:6px;background:var(--pip);border-radius:50%;box-shadow:0 1px 2px rgba(0,0,0,.5);justify-self:center;align-self:center}
+.chain-t .pip{width:5px;height:5px}
 .pip-grid[data-n="0"]{grid-template:1fr/1fr}
 .pip-grid[data-n="1"]{grid-template:repeat(3,1fr)/repeat(3,1fr)}
 .pip-grid[data-n="2"]{grid-template:repeat(3,1fr)/repeat(3,1fr)}
@@ -392,6 +392,31 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 @keyframes sp{to{transform:rotate(360deg)}}
 @keyframes fadeDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+/* ═══ AUDIO PLAYER ═══ */
+#audio-player{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:min(720px,100%);z-index:40;
+  background:linear-gradient(135deg,rgba(8,12,18,.97),rgba(20,28,42,.97));
+  border-top:1px solid rgba(201,168,76,.2);
+  padding:8px 14px;display:none;
+  align-items:center;gap:10px;
+  backdrop-filter:blur(10px);
+  box-shadow:0 -8px 30px rgba(0,0,0,.5);
+}
+#audio-player.show{display:flex}
+#ap-icon{font-size:1.2rem;flex-shrink:0}
+#ap-info{flex:1;min-width:0}
+#ap-title{font-size:.72rem;color:var(--gold2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+#ap-sub{font-size:.58rem;color:var(--text3)}
+#ap-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ap-btn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:1.1rem;padding:4px;touch-action:manipulation;transition:color .15s}
+.ap-btn:hover{color:var(--gold)}
+#ap-vol{width:60px;accent-color:var(--gold);cursor:pointer}
+#btn-close-ap{color:var(--text3);font-size:.85rem}
+
+/* Game controls shift up when player visible */
+#game.audio-on #controls{margin-bottom:52px}
+
 #table-scroll::-webkit-scrollbar{height:4px;width:4px}
 #table-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
 </style>
@@ -407,7 +432,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <div class="islamic-ornament">✦ ☽ ✦</div>
       <div class="game-name" id="game-name-text">DOMINO</div>
       <div class="game-sub" id="game-sub-text">Multiplayer · Classic · Worldwide</div>
-      <div class="version-tag">v8.5</div>
+      <div class="version-tag">v8.6</div>
     </div>
 
     <!-- Arabic Quote -->
@@ -458,6 +483,10 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
         <div><div class="feature-label" id="lbl-weather-feat">Weather</div><div class="feature-sub" id="lbl-weather-sub">Live local weather</div></div>
         <div class="toggle" id="tog-weather" onclick="toggleFeature('weather')"></div>
       </div>
+      <div class="feature-row">
+        <div><div class="feature-label" id="lbl-audio-feat">🎵 Background Music</div><div class="feature-sub" id="lbl-audio-sub">Quran Radio or your own music file</div></div>
+        <div class="toggle" id="tog-audio" onclick="toggleFeature('audio')"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -486,7 +515,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </div>
   <div id="hadith-bar"><div id="hadith-text">—</div></div>
   <div id="hdr">
-    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8.5</span></div>
+    <div class="hdr-brand"><span class="brand-name">DOMINO</span><span class="brand-v">v8.6</span></div>
     <div class="scores-row" id="scores-row"></div>
   </div>
   <div id="opps-row"></div>
@@ -546,6 +575,24 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <button id="btn-send-chat" onclick="sendChat()">Send</button>
   </div>
 </div>
+
+<!-- AUDIO PLAYER -->
+<div id="audio-player">
+  <span id="ap-icon">🎵</span>
+  <div id="ap-info">
+    <div id="ap-title">—</div>
+    <div id="ap-sub">Background Audio</div>
+  </div>
+  <div id="ap-controls">
+    <button class="ap-btn" id="ap-prev" onclick="apPrev()" title="Previous">⏮</button>
+    <button class="ap-btn" id="ap-play" onclick="apToggle()" title="Play/Pause">▶</button>
+    <button class="ap-btn" id="ap-next" onclick="apNext()" title="Next">⏭</button>
+    <input type="range" id="ap-vol" min="0" max="1" step="0.05" value="0.5" oninput="apSetVol(this.value)" title="Volume">
+    <label class="ap-btn" title="Upload music file" style="cursor:pointer">📁<input type="file" id="ap-file" accept="audio/*" style="display:none" onchange="apLoadFile(this)"></label>
+    <button class="ap-btn" id="btn-close-ap" onclick="apClose()">✕</button>
+  </div>
+</div>
+<audio id="ap-audio" style="display:none"></audio>
 
 <!-- PRAYER POPUP -->
 <div id="prayer-notify">
@@ -690,7 +737,12 @@ function applyT(){
 applyT();
 
 // ── FEATURES ──────────────────────────────────────────────
-function toggleFeature(f){features[f]=!features[f];document.getElementById('tog-'+f).classList.toggle('on',features[f]);updateFeatUI()}
+function toggleFeature(f){
+  features[f]=!features[f];
+  document.getElementById('tog-'+f).classList.toggle('on',features[f]);
+  if(f==='audio'){features[f]?apShow():apClose();}
+  else updateFeatUI();
+}
 function updateFeatUI(){
   document.getElementById('hadith-bar').classList.toggle('visible',features.hadith);
   document.getElementById('info-bar').classList.toggle('visible',features.prayer||features.weather);
@@ -754,7 +806,68 @@ function placeTile(chain,lE,rE,a,b,side){
 }
 
 // ── RENDER CHAIN ──────────────────────────────────────────
-// ── SOUND SYSTEM ─────────────────────────────────────────
+// ── AUDIO PLAYER SYSTEM ──────────────────────────────────
+const QURAN_STREAMS=[
+  {title:'إذاعة القرآن الكريم — مصر',sub:'Egyptian Quran Radio',url:'https://stream.radiojar.com/0tpy1h0kxtzuv',icon:'🕌'},
+  {title:'إذاعة القرآن الكريم — السعودية',sub:'Saudi Quran Radio',url:'http://stream.srrs.sa:8000/quran.mp3',icon:'🕌'},
+  {title:'Holy Quran Radio — Worldwide',sub:'24/7 Quran Recitation',url:'https://Quranradio.com/en/',icon:'📻'},
+];
+
+let apPlaying=false,apCurrentIdx=0,apUserFiles=[],apMode='quran'; // quran or file
+const apAudio=document.getElementById('ap-audio');
+
+apAudio.volume=0.5;
+apAudio.addEventListener('ended',()=>apNext());
+apAudio.addEventListener('play',()=>{document.getElementById('ap-play').textContent='⏸';apPlaying=true});
+apAudio.addEventListener('pause',()=>{document.getElementById('ap-play').textContent='▶';apPlaying=false});
+apAudio.addEventListener('error',()=>{
+  document.getElementById('ap-sub').textContent='Connection error — retrying…';
+  setTimeout(()=>{if(apPlaying)apLoad(apCurrentIdx)},3000);
+});
+
+function apShow(){
+  document.getElementById('audio-player').classList.add('show');
+  document.getElementById('game').classList.add('audio-on');
+  apLoad(0);
+}
+function apClose(){
+  apAudio.pause();apAudio.src='';apPlaying=false;
+  document.getElementById('audio-player').classList.remove('show');
+  document.getElementById('game').classList.remove('audio-on');
+}
+
+function apLoad(idx){
+  if(apMode==='quran'){
+    const s=QURAN_STREAMS[idx%QURAN_STREAMS.length];apCurrentIdx=idx%QURAN_STREAMS.length;
+    document.getElementById('ap-icon').textContent=s.icon;
+    document.getElementById('ap-title').textContent=s.title;
+    document.getElementById('ap-sub').textContent=s.sub;
+    apAudio.src=s.url;apAudio.play().catch(()=>{});
+  } else if(apUserFiles.length>0){
+    const f=apUserFiles[idx%apUserFiles.length];apCurrentIdx=idx%apUserFiles.length;
+    document.getElementById('ap-icon').textContent='🎵';
+    document.getElementById('ap-title').textContent=f.name.replace(/\.[^.]+$/,'');
+    document.getElementById('ap-sub').textContent='Local file';
+    apAudio.src=URL.createObjectURL(f);apAudio.play().catch(()=>{});
+  }
+}
+
+function apToggle(){if(apPlaying){apAudio.pause()}else{if(apAudio.src)apAudio.play().catch(()=>{});else apLoad(0)}}
+function apNext(){apLoad(apCurrentIdx+1)}
+function apPrev(){apLoad(apCurrentIdx>0?apCurrentIdx-1:0)}
+function apSetVol(v){apAudio.volume=parseFloat(v)}
+function apLoadFile(input){
+  apUserFiles=Array.from(input.files||[]);
+  if(!apUserFiles.length)return;
+  apMode='file';apCurrentIdx=0;
+  apLoad(0);
+}
+
+// Switch between Quran and file mode
+function apSwitchMode(mode){apMode=mode;apLoad(0)}
+window.apToggle=apToggle;window.apNext=apNext;window.apPrev=apPrev;window.apSetVol=apSetVol;window.apLoadFile=apLoadFile;window.apClose=apClose;window.apSwitchMode=apSwitchMode;
+
+
 let audioCtx=null;
 function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
 
@@ -949,8 +1062,19 @@ function renderHand(gs){
         e.dataTransfer.effectAllowed='move';
         highlightDropZones(true);
       });
-      t.addEventListener('dragend',()=>{
+      t.addEventListener('dragend',e=>{
         t.style.opacity='';
+        // Use screen half to determine side
+        const screenMid=window.innerWidth/2;
+        const dropX=e.clientX;
+        if(dragIdx!==null){
+          const[ta,tb]=myHand[dragIdx];
+          const tcL=canFit(ta,tb,lE),tcR=canFit(ta,tb,rE);
+          if(!gs.chain?.length){doPlay(dragIdx,'right');}
+          else if(tcL&&tcR){doPlay(dragIdx,dropX<screenMid?'left':'right');}
+          else if(tcL){doPlay(dragIdx,'left');}
+          else if(tcR){doPlay(dragIdx,'right');}
+        }
         dragIdx=null;
         highlightDropZones(false);
       });
@@ -968,12 +1092,14 @@ function renderHand(gs){
         e.preventDefault();
         const touch=e.touches[0];
         moveGhost(touch.clientX,touch.clientY);
-        // Highlight nearest drop zone
+        // Show which side will be chosen based on screen half
+        const mid=window.innerWidth/2;
+        const side=touch.clientX<mid?'left':'right';
         document.querySelectorAll('[data-side]').forEach(dz=>{
-          const r=dz.getBoundingClientRect();
-          const over=touch.clientX>=r.left&&touch.clientX<=r.right&&touch.clientY>=r.top&&touch.clientY<=r.bottom;
-          dz.style.borderColor=over?'var(--gold-bright,#f5e0a0)':'var(--gold)';
-          dz.style.transform=over?'scale(1.15)':'';
+          const isTarget=dz.dataset.side===side;
+          dz.style.borderColor=isTarget?'#f5e0a0':'rgba(201,168,76,.3)';
+          dz.style.transform=isTarget?'scale(1.15)':'scale(1)';
+          dz.style.background=isTarget?'rgba(201,168,76,.12)':'';
         });
       },{passive:false});
 
@@ -982,25 +1108,16 @@ function renderHand(gs){
         clearGhost();
         t.style.opacity='';
         highlightDropZones(false);
+        document.querySelectorAll('[data-side]').forEach(dz=>{dz.style.transform='';dz.style.background=''});
+        if(dragIdx===null){return}
         const touch=e.changedTouches[0];
-        // Find which drop zone the finger released on
-        let placed=false;
-        document.querySelectorAll('[data-side]').forEach(dz=>{
-          const r=dz.getBoundingClientRect();
-          if(touch.clientX>=r.left&&touch.clientX<=r.right&&touch.clientY>=r.top&&touch.clientY<=r.bottom){
-            if(dragIdx!==null){doPlay(dragIdx,dz.dataset.side);placed=true;}
-          }
-          dz.style.transform='';
-        });
-        // If no drop zone but only one valid side — play it
-        if(!placed&&dragIdx!==null){
-          const[ta,tb]=myHand[dragIdx];
-          const tcL=canFit(ta,tb,lE),tcR=canFit(ta,tb,rE);
-          if(!gs.chain?.length)doPlay(dragIdx,'right');
-          else if(tcL&&!tcR)doPlay(dragIdx,'left');
-          else if(!tcL&&tcR)doPlay(dragIdx,'right');
-          // If both valid and no zone hit — ignore (player needs to aim at zone)
-        }
+        const screenMid=window.innerWidth/2;
+        const[ta,tb]=myHand[dragIdx];
+        const tcL=canFit(ta,tb,lE),tcR=canFit(ta,tb,rE);
+        if(!gs.chain?.length){doPlay(dragIdx,'right');}
+        else if(tcL&&tcR){doPlay(dragIdx,touch.clientX<screenMid?'left':'right');}
+        else if(tcL){doPlay(dragIdx,'left');}
+        else if(tcR){doPlay(dragIdx,'right');}
         dragIdx=null;
       });
     }
