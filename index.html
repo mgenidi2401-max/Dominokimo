@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>DOMINO v9.3</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Reem+Kufi:wght@400;700&family=Lateef:wght@400;700&display=swap');
 :root{
   --bg:#2e4a68;--bg2:#3a5878;--surface:#435f7a;--surface2:#4e6d88;
   --border:rgba(255,255,255,.12);--border2:rgba(255,255,255,.2);
@@ -88,9 +88,32 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .version-tag{display:inline-block;font-size:.52rem;letter-spacing:2px;color:var(--gold);border:1px solid rgba(212,168,71,.3);border-radius:20px;padding:2px 8px;margin-top:6px}
 
 /* Quote */
-.quote-strip{width:100%;background:linear-gradient(135deg,rgba(212,168,71,.07),rgba(212,168,71,.03));border:1px solid rgba(212,168,71,.18);border-radius:14px;padding:14px 18px;text-align:center;animation:fadeUp .7s .05s ease both}
-.quote-ar{font-family:'Amiri',serif;font-size:.95rem;color:rgba(212,168,71,.9);line-height:1.8;margin-bottom:4px}
-.quote-author{font-size:.6rem;color:var(--text3);letter-spacing:1px}
+.quote-strip{width:100%;background:linear-gradient(135deg,rgba(212,168,71,.06),rgba(212,168,71,.02));border:1px solid rgba(212,168,71,.15);border-radius:16px;padding:16px 18px;text-align:center;position:relative;overflow:hidden;min-height:80px;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.quote-strip::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(212,168,71,.04));pointer-events:none}
+/* Quote text animations */
+.quote-ar{font-size:1rem;color:rgba(212,168,71,.92);line-height:1.9;margin-bottom:5px;transition:all .4s;white-space:pre-line}
+.quote-ar.font-amiri{font-family:'Amiri',serif;font-size:1.05rem}
+.quote-ar.font-scheherazade{font-family:'Scheherazade New',serif;font-size:1.1rem}
+.quote-ar.font-lateef{font-family:'Lateef',serif;font-size:1.2rem}
+.quote-ar.font-kufi{font-family:'Reem Kufi',sans-serif;font-size:.92rem;letter-spacing:1px}
+.quote-author{font-size:.62rem;color:var(--text3);letter-spacing:2px;font-family:'Cairo',sans-serif}
+/* Direction variations */
+.quote-ar.dir-center{text-align:center}
+.quote-ar.dir-right{text-align:right}
+.quote-ar.dir-left{text-align:left}
+/* Entrance animations */
+@keyframes qFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes qSlideRight{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes qSlideLeft{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes qZoomIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+@keyframes qDropIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes qSparkle{0%{opacity:0;filter:blur(4px)}40%{opacity:1;filter:blur(0)}70%{opacity:1}100%{opacity:.92;filter:blur(0)}}
+.q-anim-fade{animation:qFadeIn .8s ease both}
+.q-anim-right{animation:qSlideRight .7s ease both}
+.q-anim-left{animation:qSlideLeft .7s ease both}
+.q-anim-zoom{animation:qZoomIn .6s cubic-bezier(.34,1.56,.64,1) both}
+.q-anim-drop{animation:qDropIn .6s ease both}
+.q-anim-sparkle{animation:qSparkle 1.2s ease both}
 
 /* Language */
 .lang-selector{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;animation:fadeUp .7s .1s ease both}
@@ -479,6 +502,8 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <span style="font-size:.58rem;color:var(--text3);letter-spacing:1px">🎨</span>
     <div class="color-swatch active" data-bg="#0a0a0a" style="background:#0a0a0a;border-color:var(--gold)" title="أسود"></div>
     <div class="color-swatch" data-bg="#0d1b2a" style="background:#0d1b2a" title="أزرق داكن"></div>
+    <div class="color-swatch" data-bg="#001f5e" style="background:#001f5e" title="أزرق ملكي"></div>
+    <div class="color-swatch" data-bg="#0a1628" style="background:#0a1628" title="أزرق ليلي"></div>
     <div class="color-swatch" data-bg="#1a0a2e" style="background:#1a0a2e" title="بنفسجي"></div>
     <div class="color-swatch" data-bg="#0a1f0a" style="background:#0a1f0a" title="أخضر داكن"></div>
     <div class="color-swatch" data-bg="#1a0a0a" style="background:#1a0a0a" title="أحمر داكن"></div>
@@ -541,6 +566,11 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div id="weather-mini"><span id="wm-icon">🌤️</span><span id="wm-temp">--°</span><span id="wm-desc" style="margin-left:3px"></span><span id="city-mini" style="font-size:.44rem;color:var(--text3);margin-left:3px"></span></div>
   </div>
   <div id="hadith-bar"><div id="hadith-text">—</div></div>
+  <!-- IN-GAME POETRY TICKER -->
+  <div id="poetry-bar" style="display:none;background:linear-gradient(135deg,rgba(0,0,0,.92),rgba(10,10,10,.88));border-bottom:1px solid rgba(212,168,71,.08);padding:5px 16px;flex-shrink:0;align-items:center;justify-content:center;min-height:34px;overflow:hidden;position:relative">
+    <div id="poetry-text" style="font-size:.78rem;color:rgba(212,168,71,.8);text-align:center;line-height:1.6;font-family:'Scheherazade New',serif;white-space:pre-line;transition:all .4s"></div>
+    <div id="poetry-author" style="font-size:.52rem;color:var(--text3);text-align:center;letter-spacing:1px;margin-top:2px;font-family:'Cairo',sans-serif"></div>
+  </div>
   <div id="hdr">
     <div class="hdr-left">
       <span class="brand-name">DOMINO</span>
@@ -678,6 +708,8 @@ const db=getDatabase(initializeApp(FC));
 const BG_PAIRS={
   '#0a0a0a':{'--bg2':'#111','--surface':'#1a1a1a','--surface2':'#222'},
   '#0d1b2a':{'--bg2':'#1b2d3e','--surface':'#243347','--surface2':'#2e3f55'},
+  '#001f5e':{'--bg2':'#002878','--surface':'#003090','--surface2':'#003aaa'},
+  '#0a1628':{'--bg2':'#102040','--surface':'#162a50','--surface2':'#1e3460'},
   '#1a0a2e':{'--bg2':'#251540','--surface':'#2e1a50','--surface2':'#3a2260'},
   '#0a1f0a':{'--bg2':'#112811','--surface':'#1a3a1a','--surface2':'#224822'},
   '#1a0a0a':{'--bg2':'#281111','--surface':'#3a1818','--surface2':'#4a2020'},
@@ -696,21 +728,157 @@ function applyBgColor(bg){
 (()=>{try{const saved=localStorage.getItem('dom_bg');if(saved)applyBgColor(saved)}catch(e){}})();
 
 // ── QUOTES ───────────────────────────────────────────────
+// ── QUOTES & POETRY ─────────────────────────────────────
+// Types: quote | poetry | proverb
 const QUOTES=[
-  {ar:"الكلمة الطيبة صدقة، والكلمة السيئة جرح لا يندمل.",auth:"الإمام علي بن أبي طالب"},
-  {ar:"اقرأ لتعيش ألف حياة قبل أن تموت.",auth:"نجيب محفوظ"},
-  {ar:"الحياة لحظات، فأجملها تلك التي تجمعنا.",auth:"جبران خليل جبران"},
-  {ar:"لا تيأس؛ فإن الماء يقطر الحجر.",auth:"المتنبي"},
-  {ar:"العقل زينة، والعلم سلاح.",auth:"الجاحظ"},
-  {ar:"إنما الأمم الأخلاق ما بقيت.",auth:"أحمد شوقي"},
-  {ar:"المرء يُقاس بهمته لا بقامته.",auth:"الإمام الشافعي"},
-  {ar:"ليس الجمال في الوجه، الجمال نور في القلب.",auth:"جبران خليل جبران"},
-  {ar:"الوقت كالسيف إن لم تقطعه قطعك.",auth:"المثل العربي"},
-  {ar:"من لا يقرأ لا يفكر، ومن لا يفكر لا يحيا.",auth:"طه حسين"},
+  // أبيات شعر
+  {ar:"على قدر أهل العزم تأتي العزائم\nوتأتي على قدر الكرام المكارم",auth:"المتنبي",type:"poetry",font:"Scheherazade New"},
+  {ar:"إذا كانت النفوس كباراً\nتعبت في مرادها الأجساد",auth:"المتنبي",type:"poetry",font:"Scheherazade New"},
+  {ar:"أنا الذي نظر الأعمى إلى أدبي\nوأسمعت كلماتي من به صمم",auth:"المتنبي",type:"poetry",font:"Lateef"},
+  {ar:"سلامٌ على الدنيا إذا لم يكن بها\nصديقٌ صدوقٌ صادق الوعد منصف",auth:"المتنبي",type:"poetry",font:"Amiri"},
+  {ar:"وما الحبُّ إلا للحبيب الأول\nكما لا يحب الغريب الأجانب",auth:"امرؤ القيس",type:"poetry",font:"Scheherazade New"},
+  {ar:"قِفا نبكِ من ذِكرى حبيبٍ ومنزلِ\nبِسِقطِ اللِّوى بينَ الدَّخول فحَوملِ",auth:"امرؤ القيس",type:"poetry",font:"Lateef"},
+  {ar:"أريد من زمني ذا أن يُبلِّغني\nما ليس يبلغه من نفسه الزمن",auth:"المتنبي",type:"poetry",font:"Amiri"},
+  {ar:"الشعر ديوان العرب\nفيه أسرارها ووجدانها وتاريخها",auth:"ابن خلدون",type:"quote",font:"Reem Kufi"},
+  // أقوال مضيئة
+  {ar:"الكلمة الطيبة صدقة، والكلمة السيئة جرح لا يندمل.",auth:"الإمام علي بن أبي طالب",type:"quote",font:"Amiri"},
+  {ar:"اقرأ لتعيش ألف حياة قبل أن تموت.",auth:"نجيب محفوظ",type:"quote",font:"Reem Kufi"},
+  {ar:"الحياة لحظات، فأجملها تلك التي تجمعنا.",auth:"جبران خليل جبران",type:"quote",font:"Scheherazade New"},
+  {ar:"ليس الجمال في الوجه، الجمال نور في القلب.",auth:"جبران خليل جبران",type:"quote",font:"Amiri"},
+  {ar:"إنما الأمم الأخلاق ما بقيت\nفإن هُمو ذهبت أخلاقهم ذهبوا",auth:"أحمد شوقي",type:"poetry",font:"Scheherazade New"},
+  {ar:"المرء يُقاس بهمته لا بقامته.",auth:"الإمام الشافعي",type:"quote",font:"Reem Kufi"},
+  {ar:"إذا أنتَ لم تشرب مراراً على القذى\nظمئتَ وأيُّ الناس تصفو مشاربه",auth:"المتنبي",type:"poetry",font:"Lateef"},
+  {ar:"العلم في الصغر كالنقش على الحجر.",auth:"المثل العربي",type:"proverb",font:"Reem Kufi"},
+  {ar:"بقدر الكد تكتسب المعالي\nومن طلب العلا سهر الليالي",auth:"الشافعي",type:"poetry",font:"Scheherazade New"},
+  {ar:"لا تحزن إن أهانك من لا يساوي ثمن كبريائك.",auth:"جبران خليل جبران",type:"quote",font:"Amiri"},
+  {ar:"ما أضيق العيش لولا فسحة الأمل",auth:"أبو القاسم الشابي",type:"poetry",font:"Lateef"},
+  {ar:"إرادة الحياة إذا ما أرادها\nفلا بد أن يستجيب القدر",auth:"أبو القاسم الشابي",type:"poetry",font:"Scheherazade New"},
 ];
+// ── SYSTEM COLOR SCHEME ──────────────────────────────────
+(()=>{
+  try{
+    const saved=localStorage.getItem('dom_bg');
+    if(saved){applyBgColor(saved);return;}
+  }catch(e){}
+  // Detect system preference
+  const dark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+  // Default: black. Blue option if user wants it.
+  applyBgColor('#0a0a0a');
+})();
+
+// ── QUOTES & POETRY MORPH ANIMATION ──────────────────────
 let qIdx=Math.floor(Math.random()*QUOTES.length);
-function showQuote(){const q=QUOTES[qIdx%QUOTES.length];const a=document.getElementById('quote-ar-text'),b=document.getElementById('quote-author-text');if(a)a.textContent='❝  '+q.ar+'  ❞';if(b)b.textContent='— '+q.auth;qIdx++;}
-showQuote();setInterval(showQuote,30000);
+const Q_ANIMS=['q-anim-fade','q-anim-right','q-anim-left','q-anim-zoom','q-anim-drop','q-anim-sparkle'];
+const Q_DIRS=['dir-center','dir-right','dir-right','dir-center','dir-right','dir-left'];
+const Q_FONTS={'Amiri':'font-amiri','Scheherazade New':'font-scheherazade','Lateef':'font-lateef','Reem Kufi':'font-kufi'};
+
+function morphText(el, newText, duration=600){
+  // Split to chars, animate each out then in
+  const old=el.textContent||'';
+  if(!old){el.textContent=newText;return;}
+  el.style.transition=`opacity ${duration/2}ms ease, transform ${duration/2}ms ease, filter ${duration/2}ms ease`;
+  el.style.opacity='0';
+  el.style.transform='translateY(-8px)';
+  el.style.filter='blur(3px)';
+  setTimeout(()=>{
+    el.textContent=newText;
+    el.style.transform='translateY(8px)';
+    requestAnimationFrame(()=>{
+      el.style.opacity='1';
+      el.style.transform='translateY(0)';
+      el.style.filter='blur(0)';
+    });
+  },duration/2);
+}
+
+function showQuote(){
+  const q=QUOTES[qIdx%QUOTES.length];
+  const arEl=document.getElementById('quote-ar-text');
+  const auEl=document.getElementById('quote-author-text');
+  if(!arEl)return;
+
+  // Pick random animation & direction
+  const animIdx=Math.floor(Math.random()*Q_ANIMS.length);
+  const anim=Q_ANIMS[animIdx];
+  const dir=Q_DIRS[animIdx];
+  const fontClass=Q_FONTS[q.font]||'font-amiri';
+
+  // Remove all old classes
+  arEl.className='quote-ar '+fontClass+' '+dir;
+
+  // Morph animation
+  morphText(arEl, (q.type==='poetry'?'':' ❝ ')+q.ar+(q.type==='poetry'?'':' ❞ '), 700);
+  setTimeout(()=>{
+    arEl.classList.add(anim);
+    // Remove animation class after it plays
+    setTimeout(()=>arEl.classList.remove(anim),1200);
+  },400);
+
+  if(auEl){
+    const typeLabel=q.type==='poetry'?'🖋 ':q.type==='proverb'?'📜 ':'';
+    morphText(auEl, '— '+typeLabel+q.auth, 500);
+  }
+  qIdx++;
+}
+
+showQuote();
+
+// Interval with random timing for "star-like" appearance
+let quoteTimer;
+function scheduleNextQuote(){
+  const delay=18000+Math.random()*14000; // 18-32 sec random
+  quoteTimer=setTimeout(()=>{showQuote();scheduleNextQuote();},delay);
+}
+scheduleNextQuote();
+
+// ── IN-GAME POETRY BAR ────────────────────────────────────
+let poetryVisible=false;
+let poetryTimer=null;
+let pqIdx=Math.floor(Math.random()*QUOTES.length);
+const POETRY_ANIMS=['q-anim-fade','q-anim-right','q-anim-sparkle','q-anim-zoom'];
+const POETRY_FONTS=Q_FONTS;
+
+function showInGamePoetry(){
+  const bar=document.getElementById('poetry-bar');
+  const textEl=document.getElementById('poetry-text');
+  const authEl=document.getElementById('poetry-author');
+  if(!bar||!textEl)return;
+
+  const q=QUOTES[pqIdx%QUOTES.length];pqIdx++;
+  const fontClass=POETRY_FONTS[q.font]||'font-scheherazade';
+  const anim=POETRY_ANIMS[Math.floor(Math.random()*POETRY_ANIMS.length)];
+
+  // Show bar
+  bar.style.display='flex';bar.style.flexDirection='column';
+  textEl.className=fontClass+' '+anim;
+  textEl.style.opacity='0';
+  textEl.style.fontSize=q.type==='poetry'?'.8rem':'.75rem';
+  textEl.style.fontFamily=q.font==='Scheherazade New'?'Scheherazade New,serif':q.font==='Lateef'?'Lateef,serif':q.font==='Reem Kufi'?'Reem Kufi,sans-serif':'Amiri,serif';
+
+  setTimeout(()=>{
+    textEl.textContent=q.type==='poetry'?q.ar:'❝ '+q.ar+' ❞';
+    textEl.style.opacity='1';
+    textEl.style.transition='opacity .8s ease';
+    authEl.textContent='— '+(q.type==='poetry'?'🖋 ':'')+q.auth;
+    authEl.style.opacity='1';
+  },100);
+
+  // Auto-hide after 12s
+  if(poetryTimer)clearTimeout(poetryTimer);
+  poetryTimer=setTimeout(()=>{
+    textEl.style.opacity='0';authEl.style.opacity='0';
+    setTimeout(()=>{bar.style.display='none'},600);
+  },12000);
+}
+
+function startInGamePoetry(){
+  // Show first one after 10s, then every 40s randomly
+  setTimeout(()=>{
+    showInGamePoetry();
+    setInterval(showInGamePoetry,35000+Math.random()*20000);
+  },10000);
+}
+
 
 // ── TRANSLATIONS ─────────────────────────────────────────
 const T={
@@ -904,7 +1072,7 @@ async function tryRestoreSession(){
     myId=s.myId;myName=s.myName;myRole=s.myRole;roomId=s.roomId;isHost=s.isHost;vsAI=s.vsAI;
     if(s.lang)setLang(s.lang);
     if(s.features){Object.keys(s.features).forEach(f=>{if(s.features[f]&&!features[f])toggleFeature(f)});}
-    showScreen('game');listenGame(roomId);listenChat(roomId);loadLocationData();autoStartAudio();
+    showScreen('game');listenGame(roomId);listenChat(roomId);loadLocationData();autoStartAudio();startInGamePoetry();
     if(vsAI)setTimeout(()=>{if(lastGS?.turn!==myRole)runAI(lastGS?.turn)},1000);
     return true;
   }catch(e){return false;}
@@ -1383,7 +1551,7 @@ async function startVsAI(){
   await set(ref(db,`rooms/${roomId}`),{hostId:myId,status:'playing',players:pm,created:Date.now()});
   await set(ref(db,`rooms/${roomId}/game`),gs);
   logPlayer(name,'p1');saveSession();
-  showScreen('game');listenGame(roomId);listenChat(roomId);loadLocationData();autoStartAudio();
+  showScreen('game');listenGame(roomId);listenChat(roomId);loadLocationData();autoStartAudio();startInGamePoetry();
   setTimeout(()=>{if(lastGS?.turn!==myRole)runAI(lastGS?.turn)},1000);
 }
 async function joinRoom(){
@@ -1399,7 +1567,7 @@ async function joinRoom(){
   if(r.status==='playing'){
     const gs=(await get(ref(db,`rooms/${code}/game`))).val();
     if(gs){const by=[...(gs.boneyard||[])];const mt=by.splice(0,Math.min(5,by.length));const wt=[...(gs.waitingPlayers||[]),myRole];const nm={...(gs.names||{}),[myRole]:name};await update(ref(db),{[`rooms/${code}/game/${myRole}Hand`]:mt,[`rooms/${code}/game/boneyard`]:by,[`rooms/${code}/game/waitingPlayers`]:wt,[`rooms/${code}/game/names`]:nm});}
-    saveSession();showScreen('game');listenGame(code);listenChat(code);loadLocationData();autoStartAudio();
+    saveSession();showScreen('game');listenGame(code);listenChat(code);loadLocationData();autoStartAudio();startInGamePoetry();
   }else{document.getElementById('room-code-display').textContent=code;showScreen('waiting');listenRoom(code);}
 }
 async function startGame(){
