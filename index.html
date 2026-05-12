@@ -238,13 +238,48 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
 /* ── TILES ── */
 .tile{background:var(--ivory);border-radius:6px;border:1.5px solid #d0c5b0;box-shadow:1px 3px 8px var(--shadow),inset 0 1px 0 rgba(255,255,255,.8);display:inline-flex;cursor:pointer;transition:transform .15s,box-shadow .15s,opacity .15s;position:relative;flex-shrink:0;touch-action:manipulation}
-.tile.V{flex-direction:column;width:38px;height:72px}
-.tile.H{flex-direction:row;width:72px;height:38px}
-.tile.DBL{flex-direction:column;width:36px;height:68px}
+/* Base tile size — mobile portrait */
+.tile.V{flex-direction:column;width:44px;height:84px}
+.tile.H{flex-direction:row;width:84px;height:44px}
+.tile.DBL{flex-direction:column;width:42px;height:80px}
 .chain-t{cursor:default;pointer-events:none}
-.chain-t.H{width:60px;height:32px;flex-direction:row}
-.chain-t.V{width:32px;height:60px;flex-direction:column}
-.chain-t.DBL{width:32px;height:60px;flex-direction:column}
+.chain-t.H{width:68px;height:36px;flex-direction:row}
+.chain-t.V{width:36px;height:68px;flex-direction:column}
+.chain-t.DBL{width:36px;height:68px;flex-direction:column}
+
+/* Tablet */
+@media(min-width:600px) and (max-width:899px){
+  .tile.V{width:50px;height:96px}
+  .tile.H{width:96px;height:50px}
+  .tile.DBL{width:48px;height:92px}
+  .chain-t.H{width:80px;height:42px}
+  .chain-t.V{width:42px;height:80px}
+  .chain-t.DBL{width:42px;height:80px}
+  .pip{width:7px;height:7px}
+  .chain-t .pip{width:6px;height:6px}
+}
+
+/* Desktop */
+@media(min-width:900px){
+  .tile.V{width:56px;height:108px}
+  .tile.H{width:108px;height:56px}
+  .tile.DBL{width:54px;height:104px}
+  .chain-t.H{width:90px;height:48px}
+  .chain-t.V{width:48px;height:90px}
+  .chain-t.DBL{width:48px;height:90px}
+  .pip{width:8px;height:8px}
+  .chain-t .pip{width:7px;height:7px}
+}
+
+/* Landscape mobile — smaller tiles */
+@media(orientation:landscape) and (max-height:500px){
+  .tile.V{width:34px;height:64px}
+  .tile.H{width:64px;height:34px}
+  .tile.DBL{width:32px;height:60px}
+  .chain-t.H{width:54px;height:28px}
+  .chain-t.V{width:28px;height:54px}
+  .chain-t.DBL{width:28px;height:54px}
+}
 .chain-t.pending{border-color:var(--gold)!important;box-shadow:0 0 12px rgba(212,168,71,.6)!important;animation:pendPulse 1s ease-in-out infinite}
 @keyframes pendPulse{0%,100%{box-shadow:0 0 8px rgba(212,168,71,.4)}50%{box-shadow:0 0 18px rgba(212,168,71,.9)}}
 .tile:hover{transform:translateY(-6px);box-shadow:1px 8px 16px var(--shadow)}
@@ -255,8 +290,8 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .tile.H .half:first-child,.chain-t.H .half:first-child{border-right:1.5px solid #c0b098}
 .chain-t.V .half:first-child,.chain-t.DBL .half:first-child{border-bottom:1.5px solid #c0b098}
 .pip-grid{display:grid;width:100%;height:100%;padding:3px;gap:1px}
-.pip{width:6px;height:6px;background:var(--pip);border-radius:50%;box-shadow:0 1px 2px rgba(0,0,0,.5);justify-self:center;align-self:center}
-.chain-t .pip{width:5px;height:5px}
+.pip{width:7px;height:7px;background:var(--pip);border-radius:50%;box-shadow:0 1px 2px rgba(0,0,0,.5);justify-self:center;align-self:center}
+.chain-t .pip{width:6px;height:6px}
 .pip-grid[data-n="0"]{grid-template:1fr/1fr}
 .pip-grid[data-n="1"]{grid-template:repeat(3,1fr)/repeat(3,1fr)}
 .pip-grid[data-n="2"]{grid-template:repeat(3,1fr)/repeat(3,1fr)}
@@ -484,6 +519,30 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <button class="ap-btn" id="btn-close-ap">✕</button>
   </div>
 </div>
+
+<!-- RADIO COUNTRY SELECTOR -->
+<div id="radio-selector" style="display:none;position:fixed;inset:0;z-index:45;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center">
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-bottom:none;border-radius:20px 20px 0 0;padding:18px 16px 24px;width:100%;max-width:1200px;max-height:75vh;overflow-y:auto;box-shadow:0 -12px 40px rgba(0,0,0,.5);animation:slideUp .22s ease">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <span style="font-size:.85rem;font-weight:700;color:var(--gold2)">📻 اختر المحطة</span>
+      <button id="btn-close-radio-sel" style="background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer;touch-action:manipulation">✕</button>
+    </div>
+    <div id="radio-countries"></div>
+    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px">
+      <div style="font-size:.7rem;color:var(--text3);margin-bottom:8px;letter-spacing:1px">🎵 ملفاتي الموسيقية</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <label style="background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:8px 14px;font-size:.75rem;color:var(--text2);cursor:pointer;touch-action:manipulation">
+          📁 رفع ملفات موسيقية<input type="file" id="rs-file-input" accept="audio/*" multiple style="display:none">
+        </label>
+        <button id="rs-url-btn" style="background:var(--surface2);border:1px solid var(--border2);border-radius:9px;padding:8px 14px;font-size:.75rem;color:var(--text2);cursor:pointer;touch-action:manipulation;font-family:inherit">
+          🔗 رابط مباشر
+        </button>
+      </div>
+      <div id="rs-file-list" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"></div>
+    </div>
+  </div>
+</div>
+
 <audio id="ap-audio" style="display:none"></audio>
 
 <!-- PRAYER -->
@@ -572,30 +631,43 @@ document.addEventListener('touchstart',()=>{try{getAudio().resume()}catch(e){}},
 document.addEventListener('click',()=>{try{getAudio().resume()}catch(e){}},{once:true});
 
 // ── AUDIO PLAYER ─────────────────────────────────────────
-const QSTREAMS=[
-  {
-    title:'إذاعة القرآن الكريم من القاهرة',
-    sub:'البث المباشر — القاهرة 98.2 FM 🇪🇬',
-    url:'https://stream.radiojar.com/8s5u5tpdtwzuv',
-    icon:'🕌',
-    label:'القرآن الكريم'
+// ── RADIO STATIONS ───────────────────────────────────────
+const RADIO_STATIONS={
+  egypt:{
+    flag:'🇪🇬', name:'محطات مصرية',
+    stations:[
+      {title:'إذاعة القرآن الكريم من القاهرة',sub:'القاهرة 98.2 FM',url:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'🕌'},
+      {title:'نجوم FM 100.6',sub:'أشهر محطة موسيقية في مصر',url:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'⭐'},
+      {title:'نغم FM 105.3',sub:'موسيقى عربية',url:'https://stream.zeno.fm/yn65sm0gds8uv',icon:'🎶'},
+      {title:'Nile FM 104.2',sub:'Hit Music - English & Arabic',url:'https://stream.zeno.fm/2mv0ufs1p3zuv',icon:'🎵'},
+      {title:'راديو مصر',sub:'أول راديو حكومي على FM',url:'https://stream.zeno.fm/tgzaf3g0eksev',icon:'📻'},
+    ]
   },
-  {
-    title:'قناة الجزيرة — صوت',
-    sub:'البث المباشر — قطر 🇶🇦',
-    url:'https://www.radiojar.com/8s5u5tpdtwzuv', // fallback — try listen.aljazeera stream below
-    urlAlt:'http://listen.aljazeera.com/arabic/livestream',
-    icon:'📡',
-    label:'الجزيرة صوت'
+  saudi:{
+    flag:'🇸🇦', name:'محطات سعودية',
+    stations:[
+      {title:'إذاعة القرآن الكريم السعودية',sub:'الرياض — بث مباشر',url:'https://stream.radiojar.com/0tpy1h0kxtzuv',icon:'🕌'},
+      {title:'MBC FM',sub:'أشهر محطة ترفيهية سعودية',url:'https://stream.zeno.fm/4d4n2rygp3zuv',icon:'🎙️'},
+      {title:'Mix FM السعودية',sub:'Jeddah 105.5 FM',url:'https://stream.zeno.fm/0r0xa792kwzuv',icon:'🎵'},
+      {title:'إذاعة نداء الإسلام',sub:'مكة المكرمة',url:'https://stream.zeno.fm/gbr0n0lgt5zuv',icon:'🕌'},
+      {title:'SBA Saudia Radio',sub:'Riyadh 98.8 FM English',url:'https://stream.zeno.fm/gm3ahresgm0uv',icon:'📡'},
+    ]
   },
-  {
-    title:'إذاعة القرآن الكريم — السعودية',
-    sub:'البث المباشر 🇸🇦',
-    url:'https://stream.radiojar.com/0tpy1h0kxtzuv',
-    icon:'🕌',
-    label:'القرآن السعودية'
-  },
-];
+  qatar:{
+    flag:'🇶🇦', name:'محطات قطرية',
+    stations:[
+      {title:'Qatar FM 97.5',sub:'راديو قطر الرسمي',url:'https://stream.zeno.fm/3b8vdx85s9zuv',icon:'📻'},
+      {title:'Oryx FM 94',sub:'أوريكس اف ام — موسيقى متنوعة',url:'https://stream.zeno.fm/u35wr36vmfhvv',icon:'🎵'},
+      {title:'Radio Suno 91.7',sub:'موسيقى بوليوودية وعربية',url:'https://stream.zeno.fm/3mn3rfgcsmzuv',icon:'🎶'},
+      {title:'Al Araby Radio 96.6',sub:'العربي الجديد — أخبار',url:'https://stream.zeno.fm/vbm1tqvnstfvv',icon:'📡'},
+      {title:'Habaieb FM 93.7',sub:'حبايب اف ام — منوعات',url:'https://stream.zeno.fm/xr4ypqhpsmzuv',icon:'💛'},
+    ]
+  }
+};
+
+// All stations flat list for prev/next
+const QSTREAMS=Object.values(RADIO_STATIONS).flatMap(c=>c.stations);
+
 let apPlaying=false,apIdx=0,apMode='quran',apUserFiles=[],apUserUrls=[];
 const apAudio=document.getElementById('ap-audio');
 apAudio.volume=.5;
@@ -606,7 +678,33 @@ apAudio.addEventListener('error',()=>{
   // Try next on error
   setTimeout(()=>{if(apPlaying||features.audio)apNext()},2000);
 });
+// ── RADIO SELECTOR ────────────────────────────────────────
+function openRadioSelector(){
+  const el=document.getElementById('radio-countries');if(!el)return;el.innerHTML='';
+  Object.entries(RADIO_STATIONS).forEach(([key,country])=>{
+    const sec=document.createElement('div');sec.style.marginBottom='14px';
+    sec.innerHTML=`<div style="font-size:.75rem;color:var(--gold2);margin-bottom:8px;font-weight:700">${country.flag} ${country.name}</div>`;
+    const grid=document.createElement('div');
+    grid.style.cssText='display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:6px';
+    country.stations.forEach(st=>{
+      const flatIdx=QSTREAMS.indexOf(st);
+      const isActive=apMode==='quran'&&flatIdx===apIdx;
+      const btn=document.createElement('button');
+      btn.style.cssText=`background:${isActive?'rgba(212,168,71,.15)':'var(--surface2)'};border:1.5px solid ${isActive?'var(--gold)':'var(--border)'};border-radius:9px;padding:8px 10px;font-family:inherit;font-size:.7rem;color:${isActive?'var(--gold)':'var(--text2)'};cursor:pointer;text-align:right;touch-action:manipulation;direction:rtl`;
+      btn.innerHTML=`<div style="font-size:.9rem;margin-bottom:2px">${st.icon}</div><div style="font-weight:700;line-height:1.3">${st.title}</div><div style="font-size:.57rem;color:var(--text3);margin-top:1px">${st.sub}</div>`;
+      btn.addEventListener('click',()=>{apMode='quran';apIdx=flatIdx;apLoad(apIdx);closeRadioSelector();apShow();});
+      grid.appendChild(btn);
+    });
+    sec.appendChild(grid);el.appendChild(sec);
+  });
+  // User files section
+  const fl=document.getElementById('rs-file-list');if(fl){fl.innerHTML='';apUserFiles.forEach((f,i)=>{const b=document.createElement('button');b.style.cssText=`background:${apMode==='file'&&apIdx===i?'rgba(212,168,71,.15)':'var(--surface2)'};border:1px solid ${apMode==='file'&&apIdx===i?'var(--gold)':'var(--border2)'};border-radius:8px;padding:5px 10px;font-size:.67rem;color:var(--text2);cursor:pointer;font-family:inherit;touch-action:manipulation`;b.textContent='🎵 '+f.name.replace(/\.[^.]+$/,'').substring(0,22);b.addEventListener('click',()=>{apMode='file';apLoad(i);closeRadioSelector();apShow()});fl.appendChild(b)});}
+  document.getElementById('radio-selector').style.display='flex';
+}
+function closeRadioSelector(){const el=document.getElementById('radio-selector');if(el)el.style.display='none';}
+
 function apShow(){document.getElementById('audio-player').classList.add('show');document.getElementById('game').classList.add('audio-on');}
+
 function apClose(){apAudio.pause();apAudio.src='';apPlaying=false;document.getElementById('audio-player').classList.remove('show');document.getElementById('game').classList.remove('audio-on')}
 function apLoad(idx){
   if(apMode==='url'&&apUserUrls.length>0){
@@ -749,7 +847,7 @@ function toggleFeature(f){
 function updateFeatUI(f){
   if(f==='hadith'||f===undefined){document.getElementById('hadith-bar').classList.toggle('visible',features.hadith);if(features.hadith)rotateHadith();}
   if(f==='prayer'||f==='weather'||f===undefined){document.getElementById('info-bar').classList.toggle('visible',features.prayer||features.weather);}
-  if(f==='audio'||f===undefined){if(features.audio)apShow();else apClose();}
+  if(f==='audio'||f===undefined){if(features.audio){apShow();openRadioSelector();}else apClose();}
 }
 
 // ── LOCATION ─────────────────────────────────────────────
@@ -1260,7 +1358,20 @@ document.getElementById('btn-send-chat').addEventListener('click',sendChat);
 document.getElementById('chat-input').addEventListener('keyup',e=>{if(e.key==='Enter')sendChat()});
 document.getElementById('btn-home').addEventListener('click',confirmHome);
 document.getElementById('ap-url-btn').addEventListener('click',()=>{
-  const url=prompt(lang==='ar'?'الصق رابط الملف الصوتي (OneDrive/Google Drive/مباشر):':'Paste audio URL (OneDrive/Google Drive/direct):');
+  const url=prompt('الصق رابط الملف الصوتي المباشر (MP3):');
+  if(url&&url.trim())apLoadUrl(url.trim());
+});
+document.getElementById('ap-icon').addEventListener('click',openRadioSelector);
+document.getElementById('ap-stream-label').addEventListener('click',openRadioSelector);
+document.getElementById('btn-close-radio-sel').addEventListener('click',closeRadioSelector);
+document.getElementById('radio-selector').addEventListener('click',function(e){if(e.target===this)closeRadioSelector()});
+document.getElementById('rs-file-input').addEventListener('change',function(){
+  apUserFiles=[...apUserFiles,...Array.from(this.files||[])];
+  if(apUserFiles.length>0){apMode='file';apLoad(apUserFiles.length-1);apShow();}
+  openRadioSelector();// refresh to show files
+});
+document.getElementById('rs-url-btn').addEventListener('click',()=>{
+  const url=prompt('الصق رابط الملف الصوتي المباشر (MP3):');
   if(url&&url.trim())apLoadUrl(url.trim());
 });
 document.getElementById('ap-file').addEventListener('change',function(){
