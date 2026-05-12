@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>DOMINO v9.3</title>
+<title>DOMINO v9.5</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Reem+Kufi:wght@400;700&family=Lateef:wght@400;700&display=swap');
 :root{
@@ -481,6 +481,95 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .feat-name{font-size:.6rem;color:var(--text3);text-align:center;line-height:1.2}
 .feat-btn.active .feat-name{color:var(--gold2)}
 
+
+
+/* ── KIMO v9.5 UPGRADES: system theme + floating chat + visible player ── */
+:root{color-scheme:dark light;}
+body.system-light{
+  --bg:#f6f7fb;--bg2:#eef1f8;--surface:#ffffff;--surface2:#edf2ff;
+  --border:rgba(26,35,126,.12);--border2:rgba(26,35,126,.22);
+  --text:#101522;--text2:#34405c;--text3:#6f7891;--shadow:rgba(30,40,70,.25);
+  --felt:#1d7140;--felt2:#dfe9f2;
+}
+body.system-light #landing{background:radial-gradient(ellipse at 30% 0%,#dbe6ff 0%,#f7f8fc 44%,#edf2ff 100%)}
+body.system-light #hdr{background:linear-gradient(180deg,#ffffff,#edf2ff)}
+body.system-light #controls,body.system-light #audio-player{background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(237,242,255,.96))}
+body.system-light #table-wrap{background:radial-gradient(ellipse at 50% 50%,#2f9e56 0%,#1d7140 62%,#114626 100%)}
+
+/* Bigger, always-visible audio strip */
+#audio-player{
+  order:20;
+  min-height:46px;
+  padding:7px 12px;
+  border-top:1px solid rgba(212,168,71,.22);
+  border-bottom:1px solid rgba(212,168,71,.18);
+  box-shadow:0 -6px 22px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.05);
+}
+#audio-player #ap-play{width:34px!important;height:34px!important;font-size:1.05rem!important}
+#audio-player #ap-title{font-size:.72rem!important}
+#audio-player #ap-sub{font-size:.55rem!important}
+#btn-close-ap{display:none!important}
+
+/* Floating tiny chat button: does not take space from the game */
+#btn-chat-toggle{
+  position:fixed!important;
+  right:12px;
+  bottom:118px;
+  width:48px!important;
+  height:48px;
+  flex:unset!important;
+  border-radius:50%!important;
+  padding:0!important;
+  z-index:44;
+  font-size:0!important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,rgba(212,168,71,.95),rgba(168,130,42,.98))!important;
+  color:#08111f!important;
+  border:1px solid rgba(255,255,255,.35)!important;
+  box-shadow:0 8px 26px rgba(0,0,0,.42),0 0 18px rgba(212,168,71,.35);
+}
+#btn-chat-toggle::before{content:'💬';font-size:1.35rem;line-height:1}
+#btn-chat-toggle.has-new::after{top:3px!important;right:4px!important;width:11px!important;height:11px!important;border:2px solid #fff;background:#e74c3c!important}
+
+/* Side chat drawer instead of full-screen cover */
+#chat-panel{
+  position:fixed;
+  inset:auto 10px 96px auto;
+  width:min(380px,92vw);
+  height:min(560px,72vh);
+  z-index:60;
+  display:none;
+  flex-direction:column;
+  background:linear-gradient(160deg,rgba(8,8,15,.98),rgba(14,14,26,.98));
+  border:1px solid rgba(212,168,71,.28);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 18px 60px rgba(0,0,0,.62),0 0 0 1px rgba(255,255,255,.04);
+  backdrop-filter:blur(12px);
+}
+#chat-panel.show{display:flex;animation:chatFloatIn .18s ease both}
+@keyframes chatFloatIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+#chat-header{padding:9px 12px}
+#chat-messages{padding:10px;gap:6px}
+.msg-bubble{font-size:.76rem}
+#chat-input-row{padding:8px}
+#chat-input{font-size:.78rem;padding:8px 10px}
+#btn-send-chat{font-size:.74rem;padding:8px 11px}
+@media(max-width:599px){
+  #btn-chat-toggle{right:10px;bottom:108px;width:44px!important;height:44px}
+  #chat-panel{right:8px;bottom:92px;width:min(340px,92vw);height:min(430px,58vh);border-radius:18px}
+  #audio-player{min-height:42px;gap:6px;padding:6px 8px}
+  #ap-prev,#ap-next,#ap-icon-wrap,label[title="رفع ملف"]{display:none!important}
+  #ap-vol{width:44px!important}
+}
+@media(orientation:landscape) and (max-height:500px){
+  #btn-chat-toggle{bottom:58px;width:38px!important;height:38px}
+  #chat-panel{bottom:48px;height:72vh;width:330px}
+  #audio-player{min-height:34px;padding:4px 8px}
+}
+
 </style>
 </head>
 <body>
@@ -494,7 +583,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div class="game-name">DOMINO</div>
     <div class="mk-tag">MK</div>
     <div class="game-sub" id="game-sub-text">متعدد اللاعبين · كلاسيكي · عالمي</div>
-    <div class="version-tag">v9.3</div>
+    <div class="version-tag">v9.5</div>
   </div>
   <div class="quote-strip"><div class="quote-ar" id="quote-ar-text"></div><div class="quote-author" id="quote-author-text"></div></div>
   <div class="lang-selector">
@@ -557,7 +646,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   <div id="hdr">
     <div class="hdr-left">
       <span class="brand-name">DOMINO</span>
-      <span class="brand-v">v9.3</span>
+      <span class="brand-v">v9.5</span>
       <span style="font-size:.6rem;letter-spacing:3px;color:rgba(212,168,71,.4);font-family:'Playfair Display',serif">MK</span>
       <!-- In-game feature icons -->
       <div class="hdr-feats">
@@ -680,6 +769,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getDatabase,ref,set,get,update,onValue,remove,push}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -738,14 +828,16 @@ const QUOTES=[
 ];
 // ── SYSTEM COLOR SCHEME ──────────────────────────────────
 (()=>{
-  try{
-    const saved=localStorage.getItem('dom_bg');
-    if(saved){applyBgColor(saved);return;}
-  }catch(e){}
-  // Detect system preference
-  const dark=window.matchMedia('(prefers-color-scheme:dark)').matches;
-  // Default: black. Blue option if user wants it.
-  applyBgColor('#0a0a0a');
+  const mq=window.matchMedia('(prefers-color-scheme: dark)');
+  function applySystemTheme(){
+    let saved='';
+    try{saved=localStorage.getItem('dom_bg')||'';}catch(e){}
+    if(saved){document.body.classList.remove('system-light');applyBgColor(saved);return;}
+    if(mq.matches){document.body.classList.remove('system-light');applyBgColor('#0a0a0a');}
+    else{document.body.classList.add('system-light');applyBgColor('#f6f7fb');}
+  }
+  applySystemTheme();
+  try{mq.addEventListener('change',applySystemTheme)}catch(e){mq.addListener(applySystemTheme)}
 })();
 
 // ── QUOTES & POETRY MORPH ANIMATION ──────────────────────
@@ -899,20 +991,22 @@ const RADIO_STATIONS={
   egypt:{
     flag:'🇪🇬', name:'محطات مصرية',
     stations:[
-      {title:'إذاعة القرآن الكريم من القاهرة',sub:'القاهرة 98.2 FM',url:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'🕌'},
-      {title:'نجوم FM 100.6',sub:'أشهر محطة موسيقية في مصر',url:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'⭐'},
+      {title:'إذاعة القرآن الكريم من القاهرة',sub:'القاهرة 98.2 FM',url:'https://n0b.radiojar.com/8s5u5tpdtwzuv',urlAlt:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'🕌'},
+      {title:'نجوم FM 100.6',sub:'أشهر محطة موسيقية في مصر',url:'https://audiostreaming.twesto.com/nogoumfm',urlAlt:'https://stream.zeno.fm/tgzaf3g0eksev',icon:'⭐'},
       {title:'نغم FM 105.3',sub:'موسيقى عربية',url:'https://stream.zeno.fm/yn65sm0gds8uv',icon:'🎶'},
-      {title:'Nile FM 104.2',sub:'Hit Music - English & Arabic',url:'https://stream.zeno.fm/2mv0ufs1p3zuv',icon:'🎵'},
+      {title:'Nile FM 104.2',sub:'Hit Music - English & Arabic',url:'https://eu10.fastcast4u.com/nilefm',urlAlt:'https://stream.zeno.fm/2mv0ufs1p3zuv',icon:'🎵'},
       {title:'راديو مصر',sub:'أول راديو حكومي على FM',url:'https://stream.zeno.fm/tgzaf3g0eksev',icon:'📻'},
+      {title:'BBC Arabic',sub:'بي بي سي عربي مباشر',url:'https://stream.live.vc.bbcmedia.co.uk/bbc_arabic_radio',icon:'🌍'},
+      {title:'Al Jazeera Arabic',sub:'قناة الجزيرة مباشر',url:'https://live-hls-web-aja.getaj.net/AJA/index.m3u8',icon:'📺'},
     ]
   },
   saudi:{
     flag:'🇸🇦', name:'محطات سعودية',
     stations:[
-      {title:'إذاعة القرآن الكريم السعودية',sub:'الرياض — بث مباشر',url:'https://stream.radiojar.com/0tpy1h0kxtzuv',icon:'🕌'},
-      {title:'MBC FM',sub:'أشهر محطة ترفيهية سعودية',url:'https://stream.zeno.fm/4d4n2rygp3zuv',icon:'🎙️'},
+      {title:'إذاعة القرآن الكريم السعودية',sub:'الرياض — بث مباشر',url:'https://backup.qurango.net/radio/saudiquran',urlAlt:'https://stream.radiojar.com/0tpy1h0kxtzuv',icon:'🕌'},
+      {title:'MBC FM',sub:'أشهر محطة ترفيهية سعودية',url:'https://mbcfm-live.hls.adaptive.level3.net/mbcfm/mbcfm.m3u8',urlAlt:'https://stream.zeno.fm/4d4n2rygp3zuv',icon:'🎙️'},
       {title:'Mix FM السعودية',sub:'Jeddah 105.5 FM',url:'https://stream.zeno.fm/0r0xa792kwzuv',icon:'🎵'},
-      {title:'إذاعة نداء الإسلام',sub:'مكة المكرمة',url:'https://stream.zeno.fm/gbr0n0lgt5zuv',icon:'🕌'},
+      {title:'إذاعة نداء الإسلام',sub:'مكة المكرمة',url:'https://nida-live.digitalproserver.com/nida/playlist.m3u8',urlAlt:'https://stream.zeno.fm/gbr0n0lgt5zuv',icon:'🕌'},
       {title:'SBA Saudia Radio',sub:'Riyadh 98.8 FM English',url:'https://stream.zeno.fm/gm3ahresgm0uv',icon:'📡'},
     ]
   },
@@ -933,6 +1027,25 @@ const QSTREAMS=Object.values(RADIO_STATIONS).flatMap(c=>c.stations);
 
 let apPlaying=false,apIdx=0,apMode='quran',apUserFiles=[],apUserUrls=[];
 const apAudio=document.getElementById('ap-audio');
+let hlsPlayer=null;
+function playStreamUrl(url, fallbackUrl){
+  if(hlsPlayer){try{hlsPlayer.destroy()}catch(e){} hlsPlayer=null;}
+  const tryFallback=()=>{
+    if(fallbackUrl && fallbackUrl!==url){
+      setTimeout(()=>playStreamUrl(fallbackUrl,''),500);
+    }
+  };
+  if(/\.m3u8(\?|$)/i.test(url) && window.Hls && window.Hls.isSupported()){
+    hlsPlayer=new window.Hls({lowLatencyMode:true,enableWorker:true});
+    hlsPlayer.loadSource(url);
+    hlsPlayer.attachMedia(apAudio);
+    hlsPlayer.on(window.Hls.Events.MANIFEST_PARSED,()=>apAudio.play().catch(()=>{}));
+    hlsPlayer.on(window.Hls.Events.ERROR,(evt,data)=>{if(data&&data.fatal)tryFallback();});
+  }else{
+    apAudio.src=url;
+    apAudio.play().catch(()=>{tryFallback();});
+  }
+}
 apAudio.volume=.5;
 apAudio.addEventListener('ended',()=>apNext());
 apAudio.addEventListener('play',()=>{document.getElementById('ap-play').textContent='⏸';apPlaying=true});
@@ -968,14 +1081,14 @@ function closeRadioSelector(){const el=document.getElementById('radio-selector')
 
 function apShow(){/* audio player always visible in game */}
 
-function apClose(){apAudio.pause();apAudio.src='';apPlaying=false;document.getElementById('ap-play').textContent='▶';}
+function apClose(){if(hlsPlayer){try{hlsPlayer.destroy()}catch(e){} hlsPlayer=null;}apAudio.pause();apAudio.src='';apPlaying=false;document.getElementById('ap-play').textContent='▶';document.getElementById('ap-title').textContent='اضغط لاختيار المحطة 🎵';document.getElementById('ap-sub').textContent='متوقف — الشريط ظاهر دائمًا';}
 function apLoad(idx){
   if(apMode==='url'&&apUserUrls.length>0){
     const u=apUserUrls[idx%apUserUrls.length];apIdx=idx%apUserUrls.length;
     document.getElementById('ap-icon').textContent='🎵';
     document.getElementById('ap-title').textContent=u.name||'ملف صوتي';
     document.getElementById('ap-sub').textContent=u.url.includes('radiojar')?'Radio Stream':'Cloud/URL';
-    apAudio.src=u.url;apAudio.play().catch(()=>{});
+    playStreamUrl(u.url,'');
   } else if(apMode==='file'&&apUserFiles.length>0){
     const f=apUserFiles[idx%apUserFiles.length];apIdx=idx%apUserFiles.length;
     document.getElementById('ap-icon').textContent='🎵';
@@ -991,10 +1104,7 @@ function apLoad(idx){
     document.getElementById('ap-sub').textContent=s.sub;
     const lbl=document.getElementById('ap-stream-label');if(lbl)lbl.textContent=s.label||'';
     // Try main URL, fallback to urlAlt if error
-    apAudio.src=s.url;
-    apAudio.play().catch(()=>{
-      if(s.urlAlt){apAudio.src=s.urlAlt;apAudio.play().catch(()=>{})}
-    });
+    playStreamUrl(s.url,s.urlAlt||'');
     // Show label on icon button in player
     const iconEl=document.getElementById('ap-icon');
     if(iconEl)iconEl.title=s.label||s.title;
