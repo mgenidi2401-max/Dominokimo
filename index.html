@@ -72,7 +72,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 #game.active{display:flex}
 
 /* ── LANDING ── */
-#landing{background:radial-gradient(ellipse at 50% 0%,#4a6a8a 0%,var(--bg) 70%);
+#landing{background:radial-gradient(ellipse at 50% 0%,#1a1a2e 0%,#0a0a0a 70%);
   align-items:center;justify-content:center;overflow-y:auto;padding:20px 16px 36px;position:relative}
 #landing::before,#landing::after{content:'';position:fixed;width:100px;height:100px;border-color:var(--gold);border-style:solid;opacity:.1;pointer-events:none}
 #landing::before{top:14px;left:14px;border-width:2px 0 0 2px}
@@ -166,15 +166,15 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 #hadith-bar.visible{display:flex}
 #hadith-text{font-size:.8rem;color:rgba(212,168,71,.75);text-align:center;font-style:italic}
 [dir=rtl] #hadith-text{font-family:'Amiri',serif;font-size:.9rem}
-#hdr{background:linear-gradient(180deg,var(--bg2),var(--bg));border-bottom:1px solid rgba(212,168,71,.1);padding:5px 11px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+#hdr{background:linear-gradient(180deg,#111,#0a0a0a);border-bottom:1px solid rgba(212,168,71,.15);padding:env(safe-area-inset-top,0px) 12px 6px;padding-top:max(env(safe-area-inset-top,0px),8px);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .hdr-left{display:flex;align-items:center;gap:10px}
-.brand-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--gold);letter-spacing:2px}
+.brand-name{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--gold);letter-spacing:3px;text-shadow:0 0 12px rgba(212,168,71,.5)}
 .brand-v{font-size:.46rem;color:var(--text3)}
 
 /* In-game feature icons in header */
-.hdr-feats{display:flex;gap:4px}
-.hdr-feat{background:none;border:1px solid var(--border);border-radius:7px;padding:3px 6px;font-size:.85rem;cursor:pointer;transition:all .15s;touch-action:manipulation;line-height:1}
-.hdr-feat.on{border-color:var(--gold);background:rgba(212,168,71,.12)}
+.hdr-feats{display:flex;gap:5px;align-items:center}
+.hdr-feat{background:rgba(255,255,255,.06);border:1px solid var(--border2);border-radius:8px;padding:5px 8px;font-size:1.1rem;cursor:pointer;transition:all .15s;touch-action:manipulation;line-height:1;min-width:34px;text-align:center}
+.hdr-feat.on{border-color:var(--gold);background:rgba(212,168,71,.18);box-shadow:0 0 8px rgba(212,168,71,.3)}
 .hdr-feat:hover{border-color:var(--text2)}
 
 .scores-row{display:flex;gap:5px}
@@ -191,7 +191,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
 /* ── FELT TABLE — snake chain ── */
 #table-wrap{flex:1;overflow:hidden;position:relative;
-  background:radial-gradient(ellipse at 50% 50%,#28a048 0%,var(--felt) 55%,var(--felt2) 100%)}
+  background:radial-gradient(ellipse at 50% 50%,#1a6b2a 0%,var(--felt) 55%,var(--felt2) 100%)}
 #table-wrap::before{content:'';position:absolute;inset:0;
   background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 28px),
   repeating-linear-gradient(90deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 28px);
@@ -199,18 +199,10 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 #table-wrap::after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 50px rgba(0,0,0,.45);pointer-events:none;z-index:0}
 
 /* Table scroll — fills entire felt area */
-#table-scroll{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;z-index:1;padding:10px 8px;display:flex;align-items:center;justify-content:center}
+#table-scroll{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;z-index:1;padding:8px;display:flex;align-items:center;justify-content:center}
 
 /* Chain wrap — centers chain when short, grows from middle */
-#chain-wrap{
-  display:flex;
-  flex-direction:column;
-  gap:3px;
-  width:100%;
-  /* Center vertically when chain is short */
-  min-height:min-content;
-  align-self:center;
-}
+#chain-wrap{display:flex;flex-direction:column;gap:4px;width:100%;align-self:center;}
 
 /* ── UNDO BAR ── */
 #undo-bar{display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(10,18,28,.96);border-top:1.5px solid var(--red2);padding:6px 12px;z-index:30;align-items:center;gap:10px}
@@ -238,47 +230,64 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
 /* ── TILES ── */
 .tile{background:var(--ivory);border-radius:6px;border:1.5px solid #d0c5b0;box-shadow:1px 3px 8px var(--shadow),inset 0 1px 0 rgba(255,255,255,.8);display:inline-flex;cursor:pointer;transition:transform .15s,box-shadow .15s,opacity .15s;position:relative;flex-shrink:0;touch-action:manipulation}
-/* Base tile size — mobile portrait */
-.tile.V{flex-direction:column;width:44px;height:84px}
-.tile.H{flex-direction:row;width:84px;height:44px}
-.tile.DBL{flex-direction:column;width:42px;height:80px}
+/* ── TILES — responsive per device ── */
+/* Mobile small (≤380px) */
+.tile.V{flex-direction:column;width:34px;height:64px}
+.tile.H{flex-direction:row;width:64px;height:34px}
+.tile.DBL{flex-direction:column;width:32px;height:60px}
 .chain-t{cursor:default;pointer-events:none}
-.chain-t.H{width:68px;height:36px;flex-direction:row}
-.chain-t.V{width:36px;height:68px;flex-direction:column}
-.chain-t.DBL{width:36px;height:68px;flex-direction:column}
+.chain-t.H{width:54px;height:28px;flex-direction:row}
+.chain-t.V{width:28px;height:54px;flex-direction:column}
+.chain-t.DBL{width:28px;height:54px;flex-direction:column}
+.pip{width:5px;height:5px}
+.chain-t .pip{width:4px;height:4px}
 
-/* Tablet */
+/* Mobile normal (381–599px) */
+@media(min-width:381px) and (max-width:599px){
+  .tile.V{width:40px;height:76px}
+  .tile.H{width:76px;height:40px}
+  .tile.DBL{width:38px;height:72px}
+  .chain-t.H{width:62px;height:32px}
+  .chain-t.V{width:32px;height:62px}
+  .chain-t.DBL{width:32px;height:62px}
+  .pip{width:6px;height:6px}
+  .chain-t .pip{width:5px;height:5px}
+}
+
+/* Tablet (600–899px) */
 @media(min-width:600px) and (max-width:899px){
-  .tile.V{width:50px;height:96px}
-  .tile.H{width:96px;height:50px}
-  .tile.DBL{width:48px;height:92px}
-  .chain-t.H{width:80px;height:42px}
-  .chain-t.V{width:42px;height:80px}
-  .chain-t.DBL{width:42px;height:80px}
+  .tile.V{width:48px;height:92px}
+  .tile.H{width:92px;height:48px}
+  .tile.DBL{width:46px;height:88px}
+  .chain-t.H{width:76px;height:40px}
+  .chain-t.V{width:40px;height:76px}
+  .chain-t.DBL{width:40px;height:76px}
   .pip{width:7px;height:7px}
   .chain-t .pip{width:6px;height:6px}
 }
 
-/* Desktop */
+/* Desktop (≥900px) */
 @media(min-width:900px){
-  .tile.V{width:56px;height:108px}
-  .tile.H{width:108px;height:56px}
-  .tile.DBL{width:54px;height:104px}
-  .chain-t.H{width:90px;height:48px}
-  .chain-t.V{width:48px;height:90px}
-  .chain-t.DBL{width:48px;height:90px}
-  .pip{width:8px;height:8px}
-  .chain-t .pip{width:7px;height:7px}
+  .tile.V{width:58px;height:112px}
+  .tile.H{width:112px;height:58px}
+  .tile.DBL{width:56px;height:108px}
+  .chain-t.H{width:94px;height:50px}
+  .chain-t.V{width:50px;height:94px}
+  .chain-t.DBL{width:50px;height:94px}
+  .pip{width:9px;height:9px}
+  .chain-t .pip{width:8px;height:8px}
 }
 
-/* Landscape mobile — smaller tiles */
+/* Landscape mobile */
 @media(orientation:landscape) and (max-height:500px){
-  .tile.V{width:34px;height:64px}
-  .tile.H{width:64px;height:34px}
-  .tile.DBL{width:32px;height:60px}
-  .chain-t.H{width:54px;height:28px}
-  .chain-t.V{width:28px;height:54px}
-  .chain-t.DBL{width:28px;height:54px}
+  .tile.V{width:28px;height:52px}
+  .tile.H{width:52px;height:28px}
+  .tile.DBL{width:26px;height:48px}
+  .chain-t.H{width:44px;height:22px}
+  .chain-t.V{width:22px;height:44px}
+  .chain-t.DBL{width:22px;height:44px}
+  .pip{width:4px;height:4px}
+  .chain-t .pip{width:3px;height:3px}
 }
 .chain-t.pending{border-color:var(--gold)!important;box-shadow:0 0 12px rgba(212,168,71,.6)!important;animation:pendPulse 1s ease-in-out infinite}
 @keyframes pendPulse{0%,100%{box-shadow:0 0 8px rgba(212,168,71,.4)}50%{box-shadow:0 0 18px rgba(212,168,71,.9)}}
@@ -381,6 +390,74 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 @keyframes sp{to{transform:rotate(360deg)}}
 #table-scroll::-webkit-scrollbar{height:4px;width:4px}
 #table-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
+
+/* ── COLOR PICKER ── */
+.color-picker-strip{display:flex;gap:7px;align-items:center;justify-content:center;flex-wrap:wrap;animation:fadeUp .7s .3s ease both}
+.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .2s;touch-action:manipulation;flex-shrink:0}
+.color-swatch:hover,.color-swatch.active{border-color:var(--gold);transform:scale(1.2);box-shadow:0 0 10px rgba(212,168,71,.5)}
+.color-swatch-custom{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid var(--border2);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:.7rem;background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)}
+
+/* ── WOW VISUALS ── */
+.islamic-ornament{font-size:2.4rem;filter:drop-shadow(0 0 20px rgba(212,168,71,.6));animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 12px rgba(212,168,71,.4))}50%{filter:drop-shadow(0 0 32px rgba(212,168,71,1))}}
+.game-name{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.4rem,8vw,3.4rem);
+  font-weight:900;letter-spacing:8px;text-transform:uppercase;
+  background:linear-gradient(135deg,#a06010 0%,var(--gold) 30%,var(--gold3) 55%,var(--gold) 80%,#a06010 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:shimmer 3s linear infinite;
+  line-height:1;
+}
+@keyframes shimmer{0%{background-position:0% center}100%{background-position:200% center}}
+.mk-tag{font-size:.75rem;letter-spacing:8px;color:rgba(212,168,71,.45);font-family:'Playfair Display',serif;margin-top:2px;font-weight:700;text-shadow:0 0 8px rgba(212,168,71,.3)}
+
+/* Starfield background */
+#landing::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    radial-gradient(1px 1px at 15% 20%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(1px 1px at 42% 8%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 70% 30%,rgba(255,255,255,.5) 0%,transparent 100%),
+    radial-gradient(1px 1px at 88% 15%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 25% 60%,rgba(255,255,255,.2) 0%,transparent 100%),
+    radial-gradient(1px 1px at 60% 75%,rgba(255,255,255,.3) 0%,transparent 100%),
+    radial-gradient(1px 1px at 90% 80%,rgba(255,255,255,.4) 0%,transparent 100%),
+    radial-gradient(2px 2px at 5% 90%,rgba(212,168,71,.3) 0%,transparent 100%),
+    radial-gradient(2px 2px at 80% 5%,rgba(212,168,71,.2) 0%,transparent 100%);
+  pointer-events:none;
+  opacity:.8;
+}
+#landing::after{bottom:14px;right:14px;border-width:0 2px 2px 0}
+
+/* Glow border on main card */
+.main-card{
+  background:linear-gradient(160deg,#1a1a1a,#111);
+  border:1px solid rgba(212,168,71,.25);
+  border-radius:18px;padding:24px 20px;width:100%;
+  box-shadow:0 0 0 1px rgba(212,168,71,.08),0 20px 60px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.05);
+  animation:fadeUp .7s .15s ease both;
+}
+.features-card{
+  background:linear-gradient(160deg,#1a1a1a,#111);
+  border:1px solid rgba(212,168,71,.15);
+  border-radius:16px;padding:15px 16px;width:100%;
+  animation:fadeUp .7s .25s ease both;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);
+}
+.feat-btn{
+  background:linear-gradient(145deg,#1e1e1e,#141414);
+  border:1.5px solid rgba(212,168,71,.18);border-radius:12px;
+  padding:12px 6px;cursor:pointer;transition:all .2s;touch-action:manipulation;font-family:inherit;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.feat-btn:hover{border-color:rgba(212,168,71,.5);background:rgba(212,168,71,.08);transform:translateY(-2px)}
+.feat-btn.active{border-color:var(--gold);background:rgba(212,168,71,.12);box-shadow:0 0 12px rgba(212,168,71,.25)}
+.feat-icon{font-size:1.6rem;line-height:1}
+.feat-name{font-size:.6rem;color:var(--text3);text-align:center;line-height:1.2}
+.feat-btn.active .feat-name{color:var(--gold2)}
+
 </style>
 </head>
 <body>
@@ -392,9 +469,24 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   <div class="logo-wrap">
     <div class="islamic-ornament">✦ ☽ ✦</div>
     <div class="game-name">DOMINO</div>
-    <div style="font-size:.7rem;letter-spacing:6px;color:rgba(212,168,71,.5);font-family:'Playfair Display',serif;margin-top:2px;font-weight:400">MK</div>
+    <div class="mk-tag">MK</div>
     <div class="game-sub" id="game-sub-text">متعدد اللاعبين · كلاسيكي · عالمي</div>
     <div class="version-tag">v9.3</div>
+  </div>
+
+  <!-- COLOR PICKER -->
+  <div class="color-picker-strip">
+    <span style="font-size:.58rem;color:var(--text3);letter-spacing:1px">🎨</span>
+    <div class="color-swatch active" data-bg="#0a0a0a" style="background:#0a0a0a;border-color:var(--gold)" title="أسود"></div>
+    <div class="color-swatch" data-bg="#0d1b2a" style="background:#0d1b2a" title="أزرق داكن"></div>
+    <div class="color-swatch" data-bg="#1a0a2e" style="background:#1a0a2e" title="بنفسجي"></div>
+    <div class="color-swatch" data-bg="#0a1f0a" style="background:#0a1f0a" title="أخضر داكن"></div>
+    <div class="color-swatch" data-bg="#1a0a0a" style="background:#1a0a0a" title="أحمر داكن"></div>
+    <div class="color-swatch" data-bg="#1a1500" style="background:#1a1500" title="ذهبي داكن"></div>
+    <div class="color-swatch" data-bg="#2a2a2a" style="background:#2a2a2a" title="رمادي"></div>
+    <label class="color-swatch color-swatch-custom" title="اختر لونك">
+      <input type="color" id="custom-color" style="opacity:0;position:absolute;width:0;height:0">
+    </label>
   </div>
   <div class="quote-strip"><div class="quote-ar" id="quote-ar-text"></div><div class="quote-author" id="quote-author-text"></div></div>
   <div class="lang-selector">
@@ -581,6 +673,27 @@ import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-ap
 import{getDatabase,ref,set,get,update,onValue,remove,push}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 const FC={apiKey:"AIzaSyDP0I6KtiHFhdGhdhRKGs6EdEBpCaFfvDM",authDomain:"dominokimo.firebaseapp.com",databaseURL:"https://dominokimo-default-rtdb.firebaseio.com",projectId:"dominokimo",storageBucket:"dominokimo.firebasestorage.app",messagingSenderId:"808003512706",appId:"1:808003512806:web:4f650ac159854a1184879b"};
 const db=getDatabase(initializeApp(FC));
+
+// ── COLOR PICKER ─────────────────────────────────────────
+const BG_PAIRS={
+  '#0a0a0a':{'--bg2':'#111','--surface':'#1a1a1a','--surface2':'#222'},
+  '#0d1b2a':{'--bg2':'#1b2d3e','--surface':'#243347','--surface2':'#2e3f55'},
+  '#1a0a2e':{'--bg2':'#251540','--surface':'#2e1a50','--surface2':'#3a2260'},
+  '#0a1f0a':{'--bg2':'#112811','--surface':'#1a3a1a','--surface2':'#224822'},
+  '#1a0a0a':{'--bg2':'#281111','--surface':'#3a1818','--surface2':'#4a2020'},
+  '#1a1500':{'--bg2':'#281f00','--surface':'#342800','--surface2':'#403200'},
+  '#2a2a2a':{'--bg2':'#333','--surface':'#3e3e3e','--surface2':'#484848'},
+};
+function applyBgColor(bg){
+  const root=document.documentElement.style;
+  root.setProperty('--bg',bg);
+  const pair=BG_PAIRS[bg]||{'--bg2':bg+'22','--surface':bg+'44','--surface2':bg+'66'};
+  Object.entries(pair).forEach(([k,v])=>root.setProperty(k,v));
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('active',s.dataset.bg===bg));
+  try{localStorage.setItem('dom_bg',bg)}catch(e){}
+}
+// Restore saved color
+(()=>{try{const saved=localStorage.getItem('dom_bg');if(saved)applyBgColor(saved)}catch(e){}})();
 
 // ── QUOTES ───────────────────────────────────────────────
 const QUOTES=[
@@ -930,11 +1043,13 @@ function renderChain(gs){
     return;
   }
 
-  // Calculate tiles per row based on actual table width
+  // Calculate tiles per row — match CSS tile widths exactly
   const scrollEl=document.getElementById('table-scroll');
-  const W=(scrollEl.clientWidth||window.innerWidth)-20;
-  const TILE=68; // H tile ~60-82px + gap depending on screen
-  const tpr=Math.max(3,Math.floor(W/TILE));
+  const W=(scrollEl.clientWidth||window.innerWidth)-18;
+  const vw=window.innerWidth;
+  // H tile widths from CSS (chain-t.H widths + gap)
+  const TILE=vw<=380?47:vw<=599?65:vw<=899?80:vw<=899?80:98;
+  const tpr=Math.max(2,Math.floor(W/TILE));
 
   // Split into rows
   const rows=[];
@@ -1328,6 +1443,16 @@ function leaveGame(){
 }
 
 // ── BIND EVENTS ──────────────────────────────────────────
+// Color picker
+document.querySelectorAll('.color-swatch[data-bg]').forEach(sw=>{
+  sw.addEventListener('click',()=>applyBgColor(sw.dataset.bg));
+});
+const customColorInput=document.getElementById('custom-color');
+if(customColorInput){
+  customColorInput.addEventListener('input',e=>applyBgColor(e.target.value));
+  customColorInput.parentElement.addEventListener('click',()=>customColorInput.click());
+}
+
 document.getElementById('lang-en').addEventListener('click',()=>setLang('en'));
 document.getElementById('lang-ar').addEventListener('click',()=>setLang('ar'));
 document.getElementById('lang-fr').addEventListener('click',()=>setLang('fr'));
