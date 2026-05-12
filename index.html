@@ -3,21 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>DOMINO v9.5</title>
+<title>DOMINO v9.3</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Reem+Kufi:wght@400;700&family=Lateef:wght@400;700&display=swap');
-:root{
-  /* 4-color: Black · Royal Blue · Gold · White */
-  --bg:#050508;--bg2:#08080f;--surface:#0e0e1a;--surface2:#131324;
-  --border:rgba(212,168,71,.14);--border2:rgba(212,168,71,.25);
-  --blue:#1a237e;--blue2:#283593;--blue3:#3949ab;
+/* ── DARK THEME (default) ── */
+:root,[data-theme="dark"]{
+  --bg:#0a0a0f;--bg2:#10101a;--surface:#18182a;--surface2:#20203a;
+  --border:rgba(212,168,71,.15);--border2:rgba(212,168,71,.28);
   --gold:#d4a847;--gold2:#ecc96d;--gold3:#f7e8b0;
   --red2:#e74c3c;
   --felt:#0a3818;--felt2:#040e08;
-  --ivory:#f8f4ec;--pip:#050508;
-  --text:#f5f0e8;--text2:#d4c8a8;--text3:#9080b0;
+  --ivory:#f8f4ec;--pip:#0a0a0f;
+  --text:#f0ede8;--text2:#c8bfa8;--text3:#787090;
+  --shadow:rgba(0,0,0,.8);
+  --input-bg:#1a1a2a;--input-border:rgba(255,255,255,.15);--input-text:#f0ede8;
+  --input-placeholder:#606070;
+  --felt-center:#134f1e;
+}
+/* ── LIGHT THEME ── */
+[data-theme="light"]{
+  --bg:#f4f1eb;--bg2:#ece8e0;--surface:#ffffff;--surface2:#f8f5ee;
+  --border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.18);
+  --gold:#b8860b;--gold2:#c9a020;--gold3:#d4a847;
+  --red2:#c0392b;
+  --felt:#1a6830;--felt2:#0f4020;
+  --ivory:#fff;--pip:#111;
+  --text:#1a1a2e;--text2:#3a3a5a;--text3:#707090;
+  --shadow:rgba(0,0,0,.2);
+  --input-bg:#ffffff;--input-border:rgba(0,0,0,.2);--input-text:#1a1a2e;
+  --input-placeholder:#9090a0;
+  --felt-center:#22873c;
+}
+/* ── ROYAL BLUE THEME ── */
+[data-theme="blue"]{
+  --bg:#05091a;--bg2:#080d24;--surface:#0e1535;--surface2:#141d45;
+  --border:rgba(100,150,255,.2);--border2:rgba(100,150,255,.35);
+  --gold:#d4a847;--gold2:#ecc96d;--gold3:#f7e8b0;
+  --red2:#e74c3c;
+  --felt:#0a3818;--felt2:#040e08;
+  --ivory:#f8f4ec;--pip:#05091a;
+  --text:#e8eef8;--text2:#b8c8e8;--text3:#7888b8;
   --shadow:rgba(0,0,0,.85);
-  --accent-glow:rgba(212,168,71,.35);
+  --input-bg:#0e1535;--input-border:rgba(100,150,255,.25);--input-text:#e8eef8;
+  --input-placeholder:#5060a0;
+  --felt-center:#134f1e;
+}
+/* ── AUTO: follow OS ── */
+@media(prefers-color-scheme:light){
+  :root:not([data-theme]){
+    --bg:#f4f1eb;--bg2:#ece8e0;--surface:#ffffff;--surface2:#f8f5ee;
+    --border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.18);
+    --gold:#b8860b;--gold2:#c9a020;--gold3:#d4a847;
+    --red2:#c0392b;--felt:#1a6830;--felt2:#0f4020;
+    --ivory:#fff;--pip:#111;
+    --text:#1a1a2e;--text2:#3a3a5a;--text3:#707090;
+    --shadow:rgba(0,0,0,.2);
+    --input-bg:#ffffff;--input-border:rgba(0,0,0,.2);--input-text:#1a1a2e;
+    --input-placeholder:#9090a0;--felt-center:#22873c;
+  }
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
 html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
@@ -133,9 +176,11 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 /* Main card */
 .main-card{background:var(--surface);border:1px solid var(--border2);border-radius:18px;padding:24px 20px;width:100%;box-shadow:0 16px 50px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05);animation:fadeUp .7s .15s ease both}
 .name-label{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
-.name-input{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:11px 15px;font-family:inherit;font-size:.95rem;color:var(--text);outline:none;transition:border-color .2s;margin-bottom:16px}
+.name-input{width:100%;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;padding:11px 15px;font-family:inherit;font-size:.95rem;color:var(--input-text);outline:none;transition:border-color .2s;margin-bottom:16px;-webkit-text-fill-color:var(--input-text)}
+
 .name-input:focus{border-color:var(--gold)}
-.name-input::placeholder{color:var(--text3)}
+.name-input::placeholder{color:var(--input-placeholder)}
+.name-input:-webkit-autofill{-webkit-box-shadow:0 0 0 30px var(--input-bg) inset!important;-webkit-text-fill-color:var(--input-text)!important}
 .pbtn{width:100%;font-family:'Inter',sans-serif;border:none;border-radius:11px;padding:13px;font-size:.85rem;font-weight:600;letter-spacing:.6px;cursor:pointer;transition:all .2s;margin-bottom:9px;text-transform:uppercase;touch-action:manipulation}
 .pbtn.primary{background:linear-gradient(135deg,var(--gold),#a8822a);color:#0d1a26;box-shadow:0 4px 16px rgba(212,168,71,.28)}
 .pbtn.primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(212,168,71,.38)}
@@ -143,7 +188,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .divider-line{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--text3);font-size:.6rem;letter-spacing:2px;text-transform:uppercase}
 .divider-line::before,.divider-line::after{content:'';flex:1;height:1px;background:var(--border)}
 .join-row{display:flex;gap:8px}
-.code-input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:11px 13px;font-family:'Inter',monospace;font-size:.95rem;font-weight:700;letter-spacing:5px;color:var(--gold2);outline:none;text-transform:uppercase;transition:border-color .2s;text-align:center}
+.code-input{flex:1;background:var(--input-bg);border:1px solid var(--input-border);border-radius:10px;padding:11px 13px;font-family:'Inter',monospace;font-size:.95rem;font-weight:700;letter-spacing:5px;color:var(--gold2);outline:none;text-transform:uppercase;transition:border-color .2s;text-align:center}
 .code-input:focus{border-color:var(--gold)}
 .code-input::placeholder{color:var(--text3);letter-spacing:2px;font-weight:400}
 .pbtn.join-btn{background:var(--surface2);color:var(--gold);border:1px solid rgba(212,168,71,.28);border-radius:10px;padding:11px 16px;width:auto;font-size:.8rem;margin:0}
@@ -341,8 +386,25 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .drop-zone:hover,.drop-zone.drag-over{border-color:var(--gold);background:rgba(212,168,71,.1);transform:scale(1.08);color:var(--gold)}
 
 /* ── CHAT ── */
-#chat-panel{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;background:var(--bg)}
-#chat-panel.show{display:flex}
+/* Side chat — doesn't cover the game */
+#chat-panel{
+  position:fixed;
+  top:0;right:-340px;
+  width:min(340px,85vw);height:100dvh;
+  z-index:50;
+  display:flex;flex-direction:column;
+  background:var(--bg2);
+  border-left:1px solid var(--border2);
+  box-shadow:-8px 0 40px rgba(0,0,0,.6);
+  transition:right .3s cubic-bezier(.4,0,.2,1);
+}
+#chat-panel.show{right:0}
+/* Dim overlay behind side chat */
+#chat-overlay{
+  display:none;position:fixed;inset:0;z-index:49;
+  background:rgba(0,0,0,.4);backdrop-filter:blur(2px);
+}
+#chat-overlay.show{display:block}
 #chat-header{background:var(--bg2);border-bottom:1px solid var(--border2);padding:10px 13px;display:flex;align-items:center;gap:9px;flex-shrink:0}
 #chat-header h3{flex:1;font-size:.88rem;color:var(--gold2);letter-spacing:1px}
 #btn-chat-close{background:none;border:none;color:var(--text3);font-size:1.1rem;cursor:pointer;touch-action:manipulation}
@@ -365,9 +427,10 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .msg.system .msg-bubble{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text3);font-size:.66rem;border-radius:9px;font-style:italic}
 .msg-time{font-size:.5rem;color:var(--text3)}
 #chat-input-row{display:flex;gap:7px;padding:9px 11px;background:var(--bg2);border-top:1px solid var(--border);flex-shrink:0}
-#chat-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:9px;padding:9px 13px;font-family:inherit;font-size:.82rem;color:var(--text);outline:none;user-select:text}
+#chat-input{flex:1;background:var(--input-bg);border:1px solid var(--input-border);border-radius:9px;padding:9px 13px;font-family:inherit;font-size:.82rem;color:var(--input-text);outline:none;user-select:text}
 #chat-input:focus{border-color:var(--gold)}
-#chat-input::placeholder{color:var(--text3)}
+#chat-input:focus{border-color:var(--gold)}
+#chat-input::placeholder{color:var(--input-placeholder)}
 #btn-send-chat{background:linear-gradient(135deg,var(--gold),#a8822a);color:#0d1a26;border:none;border-radius:9px;padding:9px 14px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer;touch-action:manipulation}
 
 /* ── AUDIO PLAYER ── */
@@ -481,94 +544,18 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .feat-name{font-size:.6rem;color:var(--text3);text-align:center;line-height:1.2}
 .feat-btn.active .feat-name{color:var(--gold2)}
 
+/* ── THEME SWITCHER ── */
+.theme-switcher{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
+.theme-btn{display:flex;flex-direction:column;align-items:center;gap:3px;background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;padding:8px 12px;cursor:pointer;transition:all .2s;touch-action:manipulation;font-family:inherit;min-width:60px}
+.theme-btn:hover{border-color:var(--gold);transform:translateY(-2px)}
+.theme-btn.active{border-color:var(--gold);background:rgba(212,168,71,.1);box-shadow:0 0 12px rgba(212,168,71,.2)}
+.theme-icon{font-size:1.2rem;line-height:1}
+.theme-name{font-size:.54rem;color:var(--text3);text-align:center}
+.theme-btn.active .theme-name{color:var(--gold2)}
+#ig-theme-strip{display:flex;gap:4px;align-items:center}
+.ig-theme-btn{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:7px;padding:4px 7px;font-size:.9rem;cursor:pointer;touch-action:manipulation;transition:all .15s;line-height:1}
+.ig-theme-btn:hover,.ig-theme-btn.active{border-color:var(--gold);background:rgba(212,168,71,.15)}
 
-
-/* ── KIMO v9.5 UPGRADES: system theme + floating chat + visible player ── */
-:root{color-scheme:dark light;}
-body.system-light{
-  --bg:#f6f7fb;--bg2:#eef1f8;--surface:#ffffff;--surface2:#edf2ff;
-  --border:rgba(26,35,126,.12);--border2:rgba(26,35,126,.22);
-  --text:#101522;--text2:#34405c;--text3:#6f7891;--shadow:rgba(30,40,70,.25);
-  --felt:#1d7140;--felt2:#dfe9f2;
-}
-body.system-light #landing{background:radial-gradient(ellipse at 30% 0%,#dbe6ff 0%,#f7f8fc 44%,#edf2ff 100%)}
-body.system-light #hdr{background:linear-gradient(180deg,#ffffff,#edf2ff)}
-body.system-light #controls,body.system-light #audio-player{background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(237,242,255,.96))}
-body.system-light #table-wrap{background:radial-gradient(ellipse at 50% 50%,#2f9e56 0%,#1d7140 62%,#114626 100%)}
-
-/* Bigger, always-visible audio strip */
-#audio-player{
-  order:20;
-  min-height:46px;
-  padding:7px 12px;
-  border-top:1px solid rgba(212,168,71,.22);
-  border-bottom:1px solid rgba(212,168,71,.18);
-  box-shadow:0 -6px 22px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.05);
-}
-#audio-player #ap-play{width:34px!important;height:34px!important;font-size:1.05rem!important}
-#audio-player #ap-title{font-size:.72rem!important}
-#audio-player #ap-sub{font-size:.55rem!important}
-#btn-close-ap{display:none!important}
-
-/* Floating tiny chat button: does not take space from the game */
-#btn-chat-toggle{
-  position:fixed!important;
-  right:12px;
-  bottom:118px;
-  width:48px!important;
-  height:48px;
-  flex:unset!important;
-  border-radius:50%!important;
-  padding:0!important;
-  z-index:44;
-  font-size:0!important;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,rgba(212,168,71,.95),rgba(168,130,42,.98))!important;
-  color:#08111f!important;
-  border:1px solid rgba(255,255,255,.35)!important;
-  box-shadow:0 8px 26px rgba(0,0,0,.42),0 0 18px rgba(212,168,71,.35);
-}
-#btn-chat-toggle::before{content:'💬';font-size:1.35rem;line-height:1}
-#btn-chat-toggle.has-new::after{top:3px!important;right:4px!important;width:11px!important;height:11px!important;border:2px solid #fff;background:#e74c3c!important}
-
-/* Side chat drawer instead of full-screen cover */
-#chat-panel{
-  position:fixed;
-  inset:auto 10px 96px auto;
-  width:min(380px,92vw);
-  height:min(560px,72vh);
-  z-index:60;
-  display:none;
-  flex-direction:column;
-  background:linear-gradient(160deg,rgba(8,8,15,.98),rgba(14,14,26,.98));
-  border:1px solid rgba(212,168,71,.28);
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:0 18px 60px rgba(0,0,0,.62),0 0 0 1px rgba(255,255,255,.04);
-  backdrop-filter:blur(12px);
-}
-#chat-panel.show{display:flex;animation:chatFloatIn .18s ease both}
-@keyframes chatFloatIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
-#chat-header{padding:9px 12px}
-#chat-messages{padding:10px;gap:6px}
-.msg-bubble{font-size:.76rem}
-#chat-input-row{padding:8px}
-#chat-input{font-size:.78rem;padding:8px 10px}
-#btn-send-chat{font-size:.74rem;padding:8px 11px}
-@media(max-width:599px){
-  #btn-chat-toggle{right:10px;bottom:108px;width:44px!important;height:44px}
-  #chat-panel{right:8px;bottom:92px;width:min(340px,92vw);height:min(430px,58vh);border-radius:18px}
-  #audio-player{min-height:42px;gap:6px;padding:6px 8px}
-  #ap-prev,#ap-next,#ap-icon-wrap,label[title="رفع ملف"]{display:none!important}
-  #ap-vol{width:44px!important}
-}
-@media(orientation:landscape) and (max-height:500px){
-  #btn-chat-toggle{bottom:58px;width:38px!important;height:38px}
-  #chat-panel{bottom:48px;height:72vh;width:330px}
-  #audio-player{min-height:34px;padding:4px 8px}
-}
 
 </style>
 </head>
@@ -583,7 +570,7 @@ body.system-light #table-wrap{background:radial-gradient(ellipse at 50% 50%,#2f9
     <div class="game-name">DOMINO</div>
     <div class="mk-tag">MK</div>
     <div class="game-sub" id="game-sub-text">متعدد اللاعبين · كلاسيكي · عالمي</div>
-    <div class="version-tag">v9.5</div>
+    <div class="version-tag">v9.3</div>
   </div>
   <div class="quote-strip"><div class="quote-ar" id="quote-ar-text"></div><div class="quote-author" id="quote-author-text"></div></div>
   <div class="lang-selector">
@@ -591,6 +578,14 @@ body.system-light #table-wrap{background:radial-gradient(ellipse at 50% 50%,#2f9
     <button class="lang-btn active" id="lang-ar"><span class="lang-flag">🇪🇬</span><span class="lang-labels"><span class="lang-l1">العربية</span><span class="lang-l2">Arabic</span></span></button>
     <button class="lang-btn" id="lang-fr"><span class="lang-flag">🇫🇷</span><span class="lang-labels"><span class="lang-l1">Français</span><span class="lang-l2">الفرنسية</span></span></button>
   </div>
+  <!-- THEME SWITCHER SPLASH -->
+  <div class="theme-switcher" id="splash-themes">
+    <button class="theme-btn active" data-theme="dark"><span class="theme-icon">🌑</span><span class="theme-name">داكن</span></button>
+    <button class="theme-btn" data-theme="light"><span class="theme-icon">☀️</span><span class="theme-name">فاتح</span></button>
+    <button class="theme-btn" data-theme="blue"><span class="theme-icon">🔷</span><span class="theme-name">أزرق</span></button>
+    <button class="theme-btn" data-theme="auto"><span class="theme-icon">🔄</span><span class="theme-name">تلقائي</span></button>
+  </div>
+
   <div class="main-card">
     <div class="name-label" id="lbl-name">اسمك</div>
     <input class="name-input" id="inp-name" placeholder="اكتب اسمك…" maxlength="14" autocomplete="off">
@@ -646,7 +641,7 @@ body.system-light #table-wrap{background:radial-gradient(ellipse at 50% 50%,#2f9
   <div id="hdr">
     <div class="hdr-left">
       <span class="brand-name">DOMINO</span>
-      <span class="brand-v">v9.5</span>
+      <span class="brand-v">v9.3</span>
       <span style="font-size:.6rem;letter-spacing:3px;color:rgba(212,168,71,.4);font-family:'Playfair Display',serif">MK</span>
       <!-- In-game feature icons -->
       <div class="hdr-feats">
@@ -655,6 +650,13 @@ body.system-light #table-wrap{background:radial-gradient(ellipse at 50% 50%,#2f9
         <button class="hdr-feat" id="hf-weather" title="الطقس">🌤️</button>
         <button class="hdr-feat" id="hf-audio" title="الصوت">🎵</button>
         <!-- HOME BUTTON -->
+        <!-- In-game theme mini switcher -->
+        <div id="ig-theme-strip">
+          <button class="ig-theme-btn active" data-theme="dark" title="داكن">🌑</button>
+          <button class="ig-theme-btn" data-theme="light" title="فاتح">☀️</button>
+          <button class="ig-theme-btn" data-theme="blue" title="أزرق">🔷</button>
+          <button class="ig-theme-btn" data-theme="auto" title="تلقائي">🔄</button>
+        </div>
         <button class="hdr-feat" id="btn-home" title="الرئيسية" style="color:var(--red2);border-color:rgba(231,76,60,.3)">🏠</button>
       </div>
     </div>
@@ -699,7 +701,8 @@ body.system-light #table-wrap{background:radial-gradient(ellipse at 50% 50%,#2f9
 </div>
 
 <!-- CHAT -->
-<div id="chat-panel">
+<div id="chat-overlay"></div>
+<div id="chat-panel" dir="rtl">
   <div id="chat-header"><h3>💬 شات</h3><button id="btn-chat-close">✕</button></div>
   <div class="chat-tabs">
     <button class="chat-tab active" id="tab-game">شات اللعبة <span class="tab-badge" id="badge-game"></span></button>
@@ -769,7 +772,6 @@ body.system-light #table-wrap{background:radial-gradient(ellipse at 50% 50%,#2f9
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import{getDatabase,ref,set,get,update,onValue,remove,push}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -777,27 +779,6 @@ const FC={apiKey:"AIzaSyDP0I6KtiHFhdGhdhRKGs6EdEBpCaFfvDM",authDomain:"dominokim
 const db=getDatabase(initializeApp(FC));
 
 // ── COLOR PICKER ─────────────────────────────────────────
-const BG_PAIRS={
-  '#0a0a0a':{'--bg2':'#111','--surface':'#1a1a1a','--surface2':'#222'},
-  '#0d1b2a':{'--bg2':'#1b2d3e','--surface':'#243347','--surface2':'#2e3f55'},
-  '#001f5e':{'--bg2':'#002878','--surface':'#003090','--surface2':'#003aaa'},
-  '#0a1628':{'--bg2':'#102040','--surface':'#162a50','--surface2':'#1e3460'},
-  '#1a0a2e':{'--bg2':'#251540','--surface':'#2e1a50','--surface2':'#3a2260'},
-  '#0a1f0a':{'--bg2':'#112811','--surface':'#1a3a1a','--surface2':'#224822'},
-  '#1a0a0a':{'--bg2':'#281111','--surface':'#3a1818','--surface2':'#4a2020'},
-  '#1a1500':{'--bg2':'#281f00','--surface':'#342800','--surface2':'#403200'},
-  '#2a2a2a':{'--bg2':'#333','--surface':'#3e3e3e','--surface2':'#484848'},
-};
-function applyBgColor(bg){
-  const root=document.documentElement.style;
-  root.setProperty('--bg',bg);
-  const pair=BG_PAIRS[bg]||{'--bg2':bg+'22','--surface':bg+'44','--surface2':bg+'66'};
-  Object.entries(pair).forEach(([k,v])=>root.setProperty(k,v));
-  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.toggle('active',s.dataset.bg===bg));
-  try{localStorage.setItem('dom_bg',bg)}catch(e){}
-}
-// Restore saved color
-(()=>{try{const saved=localStorage.getItem('dom_bg');if(saved)applyBgColor(saved)}catch(e){}})();
 
 // ── QUOTES ───────────────────────────────────────────────
 // ── QUOTES & POETRY ─────────────────────────────────────
@@ -826,19 +807,42 @@ const QUOTES=[
   {ar:"ما أضيق العيش لولا فسحة الأمل",auth:"أبو القاسم الشابي",type:"poetry",font:"Lateef"},
   {ar:"إرادة الحياة إذا ما أرادها\nفلا بد أن يستجيب القدر",auth:"أبو القاسم الشابي",type:"poetry",font:"Scheherazade New"},
 ];
-// ── SYSTEM COLOR SCHEME ──────────────────────────────────
-(()=>{
-  const mq=window.matchMedia('(prefers-color-scheme: dark)');
-  function applySystemTheme(){
-    let saved='';
-    try{saved=localStorage.getItem('dom_bg')||'';}catch(e){}
-    if(saved){document.body.classList.remove('system-light');applyBgColor(saved);return;}
-    if(mq.matches){document.body.classList.remove('system-light');applyBgColor('#0a0a0a');}
-    else{document.body.classList.add('system-light');applyBgColor('#f6f7fb');}
+// ── THEME SYSTEM ────────────────────────────────────────
+function applyTheme(t){
+  const html=document.documentElement;
+  if(t==='auto'){html.removeAttribute('data-theme');}
+  else html.setAttribute('data-theme',t);
+  // Update all theme buttons
+  document.querySelectorAll('.theme-btn,.ig-theme-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.theme===t);
+  });
+  // Adjust landing background
+  if(t==='light'){
+    const l=document.getElementById('landing');
+    if(l)l.style.background='radial-gradient(ellipse at 30% 0%,#c8b880 0%,#ece8e0 70%)';
+  } else if(t==='blue'){
+    const l=document.getElementById('landing');
+    if(l)l.style.background='radial-gradient(ellipse at 30% 0%,#1a237e 0%,#05091a 80%)';
+  } else {
+    const l=document.getElementById('landing');
+    if(l)l.style.background='radial-gradient(ellipse at 30% 0%,#1a237e 0%,#0d0d1a 40%,#0a0a0f 80%)';
   }
-  applySystemTheme();
-  try{mq.addEventListener('change',applySystemTheme)}catch(e){mq.addListener(applySystemTheme)}
+  try{localStorage.setItem('dom_theme',t)}catch(e){}
+}
+// Init theme from saved or system
+(()=>{
+  try{
+    const saved=localStorage.getItem('dom_theme');
+    if(saved){applyTheme(saved);return;}
+  }catch(e){}
+  // Auto = follow system
+  applyTheme('dark');
 })();
+// Watch system changes when in auto mode
+window.matchMedia('(prefers-color-scheme:light)').addEventListener('change',e=>{
+  const cur=localStorage.getItem('dom_theme')||'dark';
+  if(cur==='auto')document.documentElement.removeAttribute('data-theme');
+});
 
 // ── QUOTES & POETRY MORPH ANIMATION ──────────────────────
 let qIdx=Math.floor(Math.random()*QUOTES.length);
@@ -926,7 +930,7 @@ function showInGamePoetry(){
   bar.style.display='flex';bar.style.flexDirection='column';
   textEl.className=fontClass+' '+anim;
   textEl.style.opacity='0';
-  textEl.style.fontSize=q.type==='poetry'?'.8rem':'.75rem';
+  textEl.style.fontSize=q.type==='poetry'?'1.1rem':'1rem';
   textEl.style.fontFamily=q.font==='Scheherazade New'?'Scheherazade New,serif':q.font==='Lateef'?'Lateef,serif':q.font==='Reem Kufi'?'Reem Kufi,sans-serif':'Amiri,serif';
 
   setTimeout(()=>{
@@ -991,22 +995,20 @@ const RADIO_STATIONS={
   egypt:{
     flag:'🇪🇬', name:'محطات مصرية',
     stations:[
-      {title:'إذاعة القرآن الكريم من القاهرة',sub:'القاهرة 98.2 FM',url:'https://n0b.radiojar.com/8s5u5tpdtwzuv',urlAlt:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'🕌'},
-      {title:'نجوم FM 100.6',sub:'أشهر محطة موسيقية في مصر',url:'https://audiostreaming.twesto.com/nogoumfm',urlAlt:'https://stream.zeno.fm/tgzaf3g0eksev',icon:'⭐'},
+      {title:'إذاعة القرآن الكريم من القاهرة',sub:'القاهرة 98.2 FM',url:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'🕌'},
+      {title:'نجوم FM 100.6',sub:'أشهر محطة موسيقية في مصر',url:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'⭐'},
       {title:'نغم FM 105.3',sub:'موسيقى عربية',url:'https://stream.zeno.fm/yn65sm0gds8uv',icon:'🎶'},
-      {title:'Nile FM 104.2',sub:'Hit Music - English & Arabic',url:'https://eu10.fastcast4u.com/nilefm',urlAlt:'https://stream.zeno.fm/2mv0ufs1p3zuv',icon:'🎵'},
+      {title:'Nile FM 104.2',sub:'Hit Music - English & Arabic',url:'https://stream.zeno.fm/2mv0ufs1p3zuv',icon:'🎵'},
       {title:'راديو مصر',sub:'أول راديو حكومي على FM',url:'https://stream.zeno.fm/tgzaf3g0eksev',icon:'📻'},
-      {title:'BBC Arabic',sub:'بي بي سي عربي مباشر',url:'https://stream.live.vc.bbcmedia.co.uk/bbc_arabic_radio',icon:'🌍'},
-      {title:'Al Jazeera Arabic',sub:'قناة الجزيرة مباشر',url:'https://live-hls-web-aja.getaj.net/AJA/index.m3u8',icon:'📺'},
     ]
   },
   saudi:{
     flag:'🇸🇦', name:'محطات سعودية',
     stations:[
-      {title:'إذاعة القرآن الكريم السعودية',sub:'الرياض — بث مباشر',url:'https://backup.qurango.net/radio/saudiquran',urlAlt:'https://stream.radiojar.com/0tpy1h0kxtzuv',icon:'🕌'},
-      {title:'MBC FM',sub:'أشهر محطة ترفيهية سعودية',url:'https://mbcfm-live.hls.adaptive.level3.net/mbcfm/mbcfm.m3u8',urlAlt:'https://stream.zeno.fm/4d4n2rygp3zuv',icon:'🎙️'},
+      {title:'إذاعة القرآن الكريم السعودية',sub:'الرياض — بث مباشر',url:'https://stream.radiojar.com/0tpy1h0kxtzuv',icon:'🕌'},
+      {title:'MBC FM',sub:'أشهر محطة ترفيهية سعودية',url:'https://stream.zeno.fm/4d4n2rygp3zuv',icon:'🎙️'},
       {title:'Mix FM السعودية',sub:'Jeddah 105.5 FM',url:'https://stream.zeno.fm/0r0xa792kwzuv',icon:'🎵'},
-      {title:'إذاعة نداء الإسلام',sub:'مكة المكرمة',url:'https://nida-live.digitalproserver.com/nida/playlist.m3u8',urlAlt:'https://stream.zeno.fm/gbr0n0lgt5zuv',icon:'🕌'},
+      {title:'إذاعة نداء الإسلام',sub:'مكة المكرمة',url:'https://stream.zeno.fm/gbr0n0lgt5zuv',icon:'🕌'},
       {title:'SBA Saudia Radio',sub:'Riyadh 98.8 FM English',url:'https://stream.zeno.fm/gm3ahresgm0uv',icon:'📡'},
     ]
   },
@@ -1027,25 +1029,6 @@ const QSTREAMS=Object.values(RADIO_STATIONS).flatMap(c=>c.stations);
 
 let apPlaying=false,apIdx=0,apMode='quran',apUserFiles=[],apUserUrls=[];
 const apAudio=document.getElementById('ap-audio');
-let hlsPlayer=null;
-function playStreamUrl(url, fallbackUrl){
-  if(hlsPlayer){try{hlsPlayer.destroy()}catch(e){} hlsPlayer=null;}
-  const tryFallback=()=>{
-    if(fallbackUrl && fallbackUrl!==url){
-      setTimeout(()=>playStreamUrl(fallbackUrl,''),500);
-    }
-  };
-  if(/\.m3u8(\?|$)/i.test(url) && window.Hls && window.Hls.isSupported()){
-    hlsPlayer=new window.Hls({lowLatencyMode:true,enableWorker:true});
-    hlsPlayer.loadSource(url);
-    hlsPlayer.attachMedia(apAudio);
-    hlsPlayer.on(window.Hls.Events.MANIFEST_PARSED,()=>apAudio.play().catch(()=>{}));
-    hlsPlayer.on(window.Hls.Events.ERROR,(evt,data)=>{if(data&&data.fatal)tryFallback();});
-  }else{
-    apAudio.src=url;
-    apAudio.play().catch(()=>{tryFallback();});
-  }
-}
 apAudio.volume=.5;
 apAudio.addEventListener('ended',()=>apNext());
 apAudio.addEventListener('play',()=>{document.getElementById('ap-play').textContent='⏸';apPlaying=true});
@@ -1081,14 +1064,14 @@ function closeRadioSelector(){const el=document.getElementById('radio-selector')
 
 function apShow(){/* audio player always visible in game */}
 
-function apClose(){if(hlsPlayer){try{hlsPlayer.destroy()}catch(e){} hlsPlayer=null;}apAudio.pause();apAudio.src='';apPlaying=false;document.getElementById('ap-play').textContent='▶';document.getElementById('ap-title').textContent='اضغط لاختيار المحطة 🎵';document.getElementById('ap-sub').textContent='متوقف — الشريط ظاهر دائمًا';}
+function apClose(){apAudio.pause();apAudio.src='';apPlaying=false;document.getElementById('ap-play').textContent='▶';}
 function apLoad(idx){
   if(apMode==='url'&&apUserUrls.length>0){
     const u=apUserUrls[idx%apUserUrls.length];apIdx=idx%apUserUrls.length;
     document.getElementById('ap-icon').textContent='🎵';
     document.getElementById('ap-title').textContent=u.name||'ملف صوتي';
     document.getElementById('ap-sub').textContent=u.url.includes('radiojar')?'Radio Stream':'Cloud/URL';
-    playStreamUrl(u.url,'');
+    apAudio.src=u.url;apAudio.play().catch(()=>{});
   } else if(apMode==='file'&&apUserFiles.length>0){
     const f=apUserFiles[idx%apUserFiles.length];apIdx=idx%apUserFiles.length;
     document.getElementById('ap-icon').textContent='🎵';
@@ -1104,7 +1087,10 @@ function apLoad(idx){
     document.getElementById('ap-sub').textContent=s.sub;
     const lbl=document.getElementById('ap-stream-label');if(lbl)lbl.textContent=s.label||'';
     // Try main URL, fallback to urlAlt if error
-    playStreamUrl(s.url,s.urlAlt||'');
+    apAudio.src=s.url;
+    apAudio.play().catch(()=>{
+      if(s.urlAlt){apAudio.src=s.urlAlt;apAudio.play().catch(()=>{})}
+    });
     // Show label on icon button in player
     const iconEl=document.getElementById('ap-icon');
     if(iconEl)iconEl.title=s.label||s.title;
@@ -1576,8 +1562,8 @@ function endGame(winner,names){
 }
 
 // ── CHAT ─────────────────────────────────────────────────
-function openChat(){chatOpen=true;document.getElementById('chat-panel').classList.add('show');if(chatTab==='game')unreadGame=0;else unreadGlobal=0;updateBadges();setTimeout(()=>{const m=document.getElementById('chat-messages');m.scrollTop=m.scrollHeight},80)}
-function closeChat(){chatOpen=false;document.getElementById('chat-panel').classList.remove('show')}
+function openChat(){chatOpen=true;document.getElementById('chat-panel').classList.add('show');document.getElementById('chat-overlay').classList.add('show');if(chatTab==='game')unreadGame=0;else unreadGlobal=0;updateBadges();setTimeout(()=>{const m=document.getElementById('chat-messages');m.scrollTop=m.scrollHeight},80)}
+function closeChat(){chatOpen=false;document.getElementById('chat-panel').classList.remove('show');document.getElementById('chat-overlay').classList.remove('show')}
 function switchTab(tab){chatTab=tab;document.getElementById('tab-game').classList.toggle('active',tab==='game');document.getElementById('tab-global').classList.toggle('active',tab==='global');if(tab==='game')unreadGame=0;else unreadGlobal=0;updateBadges();renderMessages()}
 function updateBadges(){document.getElementById('badge-game').classList.toggle('show',unreadGame>0);document.getElementById('badge-global').classList.toggle('show',unreadGlobal>0);document.getElementById('btn-chat-toggle').classList.toggle('has-new',unreadGame>0||unreadGlobal>0)}
 function escHtml(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
@@ -1703,6 +1689,14 @@ function leaveGame(){
 }
 
 // ── BIND EVENTS ──────────────────────────────────────────
+
+// Theme switcher events
+document.querySelectorAll('.theme-btn,.ig-theme-btn').forEach(b=>{
+  b.addEventListener('click',()=>applyTheme(b.dataset.theme));
+});
+// Chat overlay click to close
+const chatOvl=document.getElementById('chat-overlay');
+if(chatOvl)chatOvl.addEventListener('click',closeChat);
 
 document.getElementById('lang-en').addEventListener('click',()=>setLang('en'));
 document.getElementById('lang-ar').addEventListener('click',()=>setLang('ar'));
