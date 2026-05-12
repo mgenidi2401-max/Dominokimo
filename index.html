@@ -7,10 +7,10 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;600;700;900&family=Amiri:wght@400;700&display=swap');
 :root{
-  --bg:#1e2e42;--bg2:#263a52;--surface:#2e4460;--surface2:#364e6e;
+  --bg:#2e4a68;--bg2:#3a5878;--surface:#435f7a;--surface2:#4e6d88;
   --border:rgba(255,255,255,.12);--border2:rgba(255,255,255,.2);
   --gold:#d4a847;--gold2:#ecc96d;--gold3:#f5e0a0;
-  --red2:#e74c3c;--felt:#1a6830;--felt2:#0f3e1a;
+  --red2:#e74c3c;--felt:#1f7a38;--felt2:#145224;
   --ivory:#f8f4ec;--pip:#111;
   --text:#edf2f8;--text2:#b0c4d8;--text3:#7a90aa;
   --shadow:rgba(0,0,0,.45);
@@ -72,7 +72,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 #game.active{display:flex}
 
 /* ── LANDING ── */
-#landing{background:radial-gradient(ellipse at 50% 0%,var(--bg2) 0%,var(--bg) 70%);
+#landing{background:radial-gradient(ellipse at 50% 0%,#4a6a8a 0%,var(--bg) 70%);
   align-items:center;justify-content:center;overflow-y:auto;padding:20px 16px 36px;position:relative}
 #landing::before,#landing::after{content:'';position:fixed;width:100px;height:100px;border-color:var(--gold);border-style:solid;opacity:.1;pointer-events:none}
 #landing::before{top:14px;left:14px;border-width:2px 0 0 2px}
@@ -191,7 +191,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
 /* ── FELT TABLE — snake chain ── */
 #table-wrap{flex:1;overflow:hidden;position:relative;
-  background:radial-gradient(ellipse at 50% 50%,#22873c 0%,var(--felt) 55%,var(--felt2) 100%)}
+  background:radial-gradient(ellipse at 50% 50%,#28a048 0%,var(--felt) 55%,var(--felt2) 100%)}
 #table-wrap::before{content:'';position:absolute;inset:0;
   background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 28px),
   repeating-linear-gradient(90deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 28px);
@@ -421,10 +421,12 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <span style="font-size:.6rem;letter-spacing:3px;color:rgba(212,168,71,.4);font-family:'Playfair Display',serif">MK</span>
       <!-- In-game feature icons -->
       <div class="hdr-feats">
-        <button class="hdr-feat" id="hf-prayer" title="Prayer Times">🕌</button>
-        <button class="hdr-feat" id="hf-hadith" title="Hadith">📿</button>
-        <button class="hdr-feat" id="hf-weather" title="Weather">🌤️</button>
-        <button class="hdr-feat" id="hf-audio" title="Audio">🎵</button>
+        <button class="hdr-feat" id="hf-prayer" title="مواقيت الصلاة">🕌</button>
+        <button class="hdr-feat" id="hf-hadith" title="الحديث">📿</button>
+        <button class="hdr-feat" id="hf-weather" title="الطقس">🌤️</button>
+        <button class="hdr-feat" id="hf-audio" title="الصوت">🎵</button>
+        <!-- HOME BUTTON -->
+        <button class="hdr-feat" id="btn-home" title="الرئيسية" style="color:var(--red2);border-color:rgba(231,76,60,.3)">🏠</button>
       </div>
     </div>
     <div class="scores-row" id="scores-row"></div>
@@ -467,14 +469,18 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
 <!-- AUDIO PLAYER -->
 <div id="audio-player">
-  <span id="ap-icon">🕌</span>
-  <div id="ap-info"><div id="ap-title">—</div><div id="ap-sub">الصوت</div></div>
+  <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;gap:1px;min-width:52px">
+    <span id="ap-icon" style="font-size:1.1rem;line-height:1">🕌</span>
+    <span id="ap-stream-label" style="font-size:.44rem;color:var(--gold2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;max-width:52px">القرآن الكريم</span>
+  </div>
+  <div id="ap-info"><div id="ap-title">—</div><div id="ap-sub">بث مباشر</div></div>
   <div id="ap-controls">
     <button class="ap-btn" id="ap-prev">⏮</button>
     <button class="ap-btn" id="ap-play">▶</button>
     <button class="ap-btn" id="ap-next">⏭</button>
     <input type="range" id="ap-vol" min="0" max="1" step="0.05" value="0.5">
-    <label class="ap-btn" style="cursor:pointer">📁<input type="file" id="ap-file" accept="audio/*" style="display:none"></label>
+    <label class="ap-btn" style="cursor:pointer" title="رفع ملف">📁<input type="file" id="ap-file" accept="audio/*" multiple style="display:none"></label>
+    <button class="ap-btn" id="ap-url-btn" title="رابط OneDrive/Cloud">🔗</button>
     <button class="ap-btn" id="btn-close-ap">✕</button>
   </div>
 </div>
@@ -567,20 +573,89 @@ document.addEventListener('click',()=>{try{getAudio().resume()}catch(e){}},{once
 
 // ── AUDIO PLAYER ─────────────────────────────────────────
 const QSTREAMS=[
-  {title:'إذاعة القرآن الكريم — القاهرة 🇪🇬',sub:'Cairo 98.2 FM',url:'https://stream.radiojar.com/8s5u5tpdtwzuv',icon:'🕌'},
-  {title:'إذاعة القرآن الكريم — السعودية 🇸🇦',sub:'Saudi Quran Radio',url:'https://stream.radiojar.com/0tpy1h0kxtzuv',icon:'🕌'},
+  {
+    title:'إذاعة القرآن الكريم من القاهرة',
+    sub:'البث المباشر — القاهرة 98.2 FM 🇪🇬',
+    url:'https://stream.radiojar.com/8s5u5tpdtwzuv',
+    icon:'🕌',
+    label:'القرآن الكريم'
+  },
+  {
+    title:'قناة الجزيرة — صوت',
+    sub:'البث المباشر — قطر 🇶🇦',
+    url:'https://www.radiojar.com/8s5u5tpdtwzuv', // fallback — try listen.aljazeera stream below
+    urlAlt:'http://listen.aljazeera.com/arabic/livestream',
+    icon:'📡',
+    label:'الجزيرة صوت'
+  },
+  {
+    title:'إذاعة القرآن الكريم — السعودية',
+    sub:'البث المباشر 🇸🇦',
+    url:'https://stream.radiojar.com/0tpy1h0kxtzuv',
+    icon:'🕌',
+    label:'القرآن السعودية'
+  },
 ];
-let apPlaying=false,apIdx=0,apMode='quran',apUserFiles=[];
+let apPlaying=false,apIdx=0,apMode='quran',apUserFiles=[],apUserUrls=[];
 const apAudio=document.getElementById('ap-audio');
 apAudio.volume=.5;
 apAudio.addEventListener('ended',()=>apNext());
 apAudio.addEventListener('play',()=>{document.getElementById('ap-play').textContent='⏸';apPlaying=true});
 apAudio.addEventListener('pause',()=>{document.getElementById('ap-play').textContent='▶';apPlaying=false});
-function apShow(){document.getElementById('audio-player').classList.add('show');document.getElementById('game').classList.add('audio-on');apLoad(0)}
+apAudio.addEventListener('error',()=>{
+  // Try next on error
+  setTimeout(()=>{if(apPlaying||features.audio)apNext()},2000);
+});
+function apShow(){document.getElementById('audio-player').classList.add('show');document.getElementById('game').classList.add('audio-on');}
 function apClose(){apAudio.pause();apAudio.src='';apPlaying=false;document.getElementById('audio-player').classList.remove('show');document.getElementById('game').classList.remove('audio-on')}
 function apLoad(idx){
-  if(apMode==='quran'){const s=QSTREAMS[idx%QSTREAMS.length];apIdx=idx%QSTREAMS.length;document.getElementById('ap-icon').textContent=s.icon;document.getElementById('ap-title').textContent=s.title;document.getElementById('ap-sub').textContent=s.sub;apAudio.src=s.url;apAudio.play().catch(()=>{});}
-  else if(apUserFiles.length>0){const f=apUserFiles[idx%apUserFiles.length];apIdx=idx%apUserFiles.length;document.getElementById('ap-icon').textContent='🎵';document.getElementById('ap-title').textContent=f.name.replace(/\.[^.]+$/,'');document.getElementById('ap-sub').textContent='Local file';apAudio.src=URL.createObjectURL(f);apAudio.play().catch(()=>{});}
+  if(apMode==='url'&&apUserUrls.length>0){
+    const u=apUserUrls[idx%apUserUrls.length];apIdx=idx%apUserUrls.length;
+    document.getElementById('ap-icon').textContent='🎵';
+    document.getElementById('ap-title').textContent=u.name||'ملف صوتي';
+    document.getElementById('ap-sub').textContent=u.url.includes('radiojar')?'Radio Stream':'Cloud/URL';
+    apAudio.src=u.url;apAudio.play().catch(()=>{});
+  } else if(apMode==='file'&&apUserFiles.length>0){
+    const f=apUserFiles[idx%apUserFiles.length];apIdx=idx%apUserFiles.length;
+    document.getElementById('ap-icon').textContent='🎵';
+    document.getElementById('ap-title').textContent=f.name.replace(/\.[^.]+$/,'');
+    document.getElementById('ap-sub').textContent='ملف محلي';
+    apAudio.src=URL.createObjectURL(f);apAudio.play().catch(()=>{});
+  } else {
+    // Quran/Radio streams (default)
+    apMode='quran';
+    const s=QSTREAMS[idx%QSTREAMS.length];apIdx=idx%QSTREAMS.length;
+    document.getElementById('ap-icon').textContent=s.icon;
+    document.getElementById('ap-title').textContent=s.title;
+    document.getElementById('ap-sub').textContent=s.sub;
+    const lbl=document.getElementById('ap-stream-label');if(lbl)lbl.textContent=s.label||'';
+    // Try main URL, fallback to urlAlt if error
+    apAudio.src=s.url;
+    apAudio.play().catch(()=>{
+      if(s.urlAlt){apAudio.src=s.urlAlt;apAudio.play().catch(()=>{})}
+    });
+    // Show label on icon button in player
+    const iconEl=document.getElementById('ap-icon');
+    if(iconEl)iconEl.title=s.label||s.title;
+  }
+}
+function apLoadUrl(url,name){
+  // Convert OneDrive share links to direct download
+  let directUrl=url;
+  if(url.includes('1drv.ms')||url.includes('onedrive.live.com')){
+    // OneDrive: replace view with download
+    directUrl=url.replace('redir?','download?').replace('&action=view','')
+      .replace('embed?','download?');
+    if(!directUrl.includes('download'))
+      directUrl=url+'&download=1';
+  }
+  if(url.includes('drive.google.com')){
+    // Google Drive: extract file ID and make direct link
+    const m=url.match(/[-\w]{25,}/);
+    if(m)directUrl=`https://drive.google.com/uc?export=download&id=${m[0]}`;
+  }
+  apUserUrls.push({url:directUrl,name:name||url.split('/').pop()});
+  apMode='url';apLoad(apUserUrls.length-1);
 }
 function apToggle(){if(apPlaying)apAudio.pause();else{if(apAudio.src)apAudio.play().catch(()=>{});else apLoad(0)}}
 function apNext(){apLoad(apIdx+1)}
@@ -618,7 +693,7 @@ async function tryRestoreSession(){
     myId=s.myId;myName=s.myName;myRole=s.myRole;roomId=s.roomId;isHost=s.isHost;vsAI=s.vsAI;
     if(s.lang)setLang(s.lang);
     if(s.features){Object.keys(s.features).forEach(f=>{if(s.features[f]&&!features[f])toggleFeature(f)});}
-    showScreen('game');listenGame(roomId);listenChat(roomId);loadLocationData();
+    showScreen('game');listenGame(roomId);listenChat(roomId);loadLocationData();autoStartAudio();
     if(vsAI)setTimeout(()=>{if(lastGS?.turn!==myRole)runAI(lastGS?.turn)},1000);
     return true;
   }catch(e){return false;}
@@ -874,6 +949,28 @@ function renderHand(gs){
     if(inUndo||!isMyT||!playable){t.classList.add('dim');}
     else{
       t.draggable=true;t.style.cursor='grab';
+
+      // ── DOUBLE CLICK/TAP → auto play ──
+      let tapTimer=null,tapCount=0;
+      const autoPlay=()=>{
+        const gs2=lastGS;if(!gs2)return;
+        const[ta,tb]=myHand[i];
+        const tcL=canFit(ta,tb,gs2.leftEnd),tcR=canFit(ta,tb,gs2.rightEnd);
+        if(!gs2.chain?.length){doPlay(i,'right');}
+        else if(tcL&&!tcR){doPlay(i,'left');}
+        else if(!tcL&&tcR){doPlay(i,'right');}
+        // if both sides → don't auto, wait for drag to choose side
+      };
+      t.addEventListener('dblclick',e=>{e.preventDefault();autoPlay()});
+      // Touch double-tap
+      t.addEventListener('touchend',e=>{
+        // Only handle as tap (not drag)
+        if(dragIdx!==null)return;
+        tapCount++;
+        if(tapCount===1){tapTimer=setTimeout(()=>{tapCount=0},400);}
+        else if(tapCount>=2){clearTimeout(tapTimer);tapCount=0;e.preventDefault();autoPlay();}
+      });
+
       t.addEventListener('dragstart',e=>{dragIdx=i;t.style.opacity='.4';e.dataTransfer.effectAllowed='move';highlightDZ(true)});
       t.addEventListener('dragend',e=>{
         t.style.opacity='';highlightDZ(false);
@@ -1048,7 +1145,7 @@ function listenRoom(rid){
     if(pl){pl.innerHTML='';Object.entries(r.players||{}).forEach(([role,name])=>{const c=document.createElement('div');c.className='player-pill'+(role===myRole?' me':'');c.innerHTML=`<div class="player-dot"></div>${name}${role===myRole?' (you)':''}`;pl.appendChild(c)})}
     const cnt=Object.keys(r.players||{}).length;
     const sb=document.getElementById('btn-start-game');if(sb)sb.style.display=(isHost&&cnt>=2)?'block':'none';
-    if(r.status==='playing'){showScreen('game');listenGame(rid);listenChat(rid);loadLocationData();saveSession();}
+    if(r.status==='playing'){showScreen('game');listenGame(rid);listenChat(rid);loadLocationData();saveSession();autoStartAudio();}
   });
 }
 function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';return Array.from({length:5},()=>c[~~(Math.random()*c.length)]).join('')}
@@ -1073,7 +1170,7 @@ async function startVsAI(){
   await set(ref(db,`rooms/${roomId}`),{hostId:myId,status:'playing',players:pm,created:Date.now()});
   await set(ref(db,`rooms/${roomId}/game`),gs);
   logPlayer(name,'p1');saveSession();
-  showScreen('game');listenGame(roomId);listenChat(roomId);loadLocationData();
+  showScreen('game');listenGame(roomId);listenChat(roomId);loadLocationData();autoStartAudio();
   setTimeout(()=>{if(lastGS?.turn!==myRole)runAI(lastGS?.turn)},1000);
 }
 async function joinRoom(){
@@ -1089,7 +1186,7 @@ async function joinRoom(){
   if(r.status==='playing'){
     const gs=(await get(ref(db,`rooms/${code}/game`))).val();
     if(gs){const by=[...(gs.boneyard||[])];const mt=by.splice(0,Math.min(5,by.length));const wt=[...(gs.waitingPlayers||[]),myRole];const nm={...(gs.names||{}),[myRole]:name};await update(ref(db),{[`rooms/${code}/game/${myRole}Hand`]:mt,[`rooms/${code}/game/boneyard`]:by,[`rooms/${code}/game/waitingPlayers`]:wt,[`rooms/${code}/game/names`]:nm});}
-    saveSession();showScreen('game');listenGame(code);listenChat(code);loadLocationData();
+    saveSession();showScreen('game');listenGame(code);listenChat(code);loadLocationData();autoStartAudio();
   }else{document.getElementById('room-code-display').textContent=code;showScreen('waiting');listenRoom(code);}
 }
 async function startGame(){
@@ -1109,6 +1206,20 @@ async function newGame(){
   await push(ref(db,`rooms/${roomId}/chat`),{system:true,text:'🔄 New game!',ts:Date.now()});
   if(vsAI)setTimeout(()=>{if(lastGS?.turn!==myRole)runAI(lastGS?.turn)},1000);
 }
+function confirmHome(){
+  // Show confirm dialog
+  const msg=lang==='ar'?'هتخرج من اللعبة وترجع للرئيسية؟':'Leave the game and go to main menu?';
+  if(confirm(msg))leaveGame();
+}
+
+// Auto-start audio when game begins (if audio feature is on)
+function autoStartAudio(){
+  if(features.audio&&!apPlaying){
+    apShow();
+    setTimeout(()=>{apLoad(apIdx)},500);
+  }
+}
+
 function leaveGame(){
   [unsubGame,unsubRoom,unsubChat,unsubGlobal].forEach(u=>{if(u)u()});unsubGame=unsubRoom=unsubChat=unsubGlobal=null;
   if(undoTimer)clearTimeout(undoTimer);if(undoInterval)clearInterval(undoInterval);
@@ -1147,10 +1258,19 @@ document.getElementById('tab-global').addEventListener('click',()=>switchTab('gl
 document.getElementById('chat-file-input').addEventListener('change',function(){sendChatFile(this)});
 document.getElementById('btn-send-chat').addEventListener('click',sendChat);
 document.getElementById('chat-input').addEventListener('keyup',e=>{if(e.key==='Enter')sendChat()});
+document.getElementById('btn-home').addEventListener('click',confirmHome);
+document.getElementById('ap-url-btn').addEventListener('click',()=>{
+  const url=prompt(lang==='ar'?'الصق رابط الملف الصوتي (OneDrive/Google Drive/مباشر):':'Paste audio URL (OneDrive/Google Drive/direct):');
+  if(url&&url.trim())apLoadUrl(url.trim());
+});
+document.getElementById('ap-file').addEventListener('change',function(){
+  apUserFiles=Array.from(this.files||[]);
+  if(!apUserFiles.length)return;
+  apMode='file';apIdx=0;apLoad(0);
+});
 document.getElementById('ap-prev').addEventListener('click',apPrev);
 document.getElementById('ap-play').addEventListener('click',apToggle);
 document.getElementById('ap-next').addEventListener('click',apNext);
-document.getElementById('ap-file').addEventListener('change',function(){apLoadFile(this)});
 document.getElementById('btn-close-ap').addEventListener('click',apClose);
 document.getElementById('ap-vol').addEventListener('input',function(){apSetVol(this.value)});
 document.getElementById('btn-close-prayer').addEventListener('click',()=>document.getElementById('prayer-notify').classList.remove('show'));
